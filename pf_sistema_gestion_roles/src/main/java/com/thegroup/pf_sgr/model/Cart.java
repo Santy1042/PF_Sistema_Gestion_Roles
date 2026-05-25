@@ -19,9 +19,6 @@ public class Cart {
     @Column(name = "cart_id")
     private Long cartId;
 
-    @Column(name = "session_token")
-    private String sessionToken;
-
     @Column(name = "user_id")
     private Long userId;
 

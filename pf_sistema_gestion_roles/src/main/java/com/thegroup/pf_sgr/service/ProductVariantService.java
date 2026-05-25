@@ -17,6 +17,7 @@ public class ProductVariantService implements IProductVariantService {
 
     private final ProductVariantRepository productVariantRepository;
 
+    @Override
     public Page<ProductVariant> getAllVariantsPaginated(int page, int size, String sortDirection) {
         Sort sort;
         if ("asc".equalsIgnoreCase(sortDirection)) {
@@ -29,14 +30,17 @@ public class ProductVariantService implements IProductVariantService {
         return productVariantRepository.findAll(pageable);
     }
 
+    @Override
     public Optional<ProductVariant> getVariantById(Integer id) {
         return productVariantRepository.findById(id);
     }
 
+    @Override
     public ProductVariant saveVariant(ProductVariant productVariant) {
         return productVariantRepository.save(productVariant);
     }
 
+    @Override
     public Optional<ProductVariant> updateVariant(Integer id, ProductVariant updatedVariant) {
         return productVariantRepository.findById(id).map(variant -> {
             if (updatedVariant.getProduct() != null) {
@@ -59,6 +63,7 @@ public class ProductVariantService implements IProductVariantService {
         });
     }
 
+    @Override
     public boolean deactivateVariant(Integer id) {
         return productVariantRepository.findById(id).map(variant -> {
             variant.setIsActive(false);
@@ -67,6 +72,7 @@ public class ProductVariantService implements IProductVariantService {
         }).orElse(false);
     }
 
+    @Override
     public boolean activateVariant(Integer id) {
         return productVariantRepository.findById(id).map(variant -> {
             variant.setIsActive(true);
@@ -75,6 +81,7 @@ public class ProductVariantService implements IProductVariantService {
         }).orElse(false);
     }
 
+    @Override
     public boolean deleteVariant(Integer id) {
         if (productVariantRepository.existsById(id)) {
             productVariantRepository.deleteById(id);

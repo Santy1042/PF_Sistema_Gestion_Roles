@@ -15,8 +15,10 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
+    
     private final ProductRepository productRepository;
 
+    @Override
     public Page<Product> getAllProductsPaginated(int page, int size, String sortDirection) {
         Sort sort;
         if ("asc".equalsIgnoreCase(sortDirection)) {
@@ -29,10 +31,12 @@ public class ProductService implements IProductService {
         return productRepository.findAll(pageable);
     }
 
+    @Override
     public Optional<Product> getProductById(Integer id) {
         return productRepository.findById(id);
     }
 
+    @Override
     public Product saveProduct(Product product) {
         if (product.getVariants() != null) {
             product.getVariants().forEach(variant -> variant.setProduct(product));
@@ -40,6 +44,7 @@ public class ProductService implements IProductService {
         return productRepository.save(product);
     }
 
+    @Override
     public Optional<Product> updateProduct(Integer id, Product updatedProduct) {
         return productRepository.findById(id).map(product -> {
             product.setName(updatedProduct.getName());
@@ -58,7 +63,7 @@ public class ProductService implements IProductService {
         });
     }
 
-
+    @Override
     public boolean deactivateProduct(Integer id) {
         return productRepository.findById(id).map(product -> {
             product.setIsActive(false);
@@ -67,6 +72,7 @@ public class ProductService implements IProductService {
         }).orElse(false);
     }
 
+    @Override
     public boolean activateProduct(Integer id) {
     return productRepository.findById(id).map(product -> {
             product.setIsActive(true);
@@ -75,6 +81,7 @@ public class ProductService implements IProductService {
         }).orElse(false);
     }
     
+    @Override
     public boolean deleteProduct(Integer id) {
         if (productRepository.existsById(id)) {
             productRepository.deleteById(id);
@@ -83,6 +90,7 @@ public class ProductService implements IProductService {
         return false;
     }
 
+    @Override
     public List<Product> searchProductByName(String name) {
         return productRepository.findByNameContainingIgnoreCase(name);
     }
