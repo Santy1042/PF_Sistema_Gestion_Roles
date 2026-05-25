@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/colors")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class ColorController {
 
     private final IColorService colorService;
@@ -23,22 +24,17 @@ public class ColorController {
 
     @GetMapping("/getColorById")
     public ResponseEntity<Color> getColorById(@RequestParam Integer id) {
-        return colorService.getColorById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(colorService.getColorById(id));
     }
 
     @PostMapping("/createColor")
     public ResponseEntity<Color> createColor(@RequestBody Color color) {
-        Color createdColor = colorService.saveColor(color);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdColor);
+        return ResponseEntity.status(HttpStatus.CREATED).body(colorService.saveColor(color));
     }
 
     @DeleteMapping("/deleteColor")
     public ResponseEntity<Void> deleteColor(@RequestParam Integer id) {
-        if (colorService.deleteColor(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        colorService.deleteColor(id);
+        return ResponseEntity.noContent().build();
     }
 }

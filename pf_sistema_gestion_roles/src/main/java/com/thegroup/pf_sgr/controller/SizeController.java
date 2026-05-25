@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/sizes")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class SizeController {
 
     private final ISizeService sizeService;
@@ -23,22 +24,17 @@ public class SizeController {
 
     @GetMapping("/getSizeById")
     public ResponseEntity<Size> getSizeById(@RequestParam Integer id) {
-        return sizeService.getSizeById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(sizeService.getSizeById(id));
     }
 
     @PostMapping("/createSize")
     public ResponseEntity<Size> createSize(@RequestBody Size size) {
-        Size createdSize = sizeService.saveSize(size);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdSize);
+        return ResponseEntity.status(HttpStatus.CREATED).body(sizeService.saveSize(size));
     }
 
     @DeleteMapping("/deleteSize")
     public ResponseEntity<Void> deleteSize(@RequestParam Integer id) {
-        if (sizeService.deleteSize(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        sizeService.deleteSize(id);
+        return ResponseEntity.noContent().build();
     }
 }

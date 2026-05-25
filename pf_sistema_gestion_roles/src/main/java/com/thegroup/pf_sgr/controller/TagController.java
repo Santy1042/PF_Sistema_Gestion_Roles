@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tags")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class TagController {
 
     private final ITagService tagService;
@@ -23,22 +24,17 @@ public class TagController {
 
     @GetMapping("/getTagById")
     public ResponseEntity<Tag> getTagById(@RequestParam Integer id) {
-        return tagService.getTagById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(tagService.getTagById(id));
     }
 
     @PostMapping("/createTag")
     public ResponseEntity<Tag> createTag(@RequestBody Tag tag) {
-        Tag createdTag = tagService.saveTag(tag);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTag);
+        return ResponseEntity.status(HttpStatus.CREATED).body(tagService.saveTag(tag));
     }
 
     @DeleteMapping("/deleteTag")
     public ResponseEntity<Void> deleteTag(@RequestParam Integer id) {
-        if (tagService.deleteTag(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        tagService.deleteTag(id);
+        return ResponseEntity.noContent().build();
     }
 }

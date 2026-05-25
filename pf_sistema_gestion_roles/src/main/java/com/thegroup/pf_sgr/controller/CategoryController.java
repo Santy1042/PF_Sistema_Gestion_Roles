@@ -23,22 +23,17 @@ public class CategoryController {
 
     @GetMapping("/getCategoryById")
     public ResponseEntity<Category> getCategoryById(@RequestParam Integer id) {
-        return categoryService.getCategoryById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
     @PostMapping("/createCategory")
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        Category createdCategory = categoryService.saveCategory(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.saveCategory(category));
     }
 
     @DeleteMapping("/deleteCategory")
     public ResponseEntity<Void> deleteCategory(@RequestParam Integer id) {
-        if (categoryService.deleteCategory(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
     }
 }
