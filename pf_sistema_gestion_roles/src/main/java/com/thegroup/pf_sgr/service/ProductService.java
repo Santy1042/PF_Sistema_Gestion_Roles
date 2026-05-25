@@ -3,16 +3,15 @@ package com.thegroup.pf_sgr.service;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-
-import com.thegroup.pf_sgr.interfaces.product.IProductRepository;
 import com.thegroup.pf_sgr.interfaces.product.IProductService;
 import com.thegroup.pf_sgr.model.Product;
+import com.thegroup.pf_sgr.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
-    private final IProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();

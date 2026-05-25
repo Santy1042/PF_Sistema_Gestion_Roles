@@ -2,7 +2,6 @@ package com.thegroup.pf_sgr.interfaces.product;
 
 import java.util.List;
 import java.util.Optional;
-
 import com.thegroup.pf_sgr.model.Product;
 
 public interface IProductService {

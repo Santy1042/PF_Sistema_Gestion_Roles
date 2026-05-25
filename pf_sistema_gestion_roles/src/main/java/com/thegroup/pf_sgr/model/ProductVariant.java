@@ -1,5 +1,6 @@
 package com.thegroup.pf_sgr.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,6 +13,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "product_variants")
@@ -27,6 +29,7 @@ public class ProductVariant {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_product", nullable = false) 
+    @JsonIgnore
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,8 +41,10 @@ public class ProductVariant {
     private Color color;
 
     @Column(name = "stock")
+    @JsonProperty("stock")
     private Integer stock;
 
     @Column(name = "is_active")
+    @JsonProperty("isActive")
     private Boolean isActive;
 }
