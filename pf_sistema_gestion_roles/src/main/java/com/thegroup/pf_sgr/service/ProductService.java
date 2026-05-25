@@ -22,18 +22,23 @@ public class ProductService implements IProductService {
     }
 
     public Product saveProduct(Product product) {
+        if (product.getVariants() != null) {
+            product.getVariants().forEach(variant -> variant.setProduct(product));
+        }
         return productRepository.save(product);
     }
 
     public Optional<Product> updateProduct(Integer id, Product updatedProduct) {
-        return productRepository.findById(id).map(product -> {
-            product.setName(updatedProduct.getName());
-            product.setPrice(updatedProduct.getPrice());
-            product.setIsActive(updatedProduct.getIsActive());
-            product.setVariants(updatedProduct.getVariants());
-            return productRepository.save(product);
-        });
-    }
+    return productRepository.findById(id).map(product -> { 
+        product.setName(updatedProduct.getName());
+        product.setPrice(updatedProduct.getPrice());
+        product.setIsActive(updatedProduct.getIsActive());
+        product.setCategory(updatedProduct.getCategory());
+        product.setTags(updatedProduct.getTags());
+        product.setVariants(updatedProduct.getVariants());
+        return productRepository.save(product);
+    });
+}
 
     public boolean deactivateProduct(Integer id) {
         return productRepository.findById(id).map(product -> {
