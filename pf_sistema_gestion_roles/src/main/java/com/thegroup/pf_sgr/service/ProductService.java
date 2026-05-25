@@ -29,16 +29,22 @@ public class ProductService implements IProductService {
     }
 
     public Optional<Product> updateProduct(Integer id, Product updatedProduct) {
-    return productRepository.findById(id).map(product -> { 
-        product.setName(updatedProduct.getName());
-        product.setPrice(updatedProduct.getPrice());
-        product.setIsActive(updatedProduct.getIsActive());
-        product.setCategory(updatedProduct.getCategory());
-        product.setTags(updatedProduct.getTags());
-        product.setVariants(updatedProduct.getVariants());
-        return productRepository.save(product);
-    });
-}
+        return productRepository.findById(id).map(product -> {
+            product.setName(updatedProduct.getName());
+            product.setPrice(updatedProduct.getPrice());
+            product.setIsActive(updatedProduct.getIsActive());
+            product.setIsFeatured(updatedProduct.getIsFeatured());
+            product.setDiscountPercentage(updatedProduct.getDiscountPercentage());
+            product.setCategory(updatedProduct.getCategory());
+            product.setTags(updatedProduct.getTags());
+            if (updatedProduct.getVariants() != null) {
+                updatedProduct.getVariants().forEach(variant -> variant.setProduct(product));
+                product.setVariants(updatedProduct.getVariants());
+            }
+            return productRepository.save(product);
+        });
+    }
+
 
     public boolean deactivateProduct(Integer id) {
         return productRepository.findById(id).map(product -> {
@@ -55,4 +61,6 @@ public class ProductService implements IProductService {
             return true;
         }).orElse(false);
     }
+
+    
 }

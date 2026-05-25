@@ -37,6 +37,13 @@ public class Product {
     @Column(name = "created_at")
     private LocalDate createdAt;
 
+    @Column(name = "is_featured")
+    @JsonProperty("isFeatured")
+    private Boolean isFeatured;
+
+    @Column(name = "discount_percentage")
+    private Integer discountPercentage;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_category")
     private Category category;
