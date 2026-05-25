@@ -7,6 +7,8 @@ import com.thegroup.pf_sgr.model.Product;
 import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,9 +25,13 @@ public class ProductController {
 
     private final IProductService productService;
 
-    @GetMapping("/getAllProducts")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    @GetMapping
+    public ResponseEntity<Page<Product>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<Product> products = productService.getAllProductsPaginated(page, size);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/getProductById")
@@ -79,6 +85,17 @@ public class ProductController {
         }
         
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/searchByName")
+    public ResponseEntity<List<Product>> searchProducts(@RequestParam String name) {
+        List<Product> products = productService.searchProductByName(name);
+        
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Retorna 204 si no encuentra nada
+        }
+        
+        return ResponseEntity.ok(products); // Retorna 200 con la lista
     }
 
 }

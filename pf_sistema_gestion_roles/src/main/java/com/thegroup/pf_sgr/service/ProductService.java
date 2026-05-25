@@ -2,6 +2,9 @@ package com.thegroup.pf_sgr.service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.thegroup.pf_sgr.interfaces.product.IProductService;
 import com.thegroup.pf_sgr.model.Product;
@@ -13,8 +16,9 @@ import lombok.RequiredArgsConstructor;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getAllProductsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.findAll(pageable);
     }
 
     public Optional<Product> getProductById(Integer id) {
@@ -68,5 +72,9 @@ public class ProductService implements IProductService {
             return true;
         }
         return false;
+    }
+
+    public List<Product> searchProductByName(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
     }
 }
