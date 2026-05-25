@@ -13,7 +13,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "product_variants")
@@ -29,11 +28,12 @@ public class ProductVariant {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_product", nullable = false) 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_size", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Size size;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -7,7 +7,6 @@ import com.thegroup.pf_sgr.model.Product;
 import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,10 +92,10 @@ public class ProductController {
         List<Product> products = productService.searchProductByName(name);
         
         if (products.isEmpty()) {
-            return ResponseEntity.noContent().build(); // Retorna 204 si no encuentra nada
+            return ResponseEntity.noContent().build();
         }
         
-        return ResponseEntity.ok(products); // Retorna 200 con la lista
+        return ResponseEntity.ok(products);
     }
 
 }
