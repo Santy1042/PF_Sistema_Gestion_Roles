@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import com.thegroup.pf_sgr.model.Product;
 
 public interface IProductService {
-    Page<Product> getAllProductsPaginated(int page, int size);
+    Page<Product> getAllProductsPaginated(int page, int size, String sortDirection);
     Optional<Product> getProductById(Integer id);
     Product saveProduct(Product product);
     Optional<Product> updateProduct(Integer id, Product updatedProduct);

@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.thegroup.pf_sgr.interfaces.product.IProductService;
 import com.thegroup.pf_sgr.model.Product;
@@ -16,8 +17,15 @@ import lombok.RequiredArgsConstructor;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
 
-    public Page<Product> getAllProductsPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<Product> getAllProductsPaginated(int page, int size, String sortDirection) {
+        Sort sort;
+        if ("asc".equalsIgnoreCase(sortDirection)) {
+            sort = Sort.by("price").ascending();
+        } else {
+            sort = Sort.by("price").descending();
+        }
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
         return productRepository.findAll(pageable);
     }
 
