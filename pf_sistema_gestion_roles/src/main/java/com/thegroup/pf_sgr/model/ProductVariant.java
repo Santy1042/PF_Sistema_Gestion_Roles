@@ -1,0 +1,45 @@
+package com.thegroup.pf_sgr.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "product_variants")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+
+public class ProductVariant {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_variant")
+    private Integer id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_product", nullable = false) 
+    private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_size", nullable = false)
+    private Size size;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_color", nullable = false)
+    private Color color;
+
+    @Column(name = "stock")
+    private Integer stock;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+}
