@@ -51,7 +51,8 @@ public class ProductService implements IProductService {
             product.setTags(updatedProduct.getTags());
             if (updatedProduct.getVariants() != null) {
                 updatedProduct.getVariants().forEach(variant -> variant.setProduct(product));
-                product.setVariants(updatedProduct.getVariants());
+                product.getVariants().clear();
+                product.getVariants().addAll(updatedProduct.getVariants());
             }
             return productRepository.save(product);
         });

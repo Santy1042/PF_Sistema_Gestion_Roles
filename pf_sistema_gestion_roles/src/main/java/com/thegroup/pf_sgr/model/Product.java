@@ -56,6 +56,6 @@ public class Product {
     )
     private List<Tag> tags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<ProductVariant> variants = new ArrayList<>();
 }

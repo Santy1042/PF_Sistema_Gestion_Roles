@@ -25,7 +25,7 @@ public class ProductController {
 
     private final IProductService productService;
 
-    @GetMapping
+    @GetMapping("/getAllProducts")
     public ResponseEntity<Page<Product>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
