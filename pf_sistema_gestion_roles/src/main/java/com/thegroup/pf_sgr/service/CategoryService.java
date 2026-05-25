@@ -1,13 +1,12 @@
 package com.thegroup.pf_sgr.service;
 
+import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.ICategoryService;
 import com.thegroup.pf_sgr.model.Category;
 import com.thegroup.pf_sgr.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +20,9 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public Optional<Category> getCategoryById(Integer id) {
-        return categoryRepository.findById(id);
+    public Category getCategoryById(Integer id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con el ID: " + id));
     }
 
     @Override
@@ -31,11 +31,10 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public boolean deleteCategory(Integer id) {
-        if (categoryRepository.existsById(id)) {
-            categoryRepository.deleteById(id);
-            return true;
+    public void deleteCategory(Integer id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Categoría no encontrada con el ID: " + id);
         }
-        return false;
+        categoryRepository.deleteById(id);
     }
 }
