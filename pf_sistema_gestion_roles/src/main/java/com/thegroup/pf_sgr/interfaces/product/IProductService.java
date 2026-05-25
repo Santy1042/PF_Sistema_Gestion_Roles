@@ -11,4 +11,5 @@ public interface IProductService {
     Optional<Product> updateProduct(Integer id, Product updatedProduct);
     boolean deactivateProduct(Integer id);
     boolean activateProduct(Integer id);
+    boolean deleteProduct(Integer id);
 }

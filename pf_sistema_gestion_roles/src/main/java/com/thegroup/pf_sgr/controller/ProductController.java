@@ -70,4 +70,15 @@ public class ProductController {
         }
     } 
 
+    @DeleteMapping("/deleteProduct")
+    public ResponseEntity<Void> deleteProduct(@RequestParam Integer id) {
+        boolean isDeleted = productService.deleteProduct(id);
+        
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        }
+        
+        return ResponseEntity.notFound().build();
+    }
+
 }

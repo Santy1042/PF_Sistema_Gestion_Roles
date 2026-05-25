@@ -61,6 +61,12 @@ public class ProductService implements IProductService {
             return true;
         }).orElse(false);
     }
-
     
+    public boolean deleteProduct(Integer id) {
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }
