@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ICategoryService {
     List<Category> getAllCategories();
-    Category getCategoryById(Integer id);
+    Category getCategoryById(Integer categoryId);
     Category saveCategory(Category category);
-    void deleteCategory(Integer id);
+    void deleteCategory(Integer categoryId);
 }

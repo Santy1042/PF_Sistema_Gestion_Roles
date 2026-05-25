@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/colors")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class ColorController {
 
     private final IColorService colorService;
@@ -23,8 +22,8 @@ public class ColorController {
     }
 
     @GetMapping("/getColorById")
-    public ResponseEntity<Color> getColorById(@RequestParam Integer id) {
-        return ResponseEntity.ok(colorService.getColorById(id));
+    public ResponseEntity<Color> getColorById(@RequestParam Integer colorId) {
+        return ResponseEntity.ok(colorService.getColorById(colorId));
     }
 
     @PostMapping("/createColor")
@@ -33,8 +32,8 @@ public class ColorController {
     }
 
     @DeleteMapping("/deleteColor")
-    public ResponseEntity<Void> deleteColor(@RequestParam Integer id) {
-        colorService.deleteColor(id);
+    public ResponseEntity<Void> deleteColor(@RequestParam Integer colorId) {
+        colorService.deleteColor(colorId);
         return ResponseEntity.noContent().build();
     }
 }

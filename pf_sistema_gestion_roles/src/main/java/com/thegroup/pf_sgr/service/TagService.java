@@ -4,12 +4,13 @@ import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.ITagService;
 import com.thegroup.pf_sgr.model.Tag;
 import com.thegroup.pf_sgr.repository.TagRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TagService implements ITagService {
 
@@ -21,9 +22,9 @@ public class TagService implements ITagService {
     }
 
     @Override
-    public Tag getTagById(Integer id) {
-        return tagRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tag no encontrada con el ID: " + id));
+    public Tag getTagById(Integer tagId) {
+        return tagRepository.findById(tagId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tag no encontrada con el ID: " + tagId));
     }
 
     @Override
@@ -32,10 +33,9 @@ public class TagService implements ITagService {
     }
 
     @Override
-    public void deleteTag(Integer id) {
-        if (!tagRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Tag no encontrada con el ID: " + id);
-        }
-        tagRepository.deleteById(id);
+    public void deleteTag(Integer tagId) {
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tag no encontrada con el ID: " + tagId));
+        tagRepository.delete(tag);
     }
 }

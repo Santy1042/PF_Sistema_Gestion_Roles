@@ -1,7 +1,7 @@
 package com.thegroup.pf_sgr.controller;
 
 import org.springframework.web.bind.annotation.*;
-import com.thegroup.pf_sgr.interfaces.product.IProductService;
+import com.thegroup.pf_sgr.interfaces.IProductService;
 import com.thegroup.pf_sgr.model.Product;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
@@ -22,8 +22,8 @@ public class ProductController {
     }
 
     @GetMapping("/getProductById")
-    public ResponseEntity<Product> getProductById(@RequestParam Integer id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+    public ResponseEntity<Product> getProductById(@RequestParam Integer productId) {
+        return ResponseEntity.ok(productService.getProductById(productId));
     }
 
     @PostMapping("/createProduct")
@@ -32,25 +32,25 @@ public class ProductController {
     }
 
     @PutMapping("/updateProduct")
-    public ResponseEntity<Product> updateProduct(@RequestParam Integer id, @RequestBody Product updatedProduct) {
-        return ResponseEntity.ok(productService.updateProduct(id, updatedProduct));
+    public ResponseEntity<Product> updateProduct(@RequestParam Integer productId, @RequestBody Product updatedProduct) {
+        return ResponseEntity.ok(productService.updateProduct(productId, updatedProduct));
     }
 
     @DeleteMapping("/deactivateProduct")
-    public ResponseEntity<Void> deactivateProduct(@RequestParam Integer id) {
-        productService.deactivateProduct(id);
+    public ResponseEntity<Void> deactivateProduct(@RequestParam Integer productId) {
+        productService.deactivateProduct(productId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/activateProduct")
-    public ResponseEntity<Void> activateProduct(@RequestParam Integer id) {
-        productService.activateProduct(id);
+    public ResponseEntity<Void> activateProduct(@RequestParam Integer productId) {
+        productService.activateProduct(productId);
         return ResponseEntity.noContent().build();
     } 
 
     @DeleteMapping("/deleteProduct")
-    public ResponseEntity<Void> deleteProduct(@RequestParam Integer id) {
-        productService.deleteProduct(id);
+    public ResponseEntity<Void> deleteProduct(@RequestParam Integer productId) {
+        productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
 

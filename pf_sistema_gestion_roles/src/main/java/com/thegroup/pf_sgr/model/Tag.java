@@ -20,7 +20,7 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tag")
-    private Integer id;
+    private Integer tagId;
 
     @Column(name = "name_tag", unique = true, nullable = false)
     private String name;

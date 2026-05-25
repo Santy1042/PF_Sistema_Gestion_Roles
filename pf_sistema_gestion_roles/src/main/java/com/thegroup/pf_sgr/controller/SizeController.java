@@ -23,8 +23,8 @@ public class SizeController {
     }
 
     @GetMapping("/getSizeById")
-    public ResponseEntity<Size> getSizeById(@RequestParam Integer id) {
-        return ResponseEntity.ok(sizeService.getSizeById(id));
+    public ResponseEntity<Size> getSizeById(@RequestParam Integer sizeId) {
+        return ResponseEntity.ok(sizeService.getSizeById(sizeId));
     }
 
     @PostMapping("/createSize")
@@ -33,8 +33,8 @@ public class SizeController {
     }
 
     @DeleteMapping("/deleteSize")
-    public ResponseEntity<Void> deleteSize(@RequestParam Integer id) {
-        sizeService.deleteSize(id);
+    public ResponseEntity<Void> deleteSize(@RequestParam Integer sizeId) {
+        sizeService.deleteSize(sizeId);
         return ResponseEntity.noContent().build();
     }
 }

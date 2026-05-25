@@ -4,11 +4,13 @@ import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.ICategoryService;
 import com.thegroup.pf_sgr.model.Category;
 import com.thegroup.pf_sgr.repository.CategoryRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CategoryService implements ICategoryService {
 
@@ -20,9 +22,9 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public Category getCategoryById(Integer id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con el ID: " + id));
+    public Category getCategoryById(Integer categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con el ID: " + categoryId));
     }
 
     @Override
@@ -31,10 +33,9 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public void deleteCategory(Integer id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Categoría no encontrada con el ID: " + id);
-        }
-        categoryRepository.deleteById(id);
+    public void deleteCategory(Integer categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con el ID: " + categoryId));
+        categoryRepository.delete(category);
     }
 }

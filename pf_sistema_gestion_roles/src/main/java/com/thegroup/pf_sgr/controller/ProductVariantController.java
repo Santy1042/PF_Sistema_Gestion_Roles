@@ -1,7 +1,7 @@
 package com.thegroup.pf_sgr.controller;
 
 import org.springframework.web.bind.annotation.*;
-import com.thegroup.pf_sgr.interfaces.productVariant.IProductVariantService;
+import com.thegroup.pf_sgr.interfaces.IProductVariantService;
 import com.thegroup.pf_sgr.model.ProductVariant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,8 +21,8 @@ public class ProductVariantController {
     }
 
     @GetMapping("/getVariantById")
-    public ResponseEntity<ProductVariant> getVariantById(@RequestParam Integer id) {
-        return ResponseEntity.ok(variantService.getVariantById(id));
+    public ResponseEntity<ProductVariant> getVariantById(@RequestParam Integer variantId) {
+        return ResponseEntity.ok(variantService.getVariantById(variantId));
     }
 
     @PostMapping("/createVariant")
@@ -31,25 +31,25 @@ public class ProductVariantController {
     }
 
     @PutMapping("/updateVariant")
-    public ResponseEntity<ProductVariant> updateVariant(@RequestParam Integer id, @RequestBody ProductVariant updatedVariant) {
-        return ResponseEntity.ok(variantService.updateVariant(id, updatedVariant));
+    public ResponseEntity<ProductVariant> updateVariant(@RequestParam Integer variantId, @RequestBody ProductVariant updatedVariant) {
+        return ResponseEntity.ok(variantService.updateVariant(variantId, updatedVariant));
     }
 
     @DeleteMapping("/deactivateVariant")
-    public ResponseEntity<Void> deactivateVariant(@RequestParam Integer id) {
-        variantService.deactivateVariant(id);
+    public ResponseEntity<Void> deactivateVariant(@RequestParam Integer variantId) {
+        variantService.deactivateVariant(variantId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/activateVariant")
-    public ResponseEntity<Void> activateVariant(@RequestParam Integer id) {
-        variantService.activateVariant(id);
+    public ResponseEntity<Void> activateVariant(@RequestParam Integer variantId) {
+        variantService.activateVariant(variantId);
         return ResponseEntity.noContent().build();
     } 
 
     @DeleteMapping("/deleteVariant")
-    public ResponseEntity<Void> deleteVariant(@RequestParam Integer id) {
-        variantService.deleteVariant(id);
+    public ResponseEntity<Void> deleteVariant(@RequestParam Integer variantId) {
+        variantService.deleteVariant(variantId);
         return ResponseEntity.noContent().build();
     }
 }

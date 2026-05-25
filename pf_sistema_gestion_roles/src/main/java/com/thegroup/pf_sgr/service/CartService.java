@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CartService implements ICartService {
 
@@ -24,7 +25,6 @@ public class CartService implements ICartService {
     private final ProductVariantRepository productVariantRepository;
 
     @Override
-    @Transactional
     public Cart getOrCreateCart(Long userId) {
         return cartRepository.findByUserId(userId)
                 .orElseGet(() -> {
@@ -36,7 +36,6 @@ public class CartService implements ICartService {
             }
 
     @Override
-    @Transactional
     public Cart addItemToCart(Long userId, Integer productVariantId, Integer quantity) {
         Cart cart = getOrCreateCart(userId);
         
@@ -44,7 +43,7 @@ public class CartService implements ICartService {
                 .orElseThrow(() -> new ResourceNotFoundException("Variante de producto no encontrada"));
 
         Optional<CartItem> existingItem = cart.getItems().stream()
-                .filter(item -> item.getProductVariant().getId().equals(productVariantId))
+                .filter(item -> item.getProductVariant().getVariantId().equals(productVariantId))
                 .findFirst();
 
         if (existingItem.isPresent()) {
@@ -61,7 +60,6 @@ public class CartService implements ICartService {
     }
 
     @Override
-    @Transactional
     public Cart updateItemQuantity(Long cartId, Long itemCartId, Integer quantity) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
@@ -81,7 +79,6 @@ public class CartService implements ICartService {
     }
 
     @Override
-    @Transactional
     public Cart removeItemFromCart(Long cartId, Long itemCartId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
@@ -91,7 +88,6 @@ public class CartService implements ICartService {
     }
 
     @Override
-    @Transactional
     public void clearCart(Long cartId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
@@ -100,7 +96,6 @@ public class CartService implements ICartService {
     }
 
     @Override
-    @Transactional
     public Cart syncCart(Long userId, List<Map<String, Integer>> frontendItems) {
         Cart cart = getOrCreateCart(userId);
         
@@ -113,7 +108,7 @@ public class CartService implements ICartService {
                         .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada: " + variantId));
                         
                 Optional<CartItem> existingItem = cart.getItems().stream()
-                        .filter(item -> item.getProductVariant().getId().equals(variantId))
+                        .filter(item -> item.getProductVariant().getVariantId().equals(variantId))
                         .findFirst();
                         
                 if (existingItem.isPresent()) {

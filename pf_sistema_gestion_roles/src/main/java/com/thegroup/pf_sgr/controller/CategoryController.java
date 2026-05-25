@@ -22,8 +22,8 @@ public class CategoryController {
     }
 
     @GetMapping("/getCategoryById")
-    public ResponseEntity<Category> getCategoryById(@RequestParam Integer id) {
-        return ResponseEntity.ok(categoryService.getCategoryById(id));
+    public ResponseEntity<Category> getCategoryById(@RequestParam Integer categoryId) {
+        return ResponseEntity.ok(categoryService.getCategoryById(categoryId));
     }
 
     @PostMapping("/createCategory")
@@ -32,8 +32,8 @@ public class CategoryController {
     }
 
     @DeleteMapping("/deleteCategory")
-    public ResponseEntity<Void> deleteCategory(@RequestParam Integer id) {
-        categoryService.deleteCategory(id);
+    public ResponseEntity<Void> deleteCategory(@RequestParam Integer categoryId) {
+        categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ISizeService {
     List<Size> getAllSizes();
-    Size getSizeById(Integer id);
+    Size getSizeById(Integer sizeId);
     Size saveSize(Size size);
-    void deleteSize(Integer id);
+    void deleteSize(Integer sizeId);
 }

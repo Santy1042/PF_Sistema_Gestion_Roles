@@ -4,12 +4,13 @@ import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.ISizeService;
 import com.thegroup.pf_sgr.model.Size;
 import com.thegroup.pf_sgr.repository.SizeRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class SizeService implements ISizeService {
 
@@ -21,9 +22,9 @@ public class SizeService implements ISizeService {
     }
 
     @Override
-    public Size getSizeById(Integer id) {
-        return sizeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Talla no encontrada con el ID: " + id));
+    public Size getSizeById(Integer sizeId) {
+        return sizeRepository.findById(sizeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Talla no encontrada con el ID: " + sizeId));
     }
 
     @Override
@@ -32,10 +33,9 @@ public class SizeService implements ISizeService {
     }
 
     @Override
-    public void deleteSize(Integer id) {
-        if (!sizeRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Talla no encontrada con el ID: " + id);
-        }
-        sizeRepository.deleteById(id);
+    public void deleteSize(Integer sizeId) {
+        Size size = sizeRepository.findById(sizeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Talla no encontrada con el ID: " + sizeId));
+        sizeRepository.delete(size);
     }
 }

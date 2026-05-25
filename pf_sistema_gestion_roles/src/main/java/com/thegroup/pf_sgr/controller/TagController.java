@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tags")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class TagController {
 
     private final ITagService tagService;
@@ -23,8 +22,8 @@ public class TagController {
     }
 
     @GetMapping("/getTagById")
-    public ResponseEntity<Tag> getTagById(@RequestParam Integer id) {
-        return ResponseEntity.ok(tagService.getTagById(id));
+    public ResponseEntity<Tag> getTagById(@RequestParam Integer tagId) {
+        return ResponseEntity.ok(tagService.getTagById(tagId));
     }
 
     @PostMapping("/createTag")
@@ -33,8 +32,8 @@ public class TagController {
     }
 
     @DeleteMapping("/deleteTag")
-    public ResponseEntity<Void> deleteTag(@RequestParam Integer id) {
-        tagService.deleteTag(id);
+    public ResponseEntity<Void> deleteTag(@RequestParam Integer tagId) {
+        tagService.deleteTag(tagId);
         return ResponseEntity.noContent().build();
     }
 }

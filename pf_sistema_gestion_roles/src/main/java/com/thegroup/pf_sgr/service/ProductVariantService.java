@@ -5,12 +5,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
-import com.thegroup.pf_sgr.interfaces.productVariant.IProductVariantService;
+import com.thegroup.pf_sgr.interfaces.IProductVariantService;
 import com.thegroup.pf_sgr.model.ProductVariant;
 import com.thegroup.pf_sgr.repository.ProductVariantRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductVariantService implements IProductVariantService {
 
@@ -18,14 +20,15 @@ public class ProductVariantService implements IProductVariantService {
 
     @Override
     public Page<ProductVariant> getAllVariantsPaginated(int page, int size, String sortDirection) {
-        Sort sort = "asc".equalsIgnoreCase(sortDirection) ? Sort.by("stock").ascending() : Sort.by("stock").descending();
+        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+        Sort sort = Sort.by(direction, "stock");
         return productVariantRepository.findAll(PageRequest.of(page, size, sort));
     }
 
     @Override
-    public ProductVariant getVariantById(Integer id) {
-        return productVariantRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + id));
+    public ProductVariant getVariantById(Integer variantId) {
+        return productVariantRepository.findById(variantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + variantId));
     }
 
     @Override
@@ -34,9 +37,9 @@ public class ProductVariantService implements IProductVariantService {
     }
 
     @Override
-    public ProductVariant updateVariant(Integer id, ProductVariant updatedVariant) {
-        ProductVariant variant = productVariantRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + id));
+    public ProductVariant updateVariant(Integer variantId, ProductVariant updatedVariant) {
+        ProductVariant variant = productVariantRepository.findById(variantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + variantId));
 
         if (updatedVariant.getProduct() != null) variant.setProduct(updatedVariant.getProduct());
         if (updatedVariant.getSize() != null) variant.setSize(updatedVariant.getSize());
@@ -50,26 +53,25 @@ public class ProductVariantService implements IProductVariantService {
     }
 
     @Override
-    public void deactivateVariant(Integer id) {
-        ProductVariant variant = productVariantRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + id));
+    public void deactivateVariant(Integer variantId) {
+        ProductVariant variant = productVariantRepository.findById(variantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + variantId));
         variant.setIsActive(false);
         productVariantRepository.save(variant);
     }
 
     @Override
-    public void activateVariant(Integer id) {
-        ProductVariant variant = productVariantRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + id));
+    public void activateVariant(Integer variantId) {
+        ProductVariant variant = productVariantRepository.findById(variantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + variantId));
         variant.setIsActive(true);
         productVariantRepository.save(variant);
     }
 
     @Override
-    public void deleteVariant(Integer id) {
-        if (!productVariantRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Variante no encontrada con el ID: " + id);
-        }
-        productVariantRepository.deleteById(id);
+    public void deleteVariant(Integer variantId) {
+        ProductVariant variant = productVariantRepository.findById(variantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + variantId));
+        productVariantRepository.delete(variant);
     }
 }

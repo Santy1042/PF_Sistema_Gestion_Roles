@@ -4,12 +4,13 @@ import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.IColorService;
 import com.thegroup.pf_sgr.model.Color;
 import com.thegroup.pf_sgr.repository.ColorRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ColorService implements IColorService {
 
@@ -21,9 +22,9 @@ public class ColorService implements IColorService {
     }
 
     @Override
-    public Color getColorById(Integer id) {
-        return colorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Color no encontrado con el ID: " + id));
+    public Color getColorById(Integer colorId) {
+        return colorRepository.findById(colorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Color no encontrado con el ID: " + colorId));
     }
 
     @Override
@@ -32,10 +33,9 @@ public class ColorService implements IColorService {
     }
 
     @Override
-    public void deleteColor(Integer id) {
-        if (!colorRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Color no encontrado con el ID: " + id);
-        }
-        colorRepository.deleteById(id);
+    public void deleteColor(Integer colorId) {
+        Color color = colorRepository.findById(colorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Color no encontrado con el ID: " + colorId));
+        colorRepository.delete(color);
     }
 }

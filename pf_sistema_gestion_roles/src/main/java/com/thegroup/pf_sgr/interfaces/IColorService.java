@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface IColorService {
     List<Color> getAllColors();
-    Color getColorById(Integer id);
+    Color getColorById(Integer colorId);
     Color saveColor(Color color);
-    void deleteColor(Integer id);
+    void deleteColor(Integer colorId);
 }

@@ -6,12 +6,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
-import com.thegroup.pf_sgr.interfaces.product.IProductService;
+import com.thegroup.pf_sgr.interfaces.IProductService;
 import com.thegroup.pf_sgr.model.Product;
 import com.thegroup.pf_sgr.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
     
@@ -19,14 +21,15 @@ public class ProductService implements IProductService {
 
     @Override
     public Page<Product> getAllProductsPaginated(int page, int size, String sortDirection) {
-        Sort sort = "asc".equalsIgnoreCase(sortDirection) ? Sort.by("price").ascending() : Sort.by("price").descending();
+        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+        Sort sort = Sort.by(direction, "price");
         return productRepository.findAll(PageRequest.of(page, size, sort));
     }
 
     @Override
-    public Product getProductById(Integer id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + id));
+    public Product getProductById(Integer productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + productId));
     }
 
     @Override
@@ -38,9 +41,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product updateProduct(Integer id, Product updatedProduct) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + id));
+    public Product updateProduct(Integer productId, Product updatedProduct) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + productId));
 
         product.setName(updatedProduct.getName());
         product.setPrice(updatedProduct.getPrice());
@@ -48,38 +51,32 @@ public class ProductService implements IProductService {
         product.setIsFeatured(updatedProduct.getIsFeatured());
         product.setDiscountPercentage(updatedProduct.getDiscountPercentage());
         product.setCategory(updatedProduct.getCategory());
-        product.setTags(updatedProduct.getTags());
         
-        if (updatedProduct.getVariants() != null) {
-            updatedProduct.getVariants().forEach(variant -> variant.setProduct(product));
-            product.getVariants().clear();
-            product.getVariants().addAll(updatedProduct.getVariants());
-        }
         return productRepository.save(product);
     }
 
     @Override
-    public void deactivateProduct(Integer id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + id));
+    public void deactivateProduct(Integer productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + productId));
         product.setIsActive(false);
         productRepository.save(product);
     }
 
     @Override
-    public void activateProduct(Integer id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + id));
+    public void activateProduct(Integer productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + productId));
         product.setIsActive(true);
         productRepository.save(product);
     }
     
     @Override
-    public void deleteProduct(Integer id) {
-        if (!productRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Producto no encontrado con el ID: " + id);
-        }
-        productRepository.deleteById(id);
+    public void deleteProduct(Integer productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + productId));
+        
+        productRepository.delete(product);
     }
 
     @Override

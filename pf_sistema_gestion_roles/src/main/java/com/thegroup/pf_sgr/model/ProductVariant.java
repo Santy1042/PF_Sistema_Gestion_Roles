@@ -26,7 +26,7 @@ public class ProductVariant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_variant")
-    private Integer id;
+    private Integer variantId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_product", nullable = false) 

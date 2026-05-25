@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ITagService {
     List<Tag> getAllTags();
-    Tag getTagById(Integer id);
+    Tag getTagById(Integer tagId);
     Tag saveTag(Tag tag);
-    void deleteTag(Integer id);
+    void deleteTag(Integer tagId);
 }
