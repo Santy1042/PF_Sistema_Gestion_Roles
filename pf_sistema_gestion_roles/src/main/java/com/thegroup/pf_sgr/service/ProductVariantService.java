@@ -48,6 +48,10 @@ public class ProductVariantService implements IProductVariantService {
             if (updatedVariant.getColor() != null) {
                 variant.setColor(updatedVariant.getColor());
             }
+            if (updatedVariant.getImageUrl() != null) {
+                variant.setImageUrl(updatedVariant.getImageUrl());
+            }
+            
             variant.setStock(updatedVariant.getStock());
             variant.setIsActive(updatedVariant.getIsActive());
             
