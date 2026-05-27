@@ -1,7 +1,7 @@
-package com.thegroup.controller;
+package com.thegroup.pf_sgr.controller;
 
-import com.thegroup.model.User;
-import com.thegroup.service.UserService;
+import com.thegroup.pf_sgr.model.User;
+import com.thegroup.pf_sgr.service.UserService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,11 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    private UserService userService = new UserService();
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public List<User> getUsers() {
@@ -37,7 +41,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public boolean updateUser(@PathVariable Long id,
+    public User updateUser(@PathVariable Long id,
     @RequestBody User updatedUser) {
 
     return userService.updateUser(id, updatedUser);
