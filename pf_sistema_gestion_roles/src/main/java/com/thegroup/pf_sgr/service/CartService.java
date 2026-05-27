@@ -1,6 +1,5 @@
 package com.thegroup.pf_sgr.service;
 
-import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.ICartService;
 import com.thegroup.pf_sgr.model.Cart;
 import com.thegroup.pf_sgr.model.CartItem;
@@ -13,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -40,7 +40,7 @@ public class CartService implements ICartService {
         Cart cart = getOrCreateCart(userId);
         
         ProductVariant variant = productVariantRepository.findById(productVariantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Variante de producto no encontrada"));
+                .orElseThrow(() -> new NoSuchElementException("Variante de producto no encontrada"));
 
         Optional<CartItem> existingItem = cart.getItems().stream()
                 .filter(item -> item.getProductVariant().getVariantId().equals(productVariantId))
@@ -62,12 +62,12 @@ public class CartService implements ICartService {
     @Override
     public Cart updateItemQuantity(Long cartId, Long itemCartId, Integer quantity) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
+                .orElseThrow(() -> new NoSuchElementException("Carrito no encontrado"));
 
         CartItem item = cart.getItems().stream()
                 .filter(i -> i.getItemCartId().equals(itemCartId))
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Ítem no encontrado en el carrito"));
+                .orElseThrow(() -> new NoSuchElementException("Ítem no encontrado en el carrito"));
 
         if (quantity <= 0) {
             cart.getItems().remove(item);
@@ -81,7 +81,7 @@ public class CartService implements ICartService {
     @Override
     public Cart removeItemFromCart(Long cartId, Long itemCartId) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
+                .orElseThrow(() -> new NoSuchElementException("Carrito no encontrado"));
 
         cart.getItems().removeIf(item -> item.getItemCartId().equals(itemCartId));
         return cartRepository.save(cart);
@@ -90,7 +90,7 @@ public class CartService implements ICartService {
     @Override
     public void clearCart(Long cartId) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
+                .orElseThrow(() -> new NoSuchElementException("Carrito no encontrado"));
         cart.getItems().clear();
         cartRepository.save(cart);
     }
@@ -105,7 +105,7 @@ public class CartService implements ICartService {
             
             if (variantId != null && quantity != null) {
                 ProductVariant variant = productVariantRepository.findById(variantId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada: " + variantId));
+                        .orElseThrow(() -> new NoSuchElementException("Variante no encontrada: " + variantId));
                         
                 Optional<CartItem> existingItem = cart.getItems().stream()
                         .filter(item -> item.getProductVariant().getVariantId().equals(variantId))

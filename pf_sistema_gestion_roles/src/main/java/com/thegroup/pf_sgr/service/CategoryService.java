@@ -1,6 +1,5 @@
 package com.thegroup.pf_sgr.service;
 
-import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.ICategoryService;
 import com.thegroup.pf_sgr.model.Category;
 import com.thegroup.pf_sgr.repository.CategoryRepository;
@@ -8,6 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -24,7 +24,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public Category getCategoryById(Integer categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con el ID: " + categoryId));
+                .orElseThrow(() -> new NoSuchElementException("Categoría no encontrada con el ID: " + categoryId));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public void deleteCategory(Integer categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con el ID: " + categoryId));
+                .orElseThrow(() -> new NoSuchElementException("Categoría no encontrada con el ID: " + categoryId));
         categoryRepository.delete(category);
     }
 }

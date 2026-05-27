@@ -1,10 +1,11 @@
 package com.thegroup.pf_sgr.service;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.IProductVariantService;
 import com.thegroup.pf_sgr.model.ProductVariant;
 import com.thegroup.pf_sgr.repository.ProductVariantRepository;
@@ -28,7 +29,7 @@ public class ProductVariantService implements IProductVariantService {
     @Override
     public ProductVariant getVariantById(Integer variantId) {
         return productVariantRepository.findById(variantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + variantId));
+                .orElseThrow(() -> new NoSuchElementException("Variante no encontrada con el ID: " + variantId));
     }
 
     @Override
@@ -39,7 +40,7 @@ public class ProductVariantService implements IProductVariantService {
     @Override
     public ProductVariant updateVariant(Integer variantId, ProductVariant updatedVariant) {
         ProductVariant variant = productVariantRepository.findById(variantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + variantId));
+                .orElseThrow(() -> new NoSuchElementException("Variante no encontrada con el ID: " + variantId));
 
         if (updatedVariant.getProduct() != null) variant.setProduct(updatedVariant.getProduct());
         if (updatedVariant.getSize() != null) variant.setSize(updatedVariant.getSize());
@@ -55,7 +56,7 @@ public class ProductVariantService implements IProductVariantService {
     @Override
     public void deactivateVariant(Integer variantId) {
         ProductVariant variant = productVariantRepository.findById(variantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + variantId));
+                .orElseThrow(() -> new NoSuchElementException("Variante no encontrada con el ID: " + variantId));
         variant.setIsActive(false);
         productVariantRepository.save(variant);
     }
@@ -63,7 +64,7 @@ public class ProductVariantService implements IProductVariantService {
     @Override
     public void activateVariant(Integer variantId) {
         ProductVariant variant = productVariantRepository.findById(variantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + variantId));
+                .orElseThrow(() -> new NoSuchElementException("Variante no encontrada con el ID: " + variantId));
         variant.setIsActive(true);
         productVariantRepository.save(variant);
     }
@@ -71,7 +72,7 @@ public class ProductVariantService implements IProductVariantService {
     @Override
     public void deleteVariant(Integer variantId) {
         ProductVariant variant = productVariantRepository.findById(variantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + variantId));
+                .orElseThrow(() -> new NoSuchElementException("Variante no encontrada con el ID: " + variantId));
         productVariantRepository.delete(variant);
     }
 }

@@ -1,6 +1,5 @@
 package com.thegroup.pf_sgr.service;
 
-import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.IColorService;
 import com.thegroup.pf_sgr.model.Color;
 import com.thegroup.pf_sgr.repository.ColorRepository;
@@ -8,6 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -24,7 +24,7 @@ public class ColorService implements IColorService {
     @Override
     public Color getColorById(Integer colorId) {
         return colorRepository.findById(colorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Color no encontrado con el ID: " + colorId));
+                .orElseThrow(() -> new NoSuchElementException("Color no encontrado con el ID: " + colorId));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ColorService implements IColorService {
     @Override
     public void deleteColor(Integer colorId) {
         Color color = colorRepository.findById(colorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Color no encontrado con el ID: " + colorId));
+                .orElseThrow(() -> new NoSuchElementException("Color no encontrado con el ID: " + colorId));
         colorRepository.delete(color);
     }
 }
