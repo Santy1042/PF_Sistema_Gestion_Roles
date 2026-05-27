@@ -1,10 +1,10 @@
 package com.thegroup.pf_sgr.service;
 
 import com.thegroup.pf_sgr.interfaces.IAdminService;
-import com.thegroup.pf_sgr.interfaces.PerfilResponse;
-import com.thegroup.pf_sgr.model.Rol;
-import com.thegroup.pf_sgr.model.Usuario;
-import com.thegroup.pf_sgr.repository.UsuarioRepository;
+import com.thegroup.pf_sgr.interfaces.ProfileResponse;
+import com.thegroup.pf_sgr.model.Role;
+import com.thegroup.pf_sgr.model.User;
+import com.thegroup.pf_sgr.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -16,53 +16,51 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminServiceImpl implements IAdminService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public List<PerfilResponse> listarUsuarios() {
-        return usuarioRepository.findAll().stream()
-                .map(usuario -> PerfilResponse.builder()
-                        .id(usuario.getId())
-                        .nombre(usuario.getNombre())
-                        .correo(usuario.getCorreo())
-                        .rol(usuario.getRol())
-                        .build())
+    public List<ProfileResponse> listUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new ProfileResponse(
+                        user.getId(),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getRole()))
                 .toList();
     }
 
     @Override
-    public PerfilResponse cambiarRol(Long id, Map<String, String> body) {
-        Usuario usuario = usuarioRepository.findById(id)
+    public ProfileResponse changeRole(Long id, Map<String, String> body) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        String nuevoRol = body.get("rol");
-        validarRol(nuevoRol);
+        String requestedRole = body.get("rol");
+        validateRole(requestedRole);
 
-        usuario.setRol(Rol.valueOf(nuevoRol));
-        usuario = usuarioRepository.save(usuario);
+        user.setRole(Role.valueOf(requestedRole));
+        user = userRepository.save(user);
 
-        return PerfilResponse.builder()
-                .id(usuario.getId())
-                .nombre(usuario.getNombre())
-                .correo(usuario.getCorreo())
-                .rol(usuario.getRol())
-                .build();
+        return new ProfileResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole());
     }
 
     @Override
-    public String eliminarUsuario(Long id) {
-        Usuario usuario = usuarioRepository.findById(id)
+    public String deleteUser(Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        usuarioRepository.deleteById(id);
-        return "Usuario " + usuario.getNombre() + " eliminado exitosamente";
+        userRepository.deleteById(id);
+        return "Usuario " + user.getName() + " eliminado exitosamente";
     }
 
-    private void validarRol(String rol) {
+    private void validateRole(String requestedRole) {
         try {
-            Rol.valueOf(rol);
+            Role.valueOf(requestedRole);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Rol inválido: " + rol);
+            throw new IllegalArgumentException("Rol inválido: " + requestedRole);
         }
     }
 }

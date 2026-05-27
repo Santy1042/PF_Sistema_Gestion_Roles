@@ -4,9 +4,9 @@ import com.thegroup.pf_sgr.interfaces.AuthResponse;
 import com.thegroup.pf_sgr.interfaces.IAuthService;
 import com.thegroup.pf_sgr.interfaces.LoginRequest;
 import com.thegroup.pf_sgr.interfaces.RegisterRequest;
-import com.thegroup.pf_sgr.model.Rol;
-import com.thegroup.pf_sgr.model.Usuario;
-import com.thegroup.pf_sgr.repository.UsuarioRepository;
+import com.thegroup.pf_sgr.model.Role;
+import com.thegroup.pf_sgr.model.User;
+import com.thegroup.pf_sgr.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,51 +18,52 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements IAuthService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
 
     @Override
     public AuthResponse register(RegisterRequest request) {
-        validarCorreoUnico(request.getCorreo());
-        
-        Usuario usuario = Usuario.builder()
-                .nombre(request.getNombre())
-                .correo(request.getCorreo())
-                .contrasena(passwordEncoder.encode(request.getContrasena()))
-                .rol(Rol.USUARIO)
-                .build();
+        validateUniqueEmail(request.getEmail());
 
-        usuario = usuarioRepository.save(usuario);
-        String token = jwtProvider.generateToken(usuario);
+        User user = new User(
+                null,
+                request.getName(),
+                request.getEmail(),
+                passwordEncoder.encode(request.getPassword()),
+                Role.USER
+        );
 
-        return AuthResponse.builder()
-                .token(token)
-                .rol(usuario.getRol())
-                .nombre(usuario.getNombre())
-                .correo(usuario.getCorreo())
-                .build();
+        user = userRepository.save(user);
+        String token = jwtProvider.generateToken(user);
+
+        return new AuthResponse(
+                token,
+                user.getRole(),
+                user.getName(),
+                user.getEmail()
+        );
     }
 
     @Override
     public AuthResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getCorreo(),
-                        request.getContrasena()
+                        request.getEmail(),
+                        request.getPassword()
                 )
         );
 
-        Usuario usuario = (Usuario) authentication.getPrincipal();
-        String token = jwtProvider.generateToken(usuario);
+        User user = (User) authentication.getPrincipal();
+        String token = jwtProvider.generateToken(user);
 
-        return AuthResponse.builder()
-                .token(token)
-                .rol(usuario.getRol())
-                .nombre(usuario.getNombre())
-                .correo(usuario.getCorreo())
-                .build();
+        return new AuthResponse(
+                token,
+                user.getRole(),
+                user.getName(),
+                user.getEmail()
+        );
     }
 
     @Override
@@ -70,8 +71,8 @@ public class AuthServiceImpl implements IAuthService {
         return "Logout exitoso";
     }
 
-    private void validarCorreoUnico(String correo) {
-        if (usuarioRepository.existsByCorreo(correo)) {
+    private void validateUniqueEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("El correo ya está registrado");
         }
     }
