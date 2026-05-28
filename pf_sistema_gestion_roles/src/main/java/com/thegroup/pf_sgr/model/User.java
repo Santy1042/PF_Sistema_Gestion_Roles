@@ -46,7 +46,7 @@ public class User implements UserDetails {
     private String password;
 
     @Convert(converter = RoleConverter.class)
-    @Column(name = "id_role", nullable = false)
+    @Column(name = "id_role", nullable = false, columnDefinition = "integer")
     private Role role;
 
     @Column(name = "is_active")

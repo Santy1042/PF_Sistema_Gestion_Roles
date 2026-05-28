@@ -2,16 +2,16 @@ package com.thegroup.pf_sgr.service;
 
 import com.thegroup.pf_sgr.dto.ProfileRequest;
 import com.thegroup.pf_sgr.dto.ProfileResponse;
+import com.thegroup.pf_sgr.interfaces.IProfileService;
 import com.thegroup.pf_sgr.model.User;
 import com.thegroup.pf_sgr.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class ProfileService {
+public class ProfileService implements IProfileService {
 
     private final UserRepository userRepository;
 

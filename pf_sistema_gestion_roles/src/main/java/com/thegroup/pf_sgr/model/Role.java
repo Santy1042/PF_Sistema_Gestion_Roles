@@ -1,25 +1,29 @@
 package com.thegroup.pf_sgr.model;
 
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+
 public enum Role {
-    USER("USUARIO"),
-    ADMIN("ADMIN");
+    ADMIN,
+    USER
+}
 
-    private final String dbValue;
+@Converter(autoApply = true)
+class RoleConverter implements AttributeConverter<Role, Integer> {
 
-    Role(String dbValue) {
-        this.dbValue = dbValue;
+    @Override
+    public Integer convertToDatabaseColumn(Role role) {
+        if (role == null) return null;
+        if (role == Role.ADMIN) return 1;
+        if (role == Role.USER) return 2;
+        return 2;
     }
 
-    public String getDbValue() {
-        return dbValue;
-    }
-
-    public static Role fromDbValue(String dbValue) {
-        for (Role role : values()) {
-            if (role.dbValue.equalsIgnoreCase(dbValue)) {
-                return role;
-            }
-        }
-        throw new IllegalArgumentException("Unknown role: " + dbValue);
+    @Override
+    public Role convertToEntityAttribute(Integer dbData) {
+        if (dbData == null) return null;
+        if (dbData == 1) return Role.ADMIN;
+        if (dbData == 2) return Role.USER;
+        return Role.USER;
     }
 }

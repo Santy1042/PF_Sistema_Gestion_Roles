@@ -3,6 +3,7 @@ package com.thegroup.pf_sgr.service;
 import com.thegroup.pf_sgr.dto.AuthResponse;
 import com.thegroup.pf_sgr.dto.LoginRequest;
 import com.thegroup.pf_sgr.dto.RegisterRequest;
+import com.thegroup.pf_sgr.interfaces.IAuthService;
 import com.thegroup.pf_sgr.model.Role;
 import com.thegroup.pf_sgr.model.User;
 import com.thegroup.pf_sgr.repository.UserRepository;
@@ -12,12 +13,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService implements IAuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
