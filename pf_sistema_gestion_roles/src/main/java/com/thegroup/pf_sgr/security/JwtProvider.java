@@ -1,4 +1,4 @@
-package com.thegroup.pf_sgr.service;
+package com.thegroup.pf_sgr.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

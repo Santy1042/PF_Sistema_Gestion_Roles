@@ -1,9 +1,9 @@
 package com.thegroup.pf_sgr.controller;
 
-import com.thegroup.pf_sgr.interfaces.AuthResponse;
-import com.thegroup.pf_sgr.interfaces.IAuthService;
-import com.thegroup.pf_sgr.interfaces.LoginRequest;
-import com.thegroup.pf_sgr.interfaces.RegisterRequest;
+import com.thegroup.pf_sgr.dto.AuthResponse;
+import com.thegroup.pf_sgr.dto.LoginRequest;
+import com.thegroup.pf_sgr.dto.RegisterRequest;
+import com.thegroup.pf_sgr.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final IAuthService authService;
+    private final AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
@@ -28,6 +28,6 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
-        return ResponseEntity.ok(authService.logout());
+        return ResponseEntity.ok("Logout exitoso.");
     }
 }

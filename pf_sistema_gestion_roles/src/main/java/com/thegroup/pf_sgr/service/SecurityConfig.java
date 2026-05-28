@@ -17,6 +17,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.thegroup.pf_sgr.security.JwtAuthenticationFilter;
+
 import java.util.Arrays;
 import java.util.Collections;
 
