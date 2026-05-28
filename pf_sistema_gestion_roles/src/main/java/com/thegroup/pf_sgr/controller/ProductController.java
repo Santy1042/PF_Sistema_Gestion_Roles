@@ -2,12 +2,14 @@ package com.thegroup.pf_sgr.controller;
 
 import org.springframework.web.bind.annotation.*;
 import com.thegroup.pf_sgr.interfaces.IProductService;
-import com.thegroup.pf_sgr.model.Product;
+import com.thegroup.pf_sgr.dto.ProductRequest;
+import com.thegroup.pf_sgr.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/products")
@@ -16,47 +18,61 @@ public class ProductController {
 
     private final IProductService productService;
 
-    @GetMapping("/getAllProducts")
-    public ResponseEntity<Page<Product>> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "desc") String sortDirection) {
+    @GetMapping
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page, 
+            @RequestParam(defaultValue = "10") int size, 
+            @RequestParam(defaultValue = "desc") String sortDirection) {
         return ResponseEntity.ok(productService.getAllProductsPaginated(page, size, sortDirection));
     }
 
-    @GetMapping("/getProductById")
-    public ResponseEntity<Product> getProductById(@RequestParam Integer productId) {
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Integer productId) {
         return ResponseEntity.ok(productService.getProductById(productId));
     }
 
-    @PostMapping("/createProduct")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProductResponse>> searchProducts(
+            @RequestParam String name,
+            @RequestParam(defaultValue = "0") int page, 
+            @RequestParam(defaultValue = "10") int size) {
+        Page<ProductResponse> products = productService.searchProductByName(name, page, size);
+        return products.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(products);
+    }
+
+    // 🛡️ Rutas Protegidas (Solo ADMIN)
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest product) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
     }
 
-    @PutMapping("/updateProduct")
-    public ResponseEntity<Product> updateProduct(@RequestParam Integer productId, @RequestBody Product updatedProduct) {
+    @PutMapping("/{productId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ProductResponse> updateProduct(
+            @PathVariable Integer productId, 
+            @Valid @RequestBody ProductRequest updatedProduct) {
         return ResponseEntity.ok(productService.updateProduct(productId, updatedProduct));
     }
 
-    @DeleteMapping("/deactivateProduct")
-    public ResponseEntity<Void> deactivateProduct(@RequestParam Integer productId) {
+    @PatchMapping("/{productId}/deactivate")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deactivateProduct(@PathVariable Integer productId) {
         productService.deactivateProduct(productId);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/activateProduct")
-    public ResponseEntity<Void> activateProduct(@RequestParam Integer productId) {
+    @PatchMapping("/{productId}/activate")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> activateProduct(@PathVariable Integer productId) {
         productService.activateProduct(productId);
         return ResponseEntity.noContent().build();
     } 
 
-    @DeleteMapping("/deleteProduct")
-    public ResponseEntity<Void> deleteProduct(@RequestParam Integer productId) {
+    @DeleteMapping("/{productId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/searchByName")
-    public ResponseEntity<List<Product>> searchProducts(@RequestParam String name) {
-        List<Product> products = productService.searchProductByName(name);
-        return products.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(products);
     }
 }
