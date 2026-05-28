@@ -1,8 +1,9 @@
 package com.thegroup.pf_sgr.controller;
 
+import com.thegroup.pf_sgr.dto.ProfileRequest;
+import com.thegroup.pf_sgr.dto.ProfileResponse;
 import com.thegroup.pf_sgr.interfaces.IProfileService;
-import com.thegroup.pf_sgr.interfaces.ProfileRequest;
-import com.thegroup.pf_sgr.interfaces.ProfileResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,7 +23,7 @@ public class ProfileController {
     }
 
     @PutMapping
-    public ResponseEntity<ProfileResponse> updateProfile(Authentication authentication, @RequestBody ProfileRequest request) {
+    public ResponseEntity<ProfileResponse> updateProfile(Authentication authentication, @Valid @RequestBody ProfileRequest request) {
         String email = authentication.getName();
         return ResponseEntity.ok(profileService.updateProfile(email, request));
     }

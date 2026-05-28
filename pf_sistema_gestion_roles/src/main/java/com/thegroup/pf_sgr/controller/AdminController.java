@@ -1,7 +1,7 @@
 package com.thegroup.pf_sgr.controller;
 
+import com.thegroup.pf_sgr.dto.ProfileResponse;
 import com.thegroup.pf_sgr.interfaces.IAdminService;
-import com.thegroup.pf_sgr.interfaces.ProfileResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
