@@ -1,5 +1,6 @@
 package com.thegroup.pf_sgr.service;
 
+import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.ITagService;
 import com.thegroup.pf_sgr.model.Tag;
 import com.thegroup.pf_sgr.repository.TagRepository;
@@ -7,7 +8,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -24,7 +24,7 @@ public class TagService implements ITagService {
     @Override
     public Tag getTagById(Integer tagId) {
         return tagRepository.findById(tagId)
-                .orElseThrow(() -> new NoSuchElementException("Tag no encontrada con el ID: " + tagId));
+                .orElseThrow(() -> new ResourceNotFoundException("Tag no encontrada con el ID: " + tagId));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class TagService implements ITagService {
     @Override
     public void deleteTag(Integer tagId) {
         Tag tag = tagRepository.findById(tagId)
-                .orElseThrow(() -> new NoSuchElementException("Tag no encontrada con el ID: " + tagId));
+                .orElseThrow(() -> new ResourceNotFoundException("Tag no encontrada con el ID: " + tagId));
         tagRepository.delete(tag);
     }
 }

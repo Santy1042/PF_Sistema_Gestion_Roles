@@ -1,10 +1,17 @@
 package com.thegroup.pf_sgr.controller;
 
+import com.thegroup.pf_sgr.dto.CartItemRequest;
+import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.ICartService;
 import com.thegroup.pf_sgr.model.Cart;
+import com.thegroup.pf_sgr.model.User;
+import com.thegroup.pf_sgr.repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,35 +21,49 @@ import java.util.Map;
 public class CartController {
 
     private final ICartService cartService;
+    private final UserRepository userRepository;
+
+    private Long getAuthenticatedUserId(Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        return user.getIdUser(); 
+    }
 
     @GetMapping("/getCart")
-    public ResponseEntity<Cart> getCart(@RequestParam Long userId) {
+    public ResponseEntity<Cart> getCart(Authentication authentication) {
+        Long userId = getAuthenticatedUserId(authentication);
         return ResponseEntity.ok(cartService.getOrCreateCart(userId));
     }
 
     @PostMapping("/addItemToCart")
-    public ResponseEntity<Cart> addItemToCart(@RequestParam Long userId, @RequestParam Integer productVariantId, @RequestParam Integer quantity) {
+    public ResponseEntity<Cart> addItemToCart(Authentication authentication, @RequestParam Integer productVariantId, @RequestParam Integer quantity) {
+        Long userId = getAuthenticatedUserId(authentication);
         return ResponseEntity.ok(cartService.addItemToCart(userId, productVariantId, quantity));
     }
 
     @PutMapping("/updateItemQuantity")
-    public ResponseEntity<Cart> updateItemQuantity(@RequestParam Long cartId, @RequestParam Long itemCartId, @RequestParam Integer quantity) {
-        return ResponseEntity.ok(cartService.updateItemQuantity(cartId, itemCartId, quantity));
+    public ResponseEntity<Cart> updateItemQuantity(Authentication authentication, @RequestParam Long itemCartId, @RequestParam Integer quantity) {
+        Long userId = getAuthenticatedUserId(authentication);
+        return ResponseEntity.ok(cartService.updateItemQuantity(userId, itemCartId, quantity));
     }
 
     @DeleteMapping("/removeItemFromCart")
-    public ResponseEntity<Cart> removeItem(@RequestParam Long cartId, @RequestParam Long itemCartId) {
-        return ResponseEntity.ok(cartService.removeItemFromCart(cartId, itemCartId));
+    public ResponseEntity<Cart> removeItem(Authentication authentication, @RequestParam Long itemCartId) {
+        Long userId = getAuthenticatedUserId(authentication);
+        return ResponseEntity.ok(cartService.removeItemFromCart(userId, itemCartId));
     }
 
     @DeleteMapping("/clearCart")
-    public ResponseEntity<Map<String, String>> clearCart(@RequestParam Long cartId) {
-        cartService.clearCart(cartId);
+    public ResponseEntity<Map<String, String>> clearCart(Authentication authentication) {
+        Long userId = getAuthenticatedUserId(authentication);
+        cartService.clearCart(userId);
         return ResponseEntity.ok(Map.of("message", "Carrito vaciado correctamente"));
     }
 
     @PostMapping("/syncCart")
-    public ResponseEntity<Cart> syncCart( @RequestParam Long userId, @RequestBody List<Map<String, Integer>> frontendItems) {
+    public ResponseEntity<Cart> syncCart(Authentication authentication, @Valid @RequestBody List<CartItemRequest> frontendItems) {
+        Long userId = getAuthenticatedUserId(authentication);
         return ResponseEntity.ok(cartService.syncCart(userId, frontendItems));
     }
 }

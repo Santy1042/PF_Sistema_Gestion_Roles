@@ -1,14 +1,13 @@
 package com.thegroup.pf_sgr.interfaces;
 
 import com.thegroup.pf_sgr.dto.ProfileResponse;
+import com.thegroup.pf_sgr.dto.RoleChangeRequest;
 
 import java.util.List;
-import java.util.Map;
 
 public interface IAdminService {
     
     List<ProfileResponse> listUsers();
-    ProfileResponse changeRole(Long id, Map<String, String> body);
+    ProfileResponse changeRole(Long id, RoleChangeRequest request);
     String deleteUser(Long id);
-    
 }

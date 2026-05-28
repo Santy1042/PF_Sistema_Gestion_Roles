@@ -17,7 +17,7 @@ import java.util.function.Function;
 @Service
 public class JwtProvider {
 
-    @Value("${jwt.secret:mySecretKeyForJwtTokenGenerationAndValidationForPfSgrProject}")
+    @Value("${jwt.secret}")
     private String secretKey;
 
     @Value("${jwt.expiration:86400000}")

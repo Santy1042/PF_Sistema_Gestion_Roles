@@ -42,9 +42,6 @@ public class User implements UserDetails {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(name = "password", nullable = false, length = 100)
-    private String password;
-
     @Convert(converter = RoleConverter.class)
     @Column(name = "id_role", nullable = false, columnDefinition = "integer")
     private Role role;

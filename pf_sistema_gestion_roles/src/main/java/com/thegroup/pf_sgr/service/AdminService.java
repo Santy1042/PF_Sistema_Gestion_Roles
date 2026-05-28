@@ -1,6 +1,7 @@
 package com.thegroup.pf_sgr.service;
 
 import com.thegroup.pf_sgr.dto.ProfileResponse;
+import com.thegroup.pf_sgr.dto.RoleChangeRequest;
 import com.thegroup.pf_sgr.interfaces.IAdminService;
 import com.thegroup.pf_sgr.model.Role;
 import com.thegroup.pf_sgr.model.User;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
@@ -32,11 +32,11 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public ProfileResponse changeRole(Long id, Map<String, String> body) {
+    public ProfileResponse changeRole(Long id, RoleChangeRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
 
-        String requestedRole = body.get("role");
+        String requestedRole = request.getRole();
         validateRole(requestedRole);
 
         user.setRole(Role.valueOf(requestedRole.toUpperCase()));
@@ -62,7 +62,6 @@ public class AdminService implements IAdminService {
 
     private void validateRole(String requestedRole) {
         try {
-            if (requestedRole == null) throw new IllegalArgumentException();
             Role.valueOf(requestedRole.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Rol inválido: " + requestedRole);

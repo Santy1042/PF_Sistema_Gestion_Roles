@@ -1,12 +1,11 @@
 package com.thegroup.pf_sgr.service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.IProductService;
 import com.thegroup.pf_sgr.model.Product;
 import com.thegroup.pf_sgr.repository.ProductRepository;
@@ -30,7 +29,7 @@ public class ProductService implements IProductService {
     @Override
     public Product getProductById(Integer productId) {
         return productRepository.findById(productId)
-                .orElseThrow(() -> new NoSuchElementException("Producto no encontrado con el ID: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + productId));
     }
 
     @Override
@@ -44,7 +43,7 @@ public class ProductService implements IProductService {
     @Override
     public Product updateProduct(Integer productId, Product updatedProduct) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoSuchElementException("Producto no encontrado con el ID: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + productId));
 
         product.setName(updatedProduct.getName());
         product.setPrice(updatedProduct.getPrice());
@@ -59,7 +58,7 @@ public class ProductService implements IProductService {
     @Override
     public void deactivateProduct(Integer productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoSuchElementException("Producto no encontrado con el ID: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + productId));
         product.setIsActive(false);
         productRepository.save(product);
     }
@@ -67,7 +66,7 @@ public class ProductService implements IProductService {
     @Override
     public void activateProduct(Integer productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoSuchElementException("Producto no encontrado con el ID: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + productId));
         product.setIsActive(true);
         productRepository.save(product);
     }
@@ -75,7 +74,7 @@ public class ProductService implements IProductService {
     @Override
     public void deleteProduct(Integer productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoSuchElementException("Producto no encontrado con el ID: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + productId));
         
         productRepository.delete(product);
     }
