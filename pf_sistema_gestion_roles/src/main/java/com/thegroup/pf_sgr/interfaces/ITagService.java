@@ -1,10 +1,10 @@
 package com.thegroup.pf_sgr.interfaces;
 
+import org.springframework.data.domain.Page;
 import com.thegroup.pf_sgr.model.Tag;
-import java.util.List;
 
 public interface ITagService {
-    List<Tag> getAllTags();
+    Page<Tag> getAllTags(int page, int size);
     Tag getTagById(Integer tagId);
     Tag saveTag(Tag tag);
     void deleteTag(Integer tagId);

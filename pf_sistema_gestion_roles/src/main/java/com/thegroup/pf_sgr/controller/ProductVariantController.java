@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/variants")
@@ -26,28 +27,33 @@ public class ProductVariantController {
     }
 
     @PostMapping("/createVariant")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductVariant> createVariant(@RequestBody ProductVariant variant) {
         return ResponseEntity.status(HttpStatus.CREATED).body(variantService.saveVariant(variant));
     }
 
     @PutMapping("/updateVariant")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductVariant> updateVariant(@RequestParam Integer variantId, @RequestBody ProductVariant updatedVariant) {
         return ResponseEntity.ok(variantService.updateVariant(variantId, updatedVariant));
     }
 
     @DeleteMapping("/deactivateVariant")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deactivateVariant(@RequestParam Integer variantId) {
         variantService.deactivateVariant(variantId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/activateVariant")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> activateVariant(@RequestParam Integer variantId) {
         variantService.activateVariant(variantId);
         return ResponseEntity.noContent().build();
     } 
 
     @DeleteMapping("/deleteVariant")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteVariant(@RequestParam Integer variantId) {
         variantService.deleteVariant(variantId);
         return ResponseEntity.noContent().build();

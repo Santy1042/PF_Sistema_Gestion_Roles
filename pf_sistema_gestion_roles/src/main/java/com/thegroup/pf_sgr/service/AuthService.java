@@ -3,6 +3,7 @@ package com.thegroup.pf_sgr.service;
 import com.thegroup.pf_sgr.dto.AuthResponse;
 import com.thegroup.pf_sgr.dto.LoginRequest;
 import com.thegroup.pf_sgr.dto.RegisterRequest;
+import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.IAuthService;
 import com.thegroup.pf_sgr.model.Role;
 import com.thegroup.pf_sgr.model.User;
@@ -13,7 +14,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class AuthService implements IAuthService {
         );
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         String token = jwtProvider.generateToken(user);
         return new AuthResponse(token);

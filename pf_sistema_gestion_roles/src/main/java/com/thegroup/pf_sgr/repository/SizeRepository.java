@@ -6,5 +6,4 @@ import com.thegroup.pf_sgr.model.Size;
 
 @Repository
 public interface SizeRepository extends JpaRepository<Size, Integer> {
-
 }

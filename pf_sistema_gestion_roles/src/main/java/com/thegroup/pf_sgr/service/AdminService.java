@@ -2,15 +2,14 @@ package com.thegroup.pf_sgr.service;
 
 import com.thegroup.pf_sgr.dto.ProfileResponse;
 import com.thegroup.pf_sgr.dto.RoleChangeRequest;
+import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.IAdminService;
 import com.thegroup.pf_sgr.model.Role;
 import com.thegroup.pf_sgr.model.User;
 import com.thegroup.pf_sgr.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +33,7 @@ public class AdminService implements IAdminService {
     @Override
     public ProfileResponse changeRole(Long id, RoleChangeRequest request) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         String requestedRole = request.getRole();
         validateRole(requestedRole);
@@ -54,7 +53,7 @@ public class AdminService implements IAdminService {
     @Override
     public String deleteUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         userRepository.deleteById(id);
         return "Usuario " + user.getFirstName() + " eliminado exitosamente";

@@ -6,8 +6,9 @@ import com.thegroup.pf_sgr.model.Color;
 import com.thegroup.pf_sgr.repository.ColorRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 @Transactional
@@ -17,8 +18,8 @@ public class ColorService implements IColorService {
     private final ColorRepository colorRepository;
 
     @Override
-    public List<Color> getAllColors() {
-        return colorRepository.findAll();
+    public Page<Color> getAllColors(int page, int size) {
+        return colorRepository.findAll(PageRequest.of(page, size));
     }
 
     @Override

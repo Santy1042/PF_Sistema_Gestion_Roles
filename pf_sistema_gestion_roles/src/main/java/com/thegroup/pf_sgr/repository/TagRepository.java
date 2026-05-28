@@ -6,5 +6,4 @@ import com.thegroup.pf_sgr.model.Tag;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Integer> {
-
 }

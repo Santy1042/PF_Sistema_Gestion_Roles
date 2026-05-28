@@ -7,14 +7,15 @@ import org.springframework.stereotype.Service;
 import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.IProductService;
 import com.thegroup.pf_sgr.model.Product;
+import com.thegroup.pf_sgr.model.Tag;
 import com.thegroup.pf_sgr.model.Category;
 import com.thegroup.pf_sgr.dto.ProductRequest;
 import com.thegroup.pf_sgr.dto.ProductResponse;
 import com.thegroup.pf_sgr.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Service
 @Transactional
@@ -31,6 +32,11 @@ public class ProductService implements IProductService {
                 .isActive(product.getIsActive())
                 .isFeatured(product.getIsFeatured())
                 .discountPercentage(product.getDiscountPercentage())
+                .categoryId(product.getCategory() != null ? product.getCategory().getIdCategory() : null)
+                .categoryName(product.getCategory() != null ? product.getCategory().getName() : null)
+                .tags(product.getTags() != null ? 
+                      product.getTags().stream().map(Tag::getName).toList() : 
+                      new ArrayList<>())
                 .build();
     }
 
@@ -56,9 +62,8 @@ public class ProductService implements IProductService {
         product.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
         product.setIsFeatured(request.getIsFeatured() != null ? request.getIsFeatured() : false);
         product.setDiscountPercentage(request.getDiscountPercentage() != null ? request.getDiscountPercentage() : 0);
-        product.setCreatedAt(LocalDate.now()); // Fecha de creación automática
+        product.setCreatedAt(LocalDate.now());
         
-        // Manejo seguro de la Categoría
         if (request.getCategoryId() != null) {
             Category category = new Category();
             category.setIdCategory(request.getCategoryId());
@@ -81,7 +86,6 @@ public class ProductService implements IProductService {
         if(request.getIsFeatured() != null) product.setIsFeatured(request.getIsFeatured());
         if(request.getDiscountPercentage() != null) product.setDiscountPercentage(request.getDiscountPercentage());
         
-        // Manejo seguro de la Categoría al actualizar
         if (request.getCategoryId() != null) {
             Category category = new Category();
             category.setIdCategory(request.getCategoryId());

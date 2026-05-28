@@ -1,10 +1,10 @@
 package com.thegroup.pf_sgr.interfaces;
 
-import com.thegroup.pf_sgr.model.Size;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import com.thegroup.pf_sgr.model.Size; 
 
 public interface ISizeService {
-    List<Size> getAllSizes();
+    Page<Size> getAllSizes(int page, int size);
     Size getSizeById(Integer sizeId);
     Size saveSize(Size size);
     void deleteSize(Integer sizeId);

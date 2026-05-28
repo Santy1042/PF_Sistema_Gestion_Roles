@@ -6,8 +6,9 @@ import com.thegroup.pf_sgr.model.Size;
 import com.thegroup.pf_sgr.repository.SizeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 @Transactional
@@ -17,8 +18,8 @@ public class SizeService implements ISizeService {
     private final SizeRepository sizeRepository;
 
     @Override
-    public List<Size> getAllSizes() {
-        return sizeRepository.findAll();
+    public Page<Size> getAllSizes(int page, int size) {
+        return sizeRepository.findAll(PageRequest.of(page, size));
     }
 
     @Override

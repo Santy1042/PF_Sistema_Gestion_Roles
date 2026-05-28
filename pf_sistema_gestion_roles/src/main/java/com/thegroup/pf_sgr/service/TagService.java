@@ -6,8 +6,9 @@ import com.thegroup.pf_sgr.model.Tag;
 import com.thegroup.pf_sgr.repository.TagRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 @Transactional
@@ -17,8 +18,8 @@ public class TagService implements ITagService {
     private final TagRepository tagRepository;
 
     @Override
-    public List<Tag> getAllTags() {
-        return tagRepository.findAll();
+    public Page<Tag> getAllTags(int page, int size) {
+        return tagRepository.findAll(PageRequest.of(page, size));
     }
 
     @Override
