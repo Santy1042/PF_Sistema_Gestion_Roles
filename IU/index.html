@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda de Ropa -</title>
+  <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- ==================== HEADER Y NAVEGACIÓN ==================== -->
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="img/APOLO_2 (1).png" alt="Logo Tienda de Ropa">
+        <a href="index.html">TIENDA DE ROPA</a>
+      </div>
+    
+      </ul>
+      <div class="nav-auth">
+        <a href="login.html" class="btn btn-secondary">Iniciar Sesión</a>
+        <a href="register.html" class="btn btn-primary">Registrarse</a>
+      </div>
+    </nav>
+  </header>
+
+
+  <section class="hero" id="inicio">
+    <h1>Bienvenido a Tienda de Ropa</h1>
+    <p>Explora nuestro catálogo y descubre las mejores ofertas en ropa, calzado, accesorios y mucho más. ¡Gracias por elegirnos!</p>
+    <div class="hero-buttons">
+ 
+      <a href="register.html" class="btn btn-outline">Crear Cuenta</a>
+    </div>
+  </section>
+
+
+
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Sobre nuestra tienda</h3>
+        <ul>
+          <li><a href="#">Acerca de nosotros</a></li>
+          <li><a href="#">Nuestro equipo</a></li>
+          <li><a href="#">Carreras</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Compra</h3>
+        <ul>
+          <li><a href="#">Catálogo</a></li>
+          <li><a href="#">Ofertas</a></li>
+          <li><a href="#">Nuevos productos</a></li>
+          <li><a href="#">Envío y devoluciones</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Soporte</h3>
+        <ul>
+          <li><a href="#">Contacto</a></li>
+          <li><a href="#">Preguntas frecuentes</a></li>
+          <li><a href="#">Estado del pedido</a></li>
+          <li><a href="#">Garantía</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Privacidad</a></li>
+          <li><a href="#">Términos de servicio</a></li>
+          <li><a href="#">Política de cookies</a></li>
+          <li><a href="#">Declaración de accesibilidad</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026     Tienda de Ropa. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Agregar funcionalidad a los botones (conectar con backend después)
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        if (this.textContent.includes('Agregar al Carrito')) {
+          e.preventDefault();
+          alert('Producto agregado al carrito. Pronto se conectará con el backend.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
