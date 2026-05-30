@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,11 +135,13 @@ public class SaleService implements ISaleService {
                 );
             }
         }
+        List<ProductVariant> variantsToUpdate = new ArrayList<>();
         for (SaleDetail detail : details) {
             ProductVariant variant = detail.getProductVariant();
             variant.setStock(variant.getStock() - detail.getQuantity());
-            productVariantRepository.save(variant);
+            variantsToUpdate.add(variant);
         }
+        productVariantRepository.saveAll(variantsToUpdate);
         sale.setStatus(SaleStatus.PAID);
         sale = saleRepository.save(sale);
 
@@ -175,11 +178,13 @@ public class SaleService implements ISaleService {
             );
         }
         List<SaleDetail> details = saleDetailRepository.findByIdSale(saleId);
+        List<ProductVariant> variantsToUpdate = new ArrayList<>();
         for (SaleDetail detail : details) {
             ProductVariant variant = detail.getProductVariant();
             variant.setStock(variant.getStock() + detail.getQuantity());
-            productVariantRepository.save(variant);
+            variantsToUpdate.add(variant);
         }
+        productVariantRepository.saveAll(variantsToUpdate);
 
         sale.setStatus(SaleStatus.REFUNDED);
         sale = saleRepository.save(sale);

@@ -12,6 +12,7 @@ import com.thegroup.pf_sgr.model.Category;
 import com.thegroup.pf_sgr.dto.ProductRequest;
 import com.thegroup.pf_sgr.dto.ProductResponse;
 import com.thegroup.pf_sgr.repository.ProductRepository;
+import com.thegroup.pf_sgr.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class ProductService implements IProductService {
     
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     private ProductResponse mapToResponse(Product product) {
         return ProductResponse.builder()
@@ -65,8 +67,7 @@ public class ProductService implements IProductService {
         product.setCreatedAt(LocalDate.now());
         
         if (request.getCategoryId() != null) {
-            Category category = new Category();
-            category.setIdCategory(request.getCategoryId());
+            Category category = categoryRepository.getReferenceById(request.getCategoryId());
             product.setCategory(category);
         }
         
@@ -87,8 +88,7 @@ public class ProductService implements IProductService {
         if(request.getDiscountPercentage() != null) product.setDiscountPercentage(request.getDiscountPercentage());
         
         if (request.getCategoryId() != null) {
-            Category category = new Category();
-            category.setIdCategory(request.getCategoryId());
+            Category category = categoryRepository.getReferenceById(request.getCategoryId());
             product.setCategory(category);
         }
         

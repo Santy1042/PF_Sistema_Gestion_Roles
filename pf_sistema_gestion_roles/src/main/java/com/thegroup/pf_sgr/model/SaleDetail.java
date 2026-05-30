@@ -3,13 +3,15 @@ package com.thegroup.pf_sgr.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "sale_details")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

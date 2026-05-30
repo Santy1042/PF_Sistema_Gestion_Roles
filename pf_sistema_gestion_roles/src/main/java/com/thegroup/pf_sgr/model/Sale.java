@@ -3,7 +3,8 @@ package com.thegroup.pf_sgr.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,7 +12,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "sales")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,8 +36,8 @@ public class Sale {
     @Column(name = "total", precision = 10, scale = 2)
     private BigDecimal total;
 
-    @Column(name = "status", length = 50)
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = SaleStatusConverter.class)
+    @Column(name = "id_status", columnDefinition = "integer")
     private SaleStatus status;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
