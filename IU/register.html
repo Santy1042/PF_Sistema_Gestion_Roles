@@ -10,24 +10,19 @@
 <body>
   <div class="auth-container">
     <div class="auth-wrapper">
-      <!-- Panel izquierdo decorativo -->
       <div class="auth-side">
-          <a href="index.html" class="form-tag"><====</a>
-         
-          <h2>Únete a nuestra Shop</h2>
-          <p>Crea tu cuenta en segundos y comienza a disfrutar de los mejores productos y ofertas exclusivas. Es seguro, fácil y completamente gratis.</p>
-          
-          
-            
-         
+        <div class="image-panel">
+          <img src="img/ropa_exibida.jpg" alt="Exhibición de ropa" class="auth-image" />
+        </div>
       </div>
 
-      <!-- Panel derecho — formulario -->
       <div class="form-container">
         <div class="form-header">
-         
-          <h2>Crear Cuenta</h2>
-          <p>Rellena el formulario para comenzar</p>
+          <button type="button" class="btn btn-secondary back-button" onclick="window.location.href='index.html'">← Regresar</button>
+          <div class="form-intro">
+            <h2>Crear Cuenta</h2>
+            <p>Rellena el formulario para comenzar</p>
+          </div>
         </div>
 
         <form id="registerForm">
@@ -108,7 +103,6 @@
   </div>
 
   <script>
-    // Validación del formulario y conexión con backend
     document.getElementById('registerForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
@@ -116,11 +110,9 @@
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
-      const role = document.getElementById('role').value;
       const terms = document.getElementById('registerForm').elements['terms'].checked;
 
-      // Validaciones básicas
-      if (!fullname || !email || !password || !confirmPassword || !role) {
+      if (!fullname || !email || !password || !confirmPassword) {
         alert('Por favor rellena todos los campos');
         return;
       }
@@ -140,13 +132,11 @@
         return;
       }
 
-      // Dividir el nombre completo en firstName y lastName
       const nameParts = fullname.split(' ');
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ') || nameParts[0];
 
       try {
-        // Enviar registro al backend
         const response = await fetch('http://localhost:8080/api/auth/register', {
           method: 'POST',
           headers: {
@@ -168,8 +158,6 @@
 
         const data = await response.json();
         console.log('Registro exitoso:', data);
-        
-        // Redirigir al index después del registro exitoso
         window.location.href = 'index.html';
       } catch (error) {
         console.error('Error:', error);
@@ -177,7 +165,6 @@
       }
     });
 
-    // Validación en tiempo real de contraseñas
     document.getElementById('confirmPassword').addEventListener('blur', function() {
       if (this.value && this.value !== document.getElementById('password').value) {
         this.style.borderColor = 'var(--error)';
@@ -186,15 +173,11 @@
       }
     });
 
-    // Funcionalidad de Google Registration
     document.querySelectorAll('.btn.btn-secondary').forEach(btn => {
       if (btn.textContent.trim() === 'Google') {
         btn.addEventListener('click', function(e) {
           e.preventDefault();
-          // Iniciar el flujo de Google OAuth para registro
           alert('Redirigiendo a Google para registro...\n\nEsta funcionalidad se conectará con tu backend para autenticación segura con Google.');
-          // En producción, aquí irá:
-          // window.location.href = 'http://localhost:8080/api/auth/google/register';
         });
       }
     });

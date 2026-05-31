@@ -10,14 +10,12 @@
 <body>
   <div class="auth-container">
     <div class="auth-wrapper">
-      <!-- Panel izquierdo con imagen -->
       <div class="auth-side">
         <div class="image-panel">
           <img src="img/ropa_exibida.jpg" alt="Exhibición de ropa" class="auth-image" />
         </div>
       </div>
 
-      <!-- Panel derecho — formulario -->
       <div class="form-container">
         <div class="form-header">
           <button type="button" class="btn btn-secondary back-button" onclick="window.location.href='index.html'">← Regresar</button>
@@ -74,7 +72,6 @@
   </div>
 
   <script>
-    // Validación del formulario (conectar con backend después)
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -83,20 +80,14 @@
       
       if (email && password) {
         alert(`Iniciando sesión con: ${email}\n\nPronto se conectará con el backend.`);
-        // Aquí irá la conexión al backend
       }
     });
 
-    // Funcionalidad de Google Login
     document.querySelectorAll('.btn.btn-secondary').forEach(btn => {
       if (btn.textContent.trim() === 'Google') {
         btn.addEventListener('click', function(e) {
           e.preventDefault();
-          // Iniciar el flujo de Google OAuth
-          // En producción, aquí irá: window.location.href = 'tu_backend_url/auth/google'
           alert('Redirigiendo a Google...\n\nEsta funcionalidad se conectará con tu backend para autenticación segura con Google.');
-          // Placeholder para la redirección real
-          // window.location.href = 'http://localhost:8080/api/auth/google';
         });
       }
     });
