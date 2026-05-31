@@ -10,20 +10,21 @@
 <body>
   <div class="auth-container">
     <div class="auth-wrapper">
-      <!-- Panel izquierdo decorativo -->
+      <!-- Panel izquierdo con imagen -->
       <div class="auth-side">
-        <div>
-          <h2>Bienvenido de Vuelta</h2>
-          <p>Accede a tu cuenta para continuar donde lo dejaste. Gestiona tus pedidos, guarda tus productos favoritos y disfruta de ofertas exclusivas.</p>
+        <div class="image-panel">
+          <img src="img/ropa_exibida.jpg" alt="Exhibición de ropa" class="auth-image" />
         </div>
       </div>
 
       <!-- Panel derecho — formulario -->
       <div class="form-container">
         <div class="form-header">
-          <span class="form-tag">Acceso</span>
-          <h2>Iniciar Sesión</h2>
-          <p>Ingresa tus credenciales para continuar</p>
+          <button type="button" class="btn btn-secondary back-button" onclick="window.location.href='index.html'">← Regresar</button>
+          <div class="form-intro">
+            <h2>Iniciar Sesión</h2>
+            <p>Ingresa tus credenciales para continuar</p>
+          </div>
         </div>
 
         <form id="loginForm">
@@ -59,7 +60,9 @@
             <a href="#" class="link">¿Olvidaste tu contraseña?</a>
           </div>
 
-         <a href="index.html"> <button type="submit" class="btn btn-primary form-submit">Entrar</button></a>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary form-submit">Entrar</button>
+          </div>
         </form>
 
         <p class="form-footer">
