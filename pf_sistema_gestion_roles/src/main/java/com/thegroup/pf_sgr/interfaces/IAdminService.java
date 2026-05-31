@@ -10,4 +10,6 @@ public interface IAdminService {
     List<ProfileResponse> listUsers();
     ProfileResponse changeRole(Long id, RoleChangeRequest request);
     String deleteUser(Long id);
+    List<ProfileResponse> searchUsersByName(String name);
+    List<ProfileResponse> searchUsersByEmail(String email);
 }

@@ -31,6 +31,34 @@ public class AdminService implements IAdminService {
     }
 
     @Override
+    public List<ProfileResponse> searchUsersByName(String name) {
+        return userRepository.findByFirstNameContainingIgnoreCase(name)
+            .stream()
+            .map(user -> ProfileResponse.builder()
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .email(user.getEmail())
+                    .phoneNumber(user.getPhoneNumber())
+                    .role(user.getRole().name())
+                    .build())
+            .toList();
+    }
+
+    @Override
+    public List<ProfileResponse> searchUsersByEmail(String email) {
+        return userRepository.findByEmailContainingIgnoreCase(email)
+            .stream()
+            .map(user -> ProfileResponse.builder()
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .email(user.getEmail())
+                    .phoneNumber(user.getPhoneNumber())
+                    .role(user.getRole().name())
+                    .build())
+            .toList();
+    }
+
+    @Override
     public ProfileResponse changeRole(Long id, RoleChangeRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));

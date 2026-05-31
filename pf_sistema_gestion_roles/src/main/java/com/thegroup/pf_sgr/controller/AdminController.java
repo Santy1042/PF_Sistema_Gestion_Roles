@@ -23,6 +23,25 @@ public class AdminController {
     public ResponseEntity<List<ProfileResponse>> listUsers() {
         return ResponseEntity.ok(adminService.listUsers());
     }
+    
+    @GetMapping("/usuarios/buscar/nombre")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ProfileResponse>> searchUsersByName(
+        @RequestParam String nombre) {
+        return ResponseEntity.ok(
+            adminService.searchUsersByName(nombre)
+        );
+    }
+
+    @GetMapping("/usuarios/buscar/email")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ProfileResponse>> searchUsersByEmail(
+        @RequestParam String email) {
+
+        return ResponseEntity.ok(
+            adminService.searchUsersByEmail(email)
+        );
+    }
 
     @PutMapping("/usuarios/{id}/rol")
     @PreAuthorize("hasRole('ADMIN')")
