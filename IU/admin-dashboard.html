@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Admin - Tienda de Ropa</title>
+  <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="sidebar-styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="img/APOLO_2 (1).png" alt="Logo Tienda de Ropa">
+        <a href="index.html">TIENDA DE ROPA</a>
+      </div>
+      <button id="themeToggle" class="btn btn-outline theme-toggle" type="button">Modo oscuro</button>
+      <div class="nav-auth">
+        <a href="profile.html" class="btn btn-secondary">Mi Perfil</a>
+        <a href="login.html" class="btn btn-primary">Cerrar Sesión</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="section">
+    <div class="dashboard-header">
+      <div class="dashboard-intro">
+        <h1>Panel de Administración</h1>
+        <p>Visualiza los datos clave de tu tienda y administra usuarios, productos y ventas desde un solo lugar.</p>
+      </div>
+      <div>
+        <a href="index.html" class="btn btn-outline">Volver al Inicio</a>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <article class="stat-card">
+        <h3>Usuarios activos</h3>
+        <p id=\"activeUsers\">1.245</p>
+        <span>Incluye clientes y administradores</span>
+      </article>
+      <article class=\"stat-card\">
+        <h3>Productos en stock</h3>
+        <p id=\"productsInStock\">8</p>
+        <span>Artículos disponibles</span>
+      </article>
+      <article class=\"stat-card\">
+        <h3>Ingresos totales</h3>
+        <p id=\"totalRevenue\">$3,500</p>
+        <span>Este mes</span>
+      </article>
+      <article class=\"stat-card\">
+        <h3>Inventario bajo</h3>
+        <p id=\"lowStock\">2</p>
+        <span>Menos de 20 unidades</span>
+      </article>
+    </div>
+
+    <div class="dashboard-actions">
+      <article class="action-card">
+        <h3>Acciones rápidas</h3>
+        <p>Accede a las funciones más importantes con un solo clic y mantén el control de tu tienda.</p>
+        <a href="#" class="btn btn-primary">Crear nuevo producto</a>
+        <a href="#" class="btn btn-secondary">Administrar usuarios</a>
+      </article>
+      <article class="action-card">
+        <h3>Resumen de actividades</h3>
+        <p>Visualiza los últimos cambios de producto, pedidos y solicitudes de soporte para mantenerte al día.</p>
+        <a href="#" class="btn btn-primary">Ver reportes</a>
+        <a href="#" class="btn btn-secondary">Ver historial</a>
+      </article>
+    </div>
+
+    <section class="table-panel">
+      <h2 style="margin-bottom: 1rem; color: var(--text-primary);">Últimos usuarios registrados</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Fecha Registro</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Lucía Rojas</td>
+            <td>lucia@example.com</td>
+            <td><span class="tag">Cliente</span></td>
+            <td>2024-05-15</td>
+            <td>Activo</td>
+            <td><a href="profile.html" class="btn btn-outline">Editar</a></td>
+          </tr>
+          <tr>
+            <td>Martín Gómez</td>
+            <td>martin@example.com</td>
+            <td><span class="tag">Admin</span></td>
+            <td>2024-05-10</td>
+            <td>Activo</td>
+            <td><a href="profile.html" class="btn btn-outline">Editar</a></td>
+          </tr>
+          <tr>
+            <td>Valentina Cruz</td>
+            <td>valentina@example.com</td>
+            <td><span class="tag">Cliente</span></td>
+            <td>2024-05-08</td>
+            <td>Inactivo</td>
+            <td><a href="#" class="btn btn-outline">Reactivar</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="table-panel">
+      <h2 style="margin-bottom: 1rem; color: var(--text-primary);">Productos del catalogo</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Camiseta Premium Negro</td>
+            <td>Camisetas</td>
+            <td>$29.99</td>
+            <td>45</td>
+            <td><span class="tag">Disponible</span></td>
+          </tr>
+          <tr>
+            <td>Jeans Clásico Azul</td>
+            <td>Pantalones</td>
+            <td>$59.99</td>
+            <td>32</td>
+            <td><span class="tag">Disponible</span></td>
+          </tr>
+          <tr>
+            <td>Tenis Deportivos Blanco</td>
+            <td>Calzado</td>
+            <td>$89.99</td>
+            <td>15</td>
+            <td><span class="tag">Bajo stock</span></td>
+          </tr>
+          <tr>
+            <td>Chaqueta de Cuero Marrón</td>
+            <td>Chaquetas</td>
+            <td>$129.99</td>
+            <td>8</td>
+            <td><span class="tag">Bajo stock</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="theme-switch.js"></script>
+  <script src="sidebar-manager.js"></script>
+  <script>
+    function verifyAdminToken() {
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        const userToken = prompt('Este panel requiere token de administrador.\\nIngresa tu token (temporal: \"admin123\"):');
+        if (userToken === 'admin123' || userToken === 'token-temporal') {
+          localStorage.setItem('adminToken', userToken);
+        } else if (userToken !== null) {
+          alert('Token inválido. Serás redirigido al inicio.');
+          window.location.href = 'index.html';
+        } else {
+          window.location.href = 'index.html';
+        }
+      }
+    }
+
+    function updateMetrics() {
+      const products = [
+        { id: 1, name: 'Camiseta Premium Negro', price: 29.99, stock: 45 },
+        { id: 2, name: 'Jeans Clásico Azul', price: 59.99, stock: 32 },
+        { id: 3, name: 'Sudadera Gris Comfort', price: 44.99, stock: 28 },
+        { id: 4, name: 'Tenis Deportivos Blanco', price: 89.99, stock: 15 },
+        { id: 5, name: 'Chaqueta de Cuero Marron', price: 129.99, stock: 8 },
+        { id: 6, name: 'Vestido Casual Beige', price: 54.99, stock: 22 },
+        { id: 7, name: 'Gorro de Lana Gris', price: 24.99, stock: 51 },
+        { id: 8, name: 'Bolsa de Mano Negra', price: 79.99, stock: 18 }
+      ];
+
+      const lowStockCount = products.filter(p => p.stock < 20).length;
+      const totalRevenue = products.reduce((sum, p) => sum + (p.price * 15), 0);
+
+      document.getElementById('productsInStock').textContent = products.length;
+      document.getElementById('lowStock').textContent = lowStockCount;
+      document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ',');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      verifyAdminToken();
+      updateMetrics();
+    });
+  </script></body>
+</html>

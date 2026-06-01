@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - Tienda de Ropa</title>
+  <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
+  <link rel="stylesheet" href="styles.css">  <link rel=\"stylesheet\" href=\"sidebar-styles.css\"></head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="img/APOLO_2 (1).png" alt="Logo Tienda de Ropa">
+        <a href="index.html">TIENDA DE ROPA</a>
+      </div>
+      <button id="themeToggle" class="btn btn-outline theme-toggle" type="button">Modo oscuro</button>
+      <div class="nav-auth">
+        <a href="admin-dashboard.html" class="btn btn-secondary">Panel Admin</a>
+        <a href="login.html" class="btn btn-primary">Cerrar Sesión</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="section">
+    <div class="profile-header">
+      <div class="profile-intro">
+        <h1>Mi Perfil</h1>
+        <p>Actualiza tu información personal y ajusta tus datos de usuario directamente desde aquí.</p>
+      </div>
+      <div>
+        <a href="admin-dashboard.html" class="btn btn-outline">Volver al Dashboard</a>
+      </div>
+    </div>
+
+    <div class="profile-page">
+      <section class="profile-panel">
+        <article class="summary-card">
+          <h3>Información de usuario</h3>
+          <p>Modifica tu nombre, correo, teléfono y contraseña. Estos cambios se guardarán cuando termines y envíes el formulario.</p>
+        </article>
+
+        <article class="profile-panel">
+          <form id="profileForm">
+            <div class="form-group">
+              <label for="fullname">Nombre completo</label>
+              <input type="text" id="fullname" name="fullname" value="Ana Torres" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input type="email" id="email" name="email" value="ana.torres@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Teléfono</label>
+              <input type="tel" id="phone" name="phone" value="+56 9 8765 4321">
+            </div>
+            <div class="form-group">
+              <label for="address">Dirección</label>
+              <textarea id="address" name="address">Calle Falsa 123, Santiago</textarea>
+            </div>
+            <div class="form-group">
+              <label for="currentPassword">Contraseña actual</label>
+              <input type="password" id="currentPassword" name="currentPassword" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label for="newPassword">Nueva contraseña</label>
+              <input type="password" id="newPassword" name="newPassword" placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+          </form>
+        </article>
+      </section>
+
+      <aside class="summary-card">
+        <h3>Consejos rápidos</h3>
+        <p>Usa un correo activo para recibir notificaciones. Cambia tu contraseña cada cierto tiempo para mantener seguro tu acceso.</p>
+        <p>Si necesitas soporte, contacta con el administrador.</p>
+        <a href="#" class="btn btn-secondary">Solicitar ayuda</a>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Tus datos se guardaron correctamente. Pronto se conectará con el backend para que los cambios se apliquen de verdad.');
+    });
+  </script>
+  <script src="theme-switch.js"></script>  <script src=\"sidebar-manager.js\"></script></body>
+</html>

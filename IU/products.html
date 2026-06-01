@@ -3,50 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tienda de Ropa -</title>
+  <title>Productos - Tienda de Ropa</title>
   <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="sidebar-styles.css">
 </head>
 <body>
-  <!-- ==================== HEADER Y NAVEGACIÓN ==================== -->
   <header>
     <nav>
       <div class="logo">
         <img src="img/APOLO_2 (1).png" alt="Logo Tienda de Ropa">
         <a href="index.html">TIENDA DE ROPA</a>
       </div>
-    
-      </ul>
       <button id="themeToggle" class="btn btn-outline theme-toggle" type="button">Modo oscuro</button>
       <div class="nav-auth">
-        <a href="login.html" class="btn btn-secondary">Iniciar Sesión</a>
-        <a href="register.html" class="btn btn-primary">Registrarse</a>
+        <a href="profile.html" class="btn btn-secondary">Mi Perfil</a>
       </div>
     </nav>
   </header>
 
-
-  <section class="hero" id="inicio">
-    <h1>Tienda de Ropa Premium</h1>
-    <p class="center">Las mejores prendas al alcance de tu mano</p>
-  </section>
-
-  <!-- ==================== PRODUCTOS DESTACADOS ==================== -->
-  <section class="products-section" id="productos">
+  <main class="section">
     <div class="section-header">
-      <h2>Productos Destacados</h2>
-      <p>Descubre nuestra selección de artículos más populares</p>
+      <h2>Catálogo de Productos</h2>
+      <p>Explora nuestros mejores artículos de ropa, calzado y accesorios</p>
     </div>
-    <div class="products-grid" id="productsContainer">
+
+    <div class="products-grid" id="productsGrid">
       <!-- Los productos se cargarán aquí con JavaScript -->
     </div>
-    <div class="section-footer">
-      <a href="products.html" class="btn btn-primary">Ver Todos los Productos</a>
-    </div>
-  </section>
+  </main>
 
-  <!-- ==================== FOOTER ==================== -->
   <footer>
     <div class="footer-content">
       <div class="footer-section">
@@ -87,26 +73,14 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2026     Tienda de Ropa. Todos los derechos reservados.</p>
+      <p>&copy; 2026 Tienda de Ropa. Todos los derechos reservados.</p>
     </div>
   </footer>
 
-  <script>
-    // Agregar funcionalidad a los botones (conectar con backend después)
-    document.querySelectorAll('.btn-primary').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        if (this.textContent.includes('Agregar al Carrito')) {
-          e.preventDefault();
-          alert('Producto agregado al carrito. Pronto se conectará con el backend.');
-        }
-      });
-    });
-  </script>
   <script src="theme-switch.js"></script>
   <script src="sidebar-manager.js"></script>
   <script>
-    // Productos destacados
-    const featuredProducts = [
+    const products = [
       {
         id: 1,
         name: 'Camiseta Premium Negro',
@@ -149,6 +123,22 @@
       },
       {
         id: 6,
+        name: 'Vestido Casual Beige',
+        price: 54.99,
+        stock: 22,
+        category: 'Vestidos',
+        image: 'productos/Vestido Casual Beige.jpg'
+      },
+      {
+        id: 7,
+        name: 'Gorro de Lana Gris',
+        price: 24.99,
+        stock: 51,
+        category: 'Accesorios',
+        image: 'productos/Gorro de Lana Gris.jpg'
+      },
+      {
+        id: 8,
         name: 'Bolsa de Mano Negra',
         price: 79.99,
         stock: 18,
@@ -157,23 +147,23 @@
       }
     ];
 
-    function renderFeaturedProducts() {
-      const container = document.getElementById('productsContainer');
-      container.innerHTML = featuredProducts.map(product => `
-        <div class="product-card">
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = products.map(product => `
+        <article class="product-card">
           <div class="product-image">
             <img src="${product.image}" alt="${product.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23666%22%3E🛍️%3C/text%3E%3C/svg%3E'" />
           </div>
           <div class="product-info">
             <span class="product-category">${product.category}</span>
-            <h3>${product.name}</h3>
+            <h3 class="product-name">${product.name}</h3>
             <p class="product-price">$${product.price.toFixed(2)}</p>
             <div class="product-stock">
               <span>${product.stock > 10 ? '✓ En stock' : product.stock > 0 ? '⚠️ Stock limitado' : 'Agotado'}</span>
             </div>
-            <button class="btn btn-primary" onclick="addToCart(${product.id}, '${product.name}')">Agregar al Carrito</button>
+            <button class="btn btn-primary" onclick="addToCart(${product.id}, '${product.name}')">Agregar al carrito</button>
           </div>
-        </div>
+        </article>
       `).join('');
     }
 
@@ -181,9 +171,9 @@
       alert(`${productName} agregado al carrito. Pronto se conectará con el backend.`);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      renderFeaturedProducts();
-    });
+    document.addEventListener('DOMContentLoaded', renderProducts);
   </script>
+  <script src="theme-switch.js"></script>
+  <script src="sidebar-manager.js"></script>
 </body>
 </html>
