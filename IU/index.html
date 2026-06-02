@@ -106,8 +106,6 @@
   </script>
   <script src="theme-switch.js"></script>
   <script src="sidebar-manager.js"></script>
-  <script src="cart-counter.js"></script>
-  <script src="add-to-cart.js"></script>
   <script>
     // Productos destacados
     const featuredProducts = [
@@ -175,10 +173,14 @@
             <div class="product-stock">
               <span>${product.stock > 10 ? '✓ En stock' : product.stock > 0 ? '⚠️ Stock limitado' : 'Agotado'}</span>
             </div>
-            <button class="btn btn-primary" onclick="addToCart(${product.id}, '${product.name}', 1, {price: ${product.price}, image: '${product.image}', category: '${product.category}'})">Agregar al Carrito</button>
+            <button class="btn btn-primary" onclick="addToCart(${product.id}, '${product.name}')">Agregar al Carrito</button>
           </div>
         </div>
       `).join('');
+    }
+
+    function addToCart(productId, productName) {
+      alert(`${productName} agregado al carrito. Pronto se conectará con el backend.`);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
