@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "product_variants")
 @Getter
 @Setter
@@ -30,12 +31,11 @@ public class ProductVariant {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_product", nullable = false) 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("variants")
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_size", nullable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Size size;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,3 +53,4 @@ public class ProductVariant {
     @Column(name = "image_url")
     private String imageUrl;
 }
+

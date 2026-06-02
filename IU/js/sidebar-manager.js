@@ -1,4 +1,4 @@
-// Los listeners se asignarán después de que se inyecte el HTML en DOMContentLoaded
+﻿// Los listeners se asignarán después de que se inyecte el HTML en DOMContentLoaded
 
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('authToken');
@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="sidebar-section-title">Configuración</div>
       <ul class="sidebar-menu">
         <li><button id="sidebarThemeToggle">🌙 Cambiar Tema</button></li>
-        <li><a href="#">⚙️ Preferencias</a></li>
       </ul>
     </div>
   </div>
@@ -90,7 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sidebarLogoutBtn) {
     sidebarLogoutBtn.addEventListener('click', () => {
       localStorage.removeItem('authToken');
+      sessionStorage.setItem('flashMessage', 'Has cerrado sesion correctamente');
       window.location.href = 'index.html';
     });
   }
 });
+
+
+

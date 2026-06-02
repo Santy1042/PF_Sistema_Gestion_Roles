@@ -19,19 +19,21 @@
   }
 
   const navbarHTML = `
-    <nav>
-      <a href="index.html" class="logo">
-        <img src="img/APOLO_2 (1).png" alt="Logo Tienda de Ropa">
-        <span>TIENDA DE ROPA</span>
-      </a>
-      <button id="themeToggle" class="btn btn-outline theme-toggle" type="button">Modo oscuro</button>
-      <a href="cart.html" class="btn btn-outline cart-btn" title="Carrito de compras">
-        🛒 <span id="cartCount" class="cart-count"></span>
-      </a>
-      <div class="nav-auth">
-        ${authHTML}
-      </div>
-    </nav>
+    <header>
+      <nav>
+        <a href="index.html" class="logo">
+          <img src="img/APOLO_2 (1).png" alt="Logo Tienda de Ropa">
+          <span>TIENDA DE ROPA</span>
+        </a>
+        <button id="themeToggle" class="btn btn-outline theme-toggle" type="button">Modo oscuro</button>
+        <a href="cart.html" class="btn btn-outline cart-btn" title="Carrito de compras">
+          🛒 <span id="cartCount" class="cart-count"></span>
+        </a>
+        <div class="nav-auth">
+          ${authHTML}
+        </div>
+      </nav>
+    </header>
   `;
 
   // Find container and inject
@@ -53,6 +55,7 @@
     if (logoutBtn) {
       logoutBtn.addEventListener('click', () => {
         localStorage.removeItem('authToken');
+        sessionStorage.setItem('flashMessage', 'Has cerrado sesion correctamente');
         window.location.href = 'index.html';
       });
     }
@@ -63,3 +66,6 @@
     document.addEventListener('DOMContentLoaded', setupLogout);
   }
 })();
+
+
+

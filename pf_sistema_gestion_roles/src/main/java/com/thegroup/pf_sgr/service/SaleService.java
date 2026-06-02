@@ -53,7 +53,7 @@ public class SaleService implements ISaleService {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new EmptyCartException("Cart not found for user"));
 
-        List<CartItem> cartItems = cartItemRepository.findByCartId(cart.getCartId());
+        List<CartItem> cartItems = cartItemRepository.findByCart_CartId(cart.getCartId());
         
         if (cartItems.isEmpty()) {
             throw new EmptyCartException("Cart is empty");
@@ -103,7 +103,7 @@ public class SaleService implements ISaleService {
             saleDetailRepository.save(detail);
         }
 
-        cartItemRepository.deleteAllByCartId(cart.getCartId());
+        cartItemRepository.deleteAllByCart_CartId(cart.getCartId());
 
         return CheckoutResponseDTO.builder()
                 .idSale(sale.getIdSale())
@@ -126,7 +126,7 @@ public class SaleService implements ISaleService {
             );
         }
 
-        List<SaleDetail> details = saleDetailRepository.findByIdSale(saleId);
+        List<SaleDetail> details = saleDetailRepository.findBySale_IdSale(saleId);
         for (SaleDetail detail : details) {
             ProductVariant variant = detail.getProductVariant();
             if (variant.getStock() < detail.getQuantity()) {
@@ -161,7 +161,7 @@ public class SaleService implements ISaleService {
         }
         sale.setStatus(SaleStatus.CANCELLED);
         sale = saleRepository.save(sale);
-        List<SaleDetail> details = saleDetailRepository.findByIdSale(saleId);
+        List<SaleDetail> details = saleDetailRepository.findBySale_IdSale(saleId);
 
         return buildSaleResponseDTO(sale, details);
     }
@@ -177,7 +177,7 @@ public class SaleService implements ISaleService {
                 "Sale status must be PAID to refund"
             );
         }
-        List<SaleDetail> details = saleDetailRepository.findByIdSale(saleId);
+        List<SaleDetail> details = saleDetailRepository.findBySale_IdSale(saleId);
         List<ProductVariant> variantsToUpdate = new ArrayList<>();
         for (SaleDetail detail : details) {
             ProductVariant variant = detail.getProductVariant();
@@ -197,7 +197,7 @@ public class SaleService implements ISaleService {
         List<Sale> sales = saleRepository.findByIdUser(userId);
         
         return sales.stream().map(sale -> {
-            List<SaleDetail> details = saleDetailRepository.findByIdSale(sale.getIdSale());
+            List<SaleDetail> details = saleDetailRepository.findBySale_IdSale(sale.getIdSale());
             return buildSaleResponseDTO(sale, details);
         }).collect(Collectors.toList());
     }
@@ -208,7 +208,7 @@ public class SaleService implements ISaleService {
                 .orElseThrow(() -> new SaleNotFoundException(
                     "Sale not found for user"
                 ));
-        List<SaleDetail> details = saleDetailRepository.findByIdSale(saleId);
+        List<SaleDetail> details = saleDetailRepository.findBySale_IdSale(saleId);
 
         return buildSaleResponseDTO(sale, details);
     }
@@ -233,3 +233,5 @@ public class SaleService implements ISaleService {
                 .build();
     }
 }
+
+

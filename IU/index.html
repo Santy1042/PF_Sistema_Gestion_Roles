@@ -1,32 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tienda de Ropa -</title>
   <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="sidebar-styles.css">
+  <link rel="stylesheet" href="style/styles.css">
+  <link rel="stylesheet" href="style/sidebar-styles.css">
 </head>
 <body>
   <!-- ==================== HEADER Y NAVEGACIÓN ==================== -->
-  <header>
-    <nav>
-      <a href="index.html" class="logo">
-        <img src="img/APOLO_2 (1).png" alt="Logo Tienda de Ropa">
-        <span>TIENDA DE ROPA</span>
-      </a>
-    
-      <button id="themeToggle" class="btn btn-outline theme-toggle" type="button">Modo oscuro</button>
-      <a href="cart.html" class="btn btn-outline cart-btn" title="Carrito de compras">
-        🛒 <span id="cartCount" class="cart-count"></span>
-      </a>
-      <div class="nav-auth">
-        <a href="login.html" class="btn btn-secondary">Iniciar Sesión</a>
-        <a href="register.html" class="btn btn-primary">Registrarse</a>
-      </div>
-    </nav>
-  </header>
+  <div id="navbar-container"></div>
 
 
   <section class="hero" id="inicio">
@@ -93,99 +77,15 @@
     </div>
   </footer>
 
-  <script>
-    // Agregar funcionalidad a los botones (conectar con backend después)
-    document.querySelectorAll('.btn-primary').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        if (this.textContent.includes('Agregar al Carrito')) {
-          e.preventDefault();
-          alert('Producto agregado al carrito. Pronto se conectará con el backend.');
-        }
-      });
-    });
-  </script>
-  <script src="theme-switch.js"></script>
-  <script src="sidebar-manager.js"></script>
-  <script>
-    // Productos destacados
-    const featuredProducts = [
-      {
-        id: 1,
-        name: 'Camiseta Premium Negro',
-        price: 29.99,
-        stock: 45,
-        category: 'Camisetas',
-        image: 'productos/camiseta.jpg'
-      },
-      {
-        id: 2,
-        name: 'Jeans Clásico Azul',
-        price: 59.99,
-        stock: 32,
-        category: 'Pantalones',
-        image: 'productos/pantaloners.jpg'
-      },
-      {
-        id: 3,
-        name: 'Sudadera Gris Comfort',
-        price: 44.99,
-        stock: 28,
-        category: 'Sudaderas',
-        image: 'productos/sudadera.jpg'
-      },
-      {
-        id: 4,
-        name: 'Tenis Deportivos Blanco',
-        price: 89.99,
-        stock: 15,
-        category: 'Calzado',
-        image: 'productos/tenis.jpg'
-      },
-      {
-        id: 5,
-        name: 'Chaqueta de Cuero Marrón',
-        price: 129.99,
-        stock: 8,
-        category: 'Chaquetas',
-        image: 'productos/chaqueta de cuero marron.jpg'
-      },
-      {
-        id: 6,
-        name: 'Bolsa de Mano Negra',
-        price: 79.99,
-        stock: 18,
-        category: 'Bolsas',
-        image: 'productos/Bolsa de Mano Negra.jpg'
-      }
-    ];
-
-    function renderFeaturedProducts() {
-      const container = document.getElementById('productsContainer');
-      container.innerHTML = featuredProducts.map(product => `
-        <div class="product-card">
-          <div class="product-image">
-            <img src="${product.image}" alt="${product.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23666%22%3E🛍️%3C/text%3E%3C/svg%3E'" />
-          </div>
-          <div class="product-info">
-            <span class="product-category">${product.category}</span>
-            <h3>${product.name}</h3>
-            <p class="product-price">$${product.price.toFixed(2)}</p>
-            <div class="product-stock">
-              <span>${product.stock > 10 ? '✓ En stock' : product.stock > 0 ? '⚠️ Stock limitado' : 'Agotado'}</span>
-            </div>
-            <button class="btn btn-primary" onclick="addToCart(${product.id}, '${product.name}')">Agregar al Carrito</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function addToCart(productId, productName) {
-      alert(`${productName} agregado al carrito. Pronto se conectará con el backend.`);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      renderFeaturedProducts();
-    });
-  </script>
+  
+  <script src="js/theme-switch.js"></script>
+  <script src="js/cart-counter.js"></script>
+  <script src="js/add-to-cart.js"></script>
+  <script src="js/product-card.js"></script>
+  <script src="js/featured.js"></script>
+    <script src="js/sidebar-manager.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/toast.js"></script>
 </body>
 </html>
+

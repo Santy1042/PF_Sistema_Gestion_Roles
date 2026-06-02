@@ -29,6 +29,22 @@ async function loadCart() {
     }
 }
 
+function mapBackendCart(data) {
+    if (!data) return { cartItems: [] };
+    return {
+        cartItems: (data.items || []).map(backendItem => ({
+            idCartItem: backendItem.itemCartId,
+            productVariantId: backendItem.productVariant?.variantId,
+            productName: backendItem.productVariant?.product?.name || 'Producto',
+            quantity: backendItem.quantity,
+            price: backendItem.productVariant?.product?.price || 0,
+            productImage: backendItem.productVariant?.imageUrl || backendItem.productVariant?.product?.imageUrl || 'img/placeholder.png',
+            color: backendItem.productVariant?.color?.name,
+            size: backendItem.productVariant?.size?.name
+        }))
+    };
+}
+
 async function loadCartFromAPI() {
     try {
         const response = await fetch(`${CART_API}/getCart`, {
@@ -50,7 +66,8 @@ async function loadCartFromAPI() {
             throw new Error('Error al cargar el carrito');
         }
 
-        currentCart = await response.json();
+        const data = await response.json();
+        currentCart = mapBackendCart(data);
         renderCart();
     } catch (error) {
         console.error('Error cargando carrito desde API:', error);
@@ -113,7 +130,6 @@ function createCartItemHTML(item) {
             
             <div class="item-details">
                 <h3>${item.productName}</h3>
-                <p class="item-description">${item.productVariantDescription || 'Sin descripción'}</p>
                 <div class="item-specs">
                     ${item.color ? `<span class="spec">🎨 ${item.color}</span>` : ''}
                     ${item.size ? `<span class="spec">📏 ${item.size}</span>` : ''}
@@ -232,7 +248,8 @@ async function updateItemQuantity(itemId, quantity) {
 
             if (!response.ok) throw new Error('Error actualizando cantidad');
 
-            currentCart = await response.json();
+            const data = await response.json();
+            currentCart = mapBackendCart(data);
         } else {
             // Unauthenticated user - use localStorage
             const item = currentCart.cartItems.find(i => i.idCartItem === itemId);
@@ -281,7 +298,8 @@ async function removeFromCart(itemId) {
 
             if (!response.ok) throw new Error('Error eliminando artículo');
 
-            currentCart = await response.json();
+            const data = await response.json();
+            currentCart = mapBackendCart(data);
         } else {
             // Unauthenticated user - use localStorage
             currentCart.cartItems = currentCart.cartItems.filter(item => item.idCartItem !== itemId);

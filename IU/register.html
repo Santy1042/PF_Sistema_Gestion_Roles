@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crear Cuenta - Tienda de Ropa</title>
   <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
-  <link rel="stylesheet" href="styles.css">  <link rel=\"stylesheet\" href=\"sidebar-styles.css\"></head>
+  <link rel="stylesheet" href="style/styles.css">  <link rel=\"stylesheet\" href=\"sidebar-styles.css\"></head>
 <body>
   <div class="auth-container">
     <div class="auth-wrapper">
@@ -104,85 +104,10 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById('registerForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const fullname = document.getElementById('fullname').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-      const terms = document.getElementById('registerForm').elements['terms'].checked;
-
-      if (!fullname || !email || !password || !confirmPassword) {
-        alert('Por favor rellena todos los campos');
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        alert('Las contraseñas no coinciden');
-        return;
-      }
-
-      if (password.length < 6) {
-        alert('La contraseña debe tener al menos 6 caracteres');
-        return;
-      }
-
-      if (!terms) {
-        alert('Debes aceptar los términos de servicio');
-        return;
-      }
-
-      const nameParts = fullname.split(' ');
-      const firstName = nameParts[0];
-      const lastName = nameParts.slice(1).join(' ') || nameParts[0];
-
-      try {
-        const response = await fetch('http://localhost:8080/api/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            password: password
-          })
-        });
-
-        if (!response.ok) {
-          const error = await response.json();
-          alert('Error en el registro: ' + (error.message || 'Por favor intenta de nuevo'));
-          return;
-        }
-
-        const data = await response.json();
-        console.log('Registro exitoso:', data);
-        window.location.href = 'index.html';
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Error en el registro. Por favor intenta de nuevo.');
-      }
-    });
-
-    document.getElementById('confirmPassword').addEventListener('blur', function() {
-      if (this.value && this.value !== document.getElementById('password').value) {
-        this.style.borderColor = 'var(--error)';
-      } else {
-        this.style.borderColor = '';
-      }
-    });
-
-    document.querySelectorAll('.btn.btn-secondary').forEach(btn => {
-      if (btn.textContent.trim() === 'Google') {
-        btn.addEventListener('click', function(e) {
-          e.preventDefault();
-          alert('Redirigiendo a Google para registro...\n\nEsta funcionalidad se conectará con tu backend para autenticación segura con Google.');
-        });
-      }
-    });
-  </script>
-  <script src="theme-switch.js"></script>  <script src=\"sidebar-manager.js\"></script></body>
+  <script src="js/register.js"></script>
+  <script src="js/theme-switch.js"></script>  <script src=\"sidebar-manager.js\"></script>  <script src="js/navbar.js"></script>
+  <script src="js/toast.js"></script>
+</body>
 </html>
+
+

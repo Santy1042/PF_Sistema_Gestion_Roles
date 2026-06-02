@@ -1,29 +1,15 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi Perfil - Tienda de Ropa</title>
   <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="sidebar-styles.css">
+  <link rel="stylesheet" href="style/styles.css">
+  <link rel="stylesheet" href="style/sidebar-styles.css">
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="index.html" class="logo">
-        <img src="img/APOLO_2 (1).png" alt="Logo Tienda de Ropa">
-        <span>TIENDA DE ROPA</span>
-      </a>
-      <button id="themeToggle" class="btn btn-outline theme-toggle" type="button">Modo oscuro</button>
-      <a href="cart.html" class="btn btn-outline cart-btn" title="Carrito de compras">
-        🛒 <span id="cartCount" class="cart-count"></span>
-      </a>
-      <div class="nav-auth">
-        <a href="login.html" class="btn btn-primary">Cerrar Sesión</a>
-      </div>
-    </nav>
-  </header>
+  <div id="navbar-container"></div>
 
   <main class="section">
     <div class="profile-header">
@@ -125,9 +111,13 @@
       alert('Tus datos se guardaron correctamente. Pronto se conectará con el backend para que los cambios se apliquen de verdad.');
     });
   </script>
-  <script src="theme-switch.js"></script>
-  <script src="sidebar-manager.js"></script>
-  <script src="cart-counter.js"></script>
-  <script src="add-to-cart.js"></script>
+  <script src="js/theme-switch.js"></script>
+  <script src="js/cart-counter.js"></script>
+  <script src="js/add-to-cart.js"></script>
+    <script src="js/sidebar-manager.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/toast.js"></script>
 </body>
 </html>
+
+

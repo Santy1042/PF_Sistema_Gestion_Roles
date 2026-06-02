@@ -40,7 +40,7 @@ async function updateCartCounter() {
 
         if (response.ok) {
             const cart = await response.json();
-            const count = cart.cartItems ? cart.cartItems.length : 0;
+            const count = cart.items ? cart.items.length : (cart.cartItems ? cart.cartItems.length : 0);
             displayCartCount(count);
             // Save to localStorage for quick access
             localStorage.setItem('cartItemCount', count);
