@@ -1,6 +1,6 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:8080/api';
-const SALES_API = `${API_BASE_URL}/sale`;
+var API_BASE_URL = 'http://localhost:8080/api';
+var SALES_API = `${API_BASE_URL}/sale`;
 
 // State
 let checkoutCart = null;
@@ -82,12 +82,10 @@ function updateTotals() {
         shippingLabel = '$25.00';
     }
 
-    const tax = (subtotal + shippingCost) * 0.16;
-    const total = subtotal + shippingCost + tax;
+    const total = subtotal + shippingCost;
 
     document.getElementById('summarySubtotal').textContent = `$${subtotal.toFixed(2)}`;
     document.getElementById('summaryShipping').textContent = shippingLabel;
-    document.getElementById('summaryTax').textContent = `$${tax.toFixed(2)}`;
     document.getElementById('summaryTotal').textContent = `$${total.toFixed(2)}`;
 }
 

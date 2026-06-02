@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface SaleDetailRepository extends JpaRepository<SaleDetail, Long> {
-    List<SaleDetail> findByIdSale(Long idSale);
+    List<SaleDetail> findBySale_IdSale(Long idSale);
 }

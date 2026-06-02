@@ -1,6 +1,12 @@
 // Los listeners se asignarán después de que se inyecte el HTML en DOMContentLoaded
 
 document.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    // Si no está logueado, no mostramos el menú lateral ni su botón
+    return;
+  }
+
   const sidebarHTML = `<div class="sidebar-overlay" id="sidebarOverlay"></div>
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
@@ -19,25 +25,17 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
 
     <div class="sidebar-section">
-      <div class="sidebar-section-title">Administración</div>
-      <ul class="sidebar-menu">
-        <li><a href="admin-dashboard.html">🔒 Panel Admin (Temporal)</a></li>
-      </ul>
-    </div>
-
-    <div class="sidebar-section">
       <div class="sidebar-section-title">Configuración</div>
       <ul class="sidebar-menu">
         <li><button id="sidebarThemeToggle">🌙 Cambiar Tema</button></li>
         <li><a href="#">⚙️ Preferencias</a></li>
-        <li><a href="#">❓ Ayuda y Soporte</a></li>
       </ul>
     </div>
   </div>
 
   <div class="sidebar-footer">
     <a href="index.html" class="btn btn-secondary">Inicio</a>
-    <a href="login.html" class="btn btn-outline">Cerrar Sesión</a>
+    <button id="sidebarLogoutBtn" class="btn btn-outline">Cerrar Sesión</button>
   </div>
 </aside>
 
@@ -50,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const newSidebarClose = document.getElementById('sidebarClose');
   const newSidebarOverlay = document.getElementById('sidebarOverlay');
   const newSidebarThemeToggle = document.getElementById('sidebarThemeToggle');
+  const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
 
   if (newSidebarToggle) {
     newSidebarToggle.addEventListener('click', () => {
@@ -85,6 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (toggle) {
         toggle.textContent = newTheme === 'dark' ? 'Modo claro' : 'Modo oscuro';
       }
+    });
+  }
+
+  if (sidebarLogoutBtn) {
+    sidebarLogoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('authToken');
+      window.location.href = 'index.html';
     });
   }
 });

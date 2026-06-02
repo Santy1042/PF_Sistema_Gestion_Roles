@@ -1,7 +1,7 @@
 // Cart Counter - Manages cart item count display across all pages
-const API_BASE_URL = 'http://localhost:8080/api';
-const CART_API = `${API_BASE_URL}/cart`;
-const STORAGE_KEY = 'localCart';
+var API_BASE_URL = 'http://localhost:8080/api';
+var CART_API = `${API_BASE_URL}/cart`;
+var STORAGE_KEY = 'localCart';
 
 // Update cart counter on page load
 document.addEventListener('DOMContentLoaded', () => {

@@ -4,6 +4,43 @@ function getStockInfo(stock) {
     return `Agotado (0 disponibles)`;
 }
 
+function handleAddToCartClick(productId, productName, productPrice, fallbackImage) {
+    let variantId = productId;
+    let color = null;
+    let size = null;
+    let image = fallbackImage;
+
+    const hiddenInput = document.getElementById(`variant-select-${productId}`);
+    if (hiddenInput) {
+        variantId = parseInt(hiddenInput.value, 10) || hiddenInput.value;
+        const text = hiddenInput.getAttribute('data-text');
+        if (text) {
+            const parts = text.split('-');
+            if (parts.length >= 2) {
+                color = parts[0].trim();
+                size = parts[1].replace('Talla', '').trim();
+            }
+        }
+    }
+    
+    const imgElement = document.getElementById(`product-img-${productId}`);
+    if (imgElement && imgElement.src && !imgElement.src.includes('data:image')) {
+        image = imgElement.src;
+    }
+
+    const productData = {
+        price: productPrice,
+        image: image,
+        color: color,
+        size: size,
+        description: hiddenInput ? hiddenInput.getAttribute('data-text') : ''
+    };
+
+    if (typeof addToCart === 'function') {
+        addToCart(variantId, productName, 1, productData);
+    }
+}
+
 function changeVariant(productId, btnElement) {
     const allBtns = document.querySelectorAll(`.variant-btn-${productId}`);
     allBtns.forEach(btn => {
@@ -107,11 +144,13 @@ function createProductCardHTML(product) {
 
     let priceHtml = '';
     const originalPrice = Number(product.price);
+    let currentPrice = originalPrice;
+    
     if (product.discountPercentage && product.discountPercentage > 0) {
-        const finalPrice = originalPrice - (originalPrice * product.discountPercentage / 100);
+        currentPrice = originalPrice - (originalPrice * product.discountPercentage / 100);
         priceHtml = `
             <div class="product-price-container" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-                <span style="color: var(--error); font-weight: 800; font-size: 1.4rem;">$${finalPrice.toFixed(2)}</span>
+                <span style="color: var(--error); font-weight: 800; font-size: 1.4rem;">$${currentPrice.toFixed(2)}</span>
                 <span style="text-decoration: line-through; color: var(--text-secondary); font-size: 1rem;">$${originalPrice.toFixed(2)}</span>
             </div>
         `;
@@ -134,8 +173,7 @@ function createProductCardHTML(product) {
         <div class="product-stock" id="product-stock-${pId}">
           <span>${stockInfo}</span>
         </div>
-        <!-- El carrito dependerá de la lógica actual del sistema de carrito -->
-        <button id="add-to-cart-btn-${pId}" class="btn btn-primary" onclick="addToCart(${pId})" ${initialStock <= 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+        <button id="add-to-cart-btn-${pId}" class="btn btn-primary" onclick="handleAddToCartClick(${pId}, '${product.name.replace(/'/g, "\\'")}', ${currentPrice}, '${imageUrl}')" ${initialStock <= 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
           ${initialStock <= 0 ? 'Agotado' : 'Agregar al carrito'}
         </button>
       </div>

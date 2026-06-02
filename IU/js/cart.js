@@ -1,7 +1,7 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:8080/api';
-const CART_API = `${API_BASE_URL}/cart`;
-const STORAGE_KEY = 'localCart';
+var API_BASE_URL = 'http://localhost:8080/api';
+var CART_API = `${API_BASE_URL}/cart`;
+var STORAGE_KEY = 'localCart';
 
 // Cart state
 let currentCart = null;
@@ -16,14 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeSidebar();
 });
 
-// Load cart from API (authenticated) or localStorage (not authenticated)
 async function loadCart() {
     try {
         if (isAuthenticated) {
-            // User is logged in - load from API
             await loadCartFromAPI();
         } else {
-            // User is not logged in - load from localStorage
             loadCartFromLocalStorage();
         }
     } catch (error) {
@@ -32,7 +29,6 @@ async function loadCart() {
     }
 }
 
-// Load cart from API (authenticated users)
 async function loadCartFromAPI() {
     try {
         const response = await fetch(`${CART_API}/getCart`, {
@@ -62,7 +58,6 @@ async function loadCartFromAPI() {
     }
 }
 
-// Load cart from localStorage (unauthenticated users)
 function loadCartFromLocalStorage() {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -154,7 +149,6 @@ function createCartItemHTML(item) {
 function updateCartSummary() {
     if (!currentCart || !currentCart.cartItems) {
         document.getElementById('subtotal').textContent = '$0.00';
-        document.getElementById('tax').textContent = '$0.00';
         document.getElementById('total').textContent = '$0.00';
         return;
     }
@@ -164,11 +158,9 @@ function updateCartSummary() {
         subtotal += item.quantity * item.price;
     });
 
-    const tax = subtotal * 0.16;
-    const total = subtotal + tax;
+    const total = subtotal;
 
     document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
-    document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
     document.getElementById('total').textContent = `$${total.toFixed(2)}`;
 
     // Update cart counter in other pages

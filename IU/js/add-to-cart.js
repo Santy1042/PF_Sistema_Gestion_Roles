@@ -1,7 +1,7 @@
 // Add to Cart functionality - Works for authenticated and unauthenticated users
-const API_BASE_URL = 'http://localhost:8080/api';
-const CART_API = `${API_BASE_URL}/cart`;
-const STORAGE_KEY = 'localCart';
+var API_BASE_URL = 'http://localhost:8080/api';
+var CART_API = `${API_BASE_URL}/cart`;
+var STORAGE_KEY = 'localCart';
 
 // Add product to cart
 async function addToCart(productVariantId, productName, quantity = 1, productData = null) {

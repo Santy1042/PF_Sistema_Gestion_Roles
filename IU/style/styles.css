@@ -826,8 +826,10 @@ footer {
 }
 
 .profile-page {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: 0 auto;
   gap: 2rem;
 }
 
@@ -894,32 +896,31 @@ footer {
 }
 
 .notification-success {
-  border-left-color: var(--success);
-  background: linear-gradient(90deg, rgba(34, 197, 94, 0.1), transparent);
+    background: var(--success);
+    color: white;
+    border-left: 4px solid rgba(0,0,0,0.2);
 }
 
 .notification-error {
-  border-left-color: var(--error);
-  background: linear-gradient(90deg, rgba(239, 68, 68, 0.1), transparent);
+    background: var(--error);
+    color: white;
+    border-left: 4px solid rgba(0,0,0,0.2);
 }
 
 .notification-warning {
-  border-left-color: var(--warning);
-  background: linear-gradient(90deg, rgba(245, 158, 11, 0.1), transparent);
+    background: var(--warning);
+    color: white;
+    border-left: 4px solid rgba(0,0,0,0.2);
 }
 
 .notification-info {
-  border-left-color: var(--primary);
-  background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), transparent);
+    background: var(--primary);
+    color: white;
+    border-left: 4px solid rgba(0,0,0,0.2);
 }
 
 @media (max-width: 980px) {
-  .dashboard-header,
   .profile-header {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-page {
     grid-template-columns: 1fr;
   }
 }
@@ -1001,3 +1002,6 @@ footer {
 
 }
 
+
+.nav-profile-pic { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light); cursor: pointer; transition: transform 0.2s; }
+.nav-profile-pic:hover { transform: scale(1.05); }
