@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidebar-styles.css">
+    <link rel="stylesheet" href="style/cart-styles.css">
+</head>
+<body>
+    <!-- ==================== HEADER Y NAVEGACIÓN ==================== -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <img src="img/APOLO_2 (1).png" alt="Logo Tienda de Ropa">
+                <span>TIENDA DE ROPA</span>
+            </a>
+        
+            <button id="themeToggle" class="btn btn-outline theme-toggle" type="button">Modo oscuro</button>
+            <a href="cart.html" class="btn btn-outline cart-btn" title="Carrito de compras">
+                🛒 <span id="cartCount" class="cart-count"></span>
+            </a>
+            <div class="nav-auth">
+                <a href="login.html" class="btn btn-secondary">Iniciar Sesión</a>
+                <a href="register.html" class="btn btn-primary">Registrarse</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar"></div>
+
+    <main class="main-container">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="cart-header">
+                <h1>🛒 Carrito de Compras</h1>
+                <p class="cart-subtitle">Revisa los artículos en tu carrito y procede al pago</p>
+            </div>
+
+            <!-- Cart Content -->
+            <div class="cart-content">
+                <!-- Cart Items Section -->
+                <section class="cart-items-section">
+                    <h2>Artículos en tu carrito</h2>
+                    <div id="cartItemsContainer" class="cart-items-container">
+                        <!-- Items will be loaded here by JavaScript -->
+                        <div class="cart-loading">
+                            <div class="spinner"></div>
+                            <p>Cargando carrito...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Empty Cart Message -->
+                <div id="emptyCartMessage" class="empty-cart" style="display: none;">
+                    <div class="empty-cart-content">
+                        <div class="empty-cart-icon">🛒</div>
+                        <h2>Tu carrito está vacío</h2>
+                        <p>Parece que no hay artículos en tu carrito. ¡Explora nuestros productos!</p>
+                        <a href="products.html" class="btn btn-primary">Continuar Comprando</a>
+                    </div>
+                </div>
+
+                <!-- Cart Summary Section -->
+                <aside class="cart-summary">
+                    <h2>Resumen del Pedido</h2>
+                    
+                    <div class="summary-content">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Impuesto (IVA 16%):</span>
+                            <span id="tax">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Envío:</span>
+                            <span id="shipping">Gratis</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <span id="total">$0.00</span>
+                        </div>
+                    </div>
+
+                    <button id="checkoutBtn" class="btn btn-primary btn-large" onclick="proceedToCheckout()">
+                        Proceder al Pago
+                    </button>
+                    <a href="products.html" class="btn btn-secondary btn-large">
+                        Seguir Comprando
+                    </a>
+
+                    <div class="promo-section">
+                        <label for="promoCode">Código de descuento:</label>
+                        <div class="promo-input-group">
+                            <input type="text" id="promoCode" placeholder="Ingresa tu código">
+                            <button onclick="applyPromoCode()" class="btn-small">Aplicar</button>
+                        </div>
+                        <div id="promoMessage" style="display: none;"></div>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Related Products -->
+            <section class="related-products">
+                <h2>Podrías estar interesado en:</h2>
+                <div id="relatedProductsContainer" class="products-grid">
+                    <!-- Related products will be loaded here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Sobre nuestra tienda</h3>
+                <ul>
+                    <li><a href="#">Acerca de nosotros</a></li>
+                    <li><a href="#">Nuestro equipo</a></li>
+                    <li><a href="#">Carreras</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Política y Legal</h3>
+                <ul>
+                    <li><a href="#">Términos de servicio</a></li>
+                    <li><a href="#">Política de privacidad</a></li>
+                    <li><a href="#">Política de cookies</a></li>
+                    <li><a href="#">Política de devoluciones</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><a href="mailto:info@tienda.com">info@tienda.com</a></li>
+                    <li><a href="tel:+34123456789">+34 123 456 789</a></li>
+                    <li><a href="#">Síguenos en redes</a></li>
+                    <li><a href="#">Centro de ayuda</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Tienda de Ropa Premium. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <!-- Quantity Modal -->
+    <div id="quantityModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('quantityModal')">&times;</span>
+            <h3>Cambiar Cantidad</h3>
+            <div class="quantity-selector">
+                <button onclick="decreaseQty()" class="qty-btn">−</button>
+                <input type="number" id="modalQuantity" min="1" max="99">
+                <button onclick="increaseQty()" class="qty-btn">+</button>
+            </div>
+            <button onclick="updateQuantity()" class="btn btn-primary">Actualizar</button>
+            <button onclick="closeModal('quantityModal')" class="btn btn-secondary">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('confirmModal')">&times;</span>
+            <h3>Confirmar eliminación</h3>
+            <p id="confirmMessage"></p>
+            <div class="modal-actions">
+                <button onclick="confirmRemove()" class="btn btn-danger">Eliminar</button>
+                <button onclick="closeModal('confirmModal')" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <div class="success-icon">✓</div>
+            <h3 id="successTitle">¡Éxito!</h3>
+            <p id="successMessage"></p>
+            <button onclick="closeModal('successModal')" class="btn btn-primary">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="theme-switch.js"></script>
+    <script src="sidebar-manager.js"></script>
+    <script src="cart-counter.js"></script>
+    <script src="add-to-cart.js"></script>
+    <script src="style/cart.js"></script>
+</body>
+</html>

@@ -11,11 +11,14 @@
 <body>
   <header>
     <nav>
-      <div class="logo">
+      <a href="index.html" class="logo">
         <img src="img/APOLO_2 (1).png" alt="Logo Tienda de Ropa">
-        <a href="index.html">TIENDA DE ROPA</a>
-      </div>
+        <span>TIENDA DE ROPA</span>
+      </a>
       <button id="themeToggle" class="btn btn-outline theme-toggle" type="button">Modo oscuro</button>
+      <a href="cart.html" class="btn btn-outline cart-btn" title="Carrito de compras">
+        🛒 <span id="cartCount" class="cart-count"></span>
+      </a>
       <div class="nav-auth">
         <a href="profile.html" class="btn btn-secondary">Mi Perfil</a>
       </div>
@@ -79,6 +82,8 @@
 
   <script src="theme-switch.js"></script>
   <script src="sidebar-manager.js"></script>
+  <script src="cart-counter.js"></script>
+  <script src="add-to-cart.js"></script>
   <script>
     const products = [
       {
@@ -161,14 +166,10 @@
             <div class="product-stock">
               <span>${product.stock > 10 ? '✓ En stock' : product.stock > 0 ? '⚠️ Stock limitado' : 'Agotado'}</span>
             </div>
-            <button class="btn btn-primary" onclick="addToCart(${product.id}, '${product.name}')">Agregar al carrito</button>
+            <button class="btn btn-primary" onclick="addToCart(${product.id}, '${product.name}', 1, {price: ${product.price}, image: '${product.image}', category: '${product.category}'})">Agregar al carrito</button>
           </div>
         </article>
       `).join('');
-    }
-
-    function addToCart(productId, productName) {
-      alert(`${productName} agregado al carrito. Pronto se conectará con el backend.`);
     }
 
     document.addEventListener('DOMContentLoaded', renderProducts);

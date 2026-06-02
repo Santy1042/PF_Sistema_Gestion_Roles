@@ -5,15 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi Perfil - Tienda de Ropa</title>
   <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
-  <link rel="stylesheet" href="styles.css">  <link rel=\"stylesheet\" href=\"sidebar-styles.css\"></head>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="sidebar-styles.css">
+</head>
 <body>
   <header>
     <nav>
-      <div class="logo">
+      <a href="index.html" class="logo">
         <img src="img/APOLO_2 (1).png" alt="Logo Tienda de Ropa">
-        <a href="index.html">TIENDA DE ROPA</a>
-      </div>
+        <span>TIENDA DE ROPA</span>
+      </a>
       <button id="themeToggle" class="btn btn-outline theme-toggle" type="button">Modo oscuro</button>
+      <a href="cart.html" class="btn btn-outline cart-btn" title="Carrito de compras">
+        🛒 <span id="cartCount" class="cart-count"></span>
+      </a>
       <div class="nav-auth">
         <a href="login.html" class="btn btn-primary">Cerrar Sesión</a>
       </div>
@@ -78,11 +83,51 @@
     </div>
   </main>
 
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Sobre nuestra tienda</h3>
+        <ul>
+          <li><a href="#">Acerca de nosotros</a></li>
+          <li><a href="#">Nuestro equipo</a></li>
+          <li><a href="#">Carreras</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Política y Legal</h3>
+        <ul>
+          <li><a href="#">Términos de servicio</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+          <li><a href="#">Política de cookies</a></li>
+          <li><a href="#">Política de devoluciones</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Contacto</h3>
+        <ul>
+          <li><a href="mailto:info@tienda.com">info@tienda.com</a></li>
+          <li><a href="tel:+34123456789">+34 123 456 789</a></li>
+          <li><a href="#">Síguenos en redes</a></li>
+          <li><a href="#">Centro de ayuda</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Tienda de Ropa Premium. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
   <script>
     document.getElementById('profileForm').addEventListener('submit', function(e) {
       e.preventDefault();
       alert('Tus datos se guardaron correctamente. Pronto se conectará con el backend para que los cambios se apliquen de verdad.');
     });
   </script>
-  <script src="theme-switch.js"></script>  <script src=\"sidebar-manager.js\"></script></body>
+  <script src="theme-switch.js"></script>
+  <script src="sidebar-manager.js"></script>
+  <script src="cart-counter.js"></script>
+  <script src="add-to-cart.js"></script>
+</body>
 </html>

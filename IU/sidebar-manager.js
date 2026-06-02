@@ -10,10 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
   
   <div class="sidebar-content">
     <div class="sidebar-section">
-      <div class="sidebar-section-title">Perfil</div>
+      <div class="sidebar-section-title">Mi Cuenta</div>
       <ul class="sidebar-menu">
         <li><a href="profile.html">👤 Mi Perfil</a></li>
         <li><a href="products.html">📦 Productos</a></li>
+        <li><a href="cart.html">🛒 Carrito</a></li>
       </ul>
     </div>
 

@@ -177,6 +177,44 @@ nav {
   color: white;
 }
 
+.cart-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 2px solid var(--primary);
+  background: transparent;
+  color: var(--primary-light);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cart-btn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--error);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 20px;
+}
+
 .hero {
   background: linear-gradient(135deg, var(--surface), var(--surface-light));
   padding: 1.5rem 2rem;
@@ -828,6 +866,50 @@ footer {
 .summary-card p {
   color: var(--text-secondary);
   line-height: 1.7;
+}
+
+/* Notification Styles */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  background: var(--surface);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px var(--shadow);
+  z-index: 9999;
+  opacity: 0;
+  transform: translateX(400px) translateY(-20px);
+  transition: all 0.3s ease;
+  border-left: 4px solid var(--primary);
+  max-width: 300px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+}
+
+.notification-success {
+  border-left-color: var(--success);
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.1), transparent);
+}
+
+.notification-error {
+  border-left-color: var(--error);
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.1), transparent);
+}
+
+.notification-warning {
+  border-left-color: var(--warning);
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.1), transparent);
+}
+
+.notification-info {
+  border-left-color: var(--primary);
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), transparent);
 }
 
 @media (max-width: 980px) {
