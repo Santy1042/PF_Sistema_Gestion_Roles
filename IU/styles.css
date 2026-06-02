@@ -36,11 +36,11 @@ body.theme-dark {
 }
 
 body.theme-light {
-  --background: #fdf7ed;
-  --surface: #ffffff;
+  --background: #cb9c6d;
+  --surface: #edceb7;
   --surface-strong: #f0e3d3;
-  --surface-light: #fde7cc;
-  --surface-muted: #fff5ec;
+  --surface-light: #cf724b;
+  --surface-muted: #9b6b40;
   --text-primary: #1f1a17;
   --text-secondary: #6b5b4d;
   --border-color: #e1c5ac;
@@ -466,6 +466,7 @@ footer {
   gap: 1rem;
   align-items: flex-start;
 }
+
 
 .auth-feature-icon {
   width: 24px;
@@ -996,4 +997,7 @@ footer {
   .products-grid {
     grid-template-columns: 1fr;
   }
+
+
 }
+
