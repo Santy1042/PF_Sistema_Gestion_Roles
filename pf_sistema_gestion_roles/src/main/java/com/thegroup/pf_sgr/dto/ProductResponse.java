@@ -17,4 +17,5 @@ public class ProductResponse {
     private Integer categoryId;
     private String categoryName;
     private List<String> tags;
+    private List<ProductVariantResponse> variants;
 }

@@ -11,6 +11,8 @@ import com.thegroup.pf_sgr.model.Tag;
 import com.thegroup.pf_sgr.model.Category;
 import com.thegroup.pf_sgr.dto.ProductRequest;
 import com.thegroup.pf_sgr.dto.ProductResponse;
+import com.thegroup.pf_sgr.dto.ProductVariantResponse;
+import com.thegroup.pf_sgr.model.ProductVariant;
 import com.thegroup.pf_sgr.repository.ProductRepository;
 import com.thegroup.pf_sgr.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
@@ -38,6 +40,17 @@ public class ProductService implements IProductService {
                 .categoryName(product.getCategory() != null ? product.getCategory().getName() : null)
                 .tags(product.getTags() != null ? 
                       product.getTags().stream().map(Tag::getName).toList() : 
+                      new ArrayList<>())
+                .variants(product.getVariants() != null ?
+                      product.getVariants().stream().map(variant -> ProductVariantResponse.builder()
+                          .id(variant.getVariantId())
+                          .size(variant.getSize() != null ? variant.getSize().getName() : null)
+                          .color(variant.getColor() != null ? variant.getColor().getName() : null)
+                          .stock(variant.getStock())
+                          .isActive(variant.getIsActive())
+                          .imageUrl(variant.getImageUrl())
+                          .build()
+                      ).toList() :
                       new ArrayList<>())
                 .build();
     }
