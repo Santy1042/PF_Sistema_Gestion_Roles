@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - AURA Essentials</title>
+  <link rel="icon" type="image/png" href="img/dark_logo.png">
+  <link rel="stylesheet" href="style/styles.css">
+  <link rel="stylesheet" href="style/sidebar-styles.css">
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main class="section">
+    <div class="profile-header">
+      <div class="profile-intro">
+        <h1>Mi Perfil</h1>
+        <p>Actualiza tu información personal y ajusta tus datos de usuario directamente desde aquí.</p>
+      </div>
+      <div>
+        <a href="index.html" class="btn btn-outline">Volver al inicio</a>
+      </div>
+    </div>
+
+    <div class="profile-page">
+      <section class="profile-panel">
+        <article class="summary-card">
+          <h3>Información de usuario</h3>
+          <p>Modifica tu nombre, correo, teléfono y contraseña. Estos cambios se guardarán cuando termines y envíes el formulario.</p>
+        </article>
+
+        <article class="profile-panel">
+          <form id="profileForm">
+            <div class="form-group">
+              <label for="fullname">Nombre completo</label>
+              <input type="text" id="fullname" name="fullname" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input type="email" id="email" name="email" required disabled>
+              <small style="color: var(--text-secondary);">El correo no se puede modificar.</small>
+            </div>
+            <div class="form-group">
+              <label for="phone">Teléfono</label>
+              <input type="tel" id="phone" name="phone">
+            </div>
+            <div class="form-group">
+              <label for="address">Dirección</label>
+              <textarea id="address" name="address"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="currentPassword">Contraseña actual</label>
+              <input type="password" id="currentPassword" name="currentPassword" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label for="newPassword">Nueva contraseña</label>
+              <input type="password" id="newPassword" name="newPassword" placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+          </form>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      try {
+        const res = await fetch('http://localhost:8080/api/profile', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const user = await res.json();
+          document.getElementById('fullname').value = (user.firstName || '') + ' ' + (user.lastName || '');
+          document.getElementById('email').value = user.email || '';
+          document.getElementById('phone').value = user.phoneNumber || '';
+          document.getElementById('address').value = user.address || '';
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    document.getElementById('profileForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+
+      const fullName = document.getElementById('fullname').value.trim();
+      const nameParts = fullName.split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+      const phoneNumber = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+
+      const requestData = {
+          firstName,
+          lastName,
+          phoneNumber,
+          address
+      };
+
+      try {
+          const res = await fetch('http://localhost:8080/api/profile', {
+              method: 'PUT',
+              headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(requestData)
+          });
+          
+          if (res.ok) {
+              const user = await res.json();
+              localStorage.setItem('userInfo', JSON.stringify(user));
+              if(window.showNotification) {
+                  showNotification('Perfil actualizado correctamente', 'success');
+              } else {
+                  alert('Perfil actualizado correctamente');
+              }
+          } else {
+              if(window.showNotification) showNotification('Error al actualizar el perfil', 'error');
+          }
+      } catch (err) {
+          console.error(err);
+          if(window.showNotification) showNotification('Error de conexión', 'error');
+      }
+    });
+  </script>
+  <script src="js/theme-switch.js"></script>
+
+  <script src="js/add-to-cart.js"></script>
+  <script src="js/sidebar-manager.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/footer.js"></script>
+  <script src="js/toast.js"></script>
+</body>
+</html>

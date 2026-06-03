@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - AURA Essentials</title>
+    <link rel="icon" type="image/png" href="img/dark_logo.png">
+    <link rel="stylesheet" href="style/styles.css">
+    <link rel="stylesheet" href="style/sidebar-styles.css">
+    <link rel="stylesheet" href="style/cart-styles.css">
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+    <div id="sidebar"></div>
+
+    <main class="main-container">
+        <div class="container">
+            <div class="cart-header">
+                <h1>🛒 Carrito de Compras</h1>
+                <p class="cart-subtitle">Revisa los artículos en tu carrito y procede al pago</p>
+            </div>
+
+            <div class="cart-content">
+                <section class="cart-items-section">
+                    <h2>Artículos en tu carrito</h2>
+                    <div id="cartItemsContainer" class="cart-items-container">
+                        <div class="cart-loading">
+                            <div class="spinner"></div>
+                            <p>Cargando carrito...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <div id="emptyCartMessage" class="empty-cart" style="display: none;">
+                    <div class="empty-cart-content">
+                        <div class="empty-cart-icon">🛒</div>
+                        <h2>Tu carrito está vacío</h2>
+                        <p>Parece que no hay artículos en tu carrito. ¡Explora nuestros productos!</p>
+                        <a href="products.html" class="btn btn-primary">Continuar Comprando</a>
+                    </div>
+                </div>
+
+                <aside class="cart-summary">
+                    <h2>Resumen del Pedido</h2>
+                    <div class="summary-content">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Envío:</span>
+                            <span id="shipping">Gratis</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <span id="total">$0.00</span>
+                        </div>
+                    </div>
+                    <button id="checkoutBtn" class="btn btn-primary btn-large" onclick="proceedToCheckout()">
+                        Proceder al Pago
+                    </button>
+                    <a href="products.html" class="btn btn-secondary btn-large">
+                        Seguir Comprando
+                    </a>
+                </aside>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <!-- Modals -->
+    <div id="quantityModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('quantityModal')">&times;</span>
+            <h3>Cambiar Cantidad</h3>
+            <div class="quantity-selector">
+                <button onclick="decreaseQty()" class="qty-btn">−</button>
+                <input type="number" id="modalQuantity" min="1" max="99">
+                <button onclick="increaseQty()" class="qty-btn">+</button>
+            </div>
+            <button onclick="updateQuantity()" class="btn btn-primary">Actualizar</button>
+            <button onclick="closeModal('quantityModal')" class="btn btn-secondary">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('confirmModal')">&times;</span>
+            <h3>Confirmar eliminación</h3>
+            <p id="confirmMessage"></p>
+            <div class="modal-actions">
+                <button onclick="confirmRemove()" class="btn btn-danger">Eliminar</button>
+                <button onclick="closeModal('confirmModal')" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <div class="success-icon">✓</div>
+            <h3 id="successTitle">¡Éxito!</h3>
+            <p id="successMessage"></p>
+            <button onclick="closeModal('successModal')" class="btn btn-primary">Aceptar</button>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+  <script src="js/theme-switch.js"></script>
+
+    <script src="js/add-to-cart.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/sidebar-manager.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/footer.js"></script>
+    <script src="js/toast.js"></script>
+</body>
+
+</html>

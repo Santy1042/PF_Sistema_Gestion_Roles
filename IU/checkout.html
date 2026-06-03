@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago - AURA Essentials</title>
+    <link rel="icon" type="image/png" href="img/dark_logo.png">
+    <link rel="stylesheet" href="style/styles.css">
+    <link rel="stylesheet" href="style/sidebar-styles.css">
+    <link rel="stylesheet" href="style/checkout-styles.css">
+    <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+</head>
+<body>
+    <!-- ==================== HEADER Y NAVEGACIÓN ==================== -->
+    <div id="navbar-container"></div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar"></div>
+
+    <main class="main-container">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="checkout-header">
+                <h1>💳 Completar Compra</h1>
+                <div class="checkout-steps">
+                    <div class="step active">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Pago</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Confirmación</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkout Content -->
+            <div class="checkout-content">
+                <!-- Forms Section -->
+                <section class="checkout-forms">
+                    
+                    <div class="form-section" style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); margin-bottom: 2rem;">
+                        <h2>📍 Dirección de Envío</h2>
+                        <p id="checkoutAddressDisplay" style="color: var(--text-color); margin-bottom: 1rem; font-weight: 500;">Cargando dirección...</p>
+                        <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.9rem;">
+                            Para cambiar la dirección de envío o facturación, por favor diríjase a su perfil.
+                        </p>
+                        <a href="profile.html" class="btn btn-secondary" style="display: inline-block;">Ir a Mi Perfil</a>
+                    </div>
+
+                    <!-- Payment Information -->
+                    <div class="form-section">
+                        <h2>💳 Información de Pago</h2>
+                        
+                        <div class="payment-methods">
+                            <div class="payment-method">
+                                <input type="radio" name="payment" id="card" value="card" checked>
+                                <label for="card">Tarjeta de Crédito/Débito</label>
+                            </div>
+                            <div class="payment-method">
+                                <input type="radio" name="payment" id="paypal" value="paypal">
+                                <label for="paypal">PayPal</label>
+                            </div>
+                            <div class="payment-method">
+                                <input type="radio" name="payment" id="bank" value="bank">
+                                <label for="bank">Transferencia Bancaria</label>
+                            </div>
+                        </div>
+
+                        <!-- Card Payment Form -->
+                        <form id="cardPaymentForm">
+                            <div class="form-group">
+                                <label for="cardName">Nombre en la Tarjeta *</label>
+                                <input type="text" id="cardName" placeholder="Como aparece en la tarjeta" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cardNumber">Número de Tarjeta *</label>
+                                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="expiry">Vencimiento (MM/AA) *</label>
+                                    <input type="text" id="expiry" placeholder="MM/AA" maxlength="5" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cvv">CVV *</label>
+                                    <input type="text" id="cvv" placeholder="123" maxlength="4" required>
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>
+
+                    <!-- Order Summary (Mobile) -->
+                    <div class="order-summary-mobile">
+                        <h3>Resumen del Pedido</h3>
+                        <div id="mobileSummary"></div>
+                    </div>
+                </section>
+
+                <!-- Order Summary (Desktop) -->
+                <aside class="order-summary">
+                    <h2>Resumen del Pedido</h2>
+                    <div id="orderItems" class="order-items">
+                        <!-- Items will be loaded here -->
+                    </div>
+
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="summarySubtotal">$0.00</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <span id="summaryTotal">$0.00</span>
+                        </div>
+                    </div>
+
+                    <button id="completeOrderBtn" class="btn btn-primary btn-large" onclick="completeOrder()">
+                        Completar Compra
+                    </button>
+                    <a href="cart.html" class="btn btn-secondary btn-large">
+                        ← Volver al Carrito
+                    </a>
+
+                    <div class="payment-security">
+                        <p>🔒 Tu información de pago está segura y encriptada</p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <div class="success-icon">✓</div>
+            <h3>¡Pedido Completado!</h3>
+            <p id="orderNumber"></p>
+            <p class="success-message">Tu pedido ha sido recibido exitosamente y el pago fue aprobado.</p>
+            <div class="modal-actions">
+                <button onclick="goToOrders()" class="btn btn-primary">Ver Mis Pedidos</button>
+                <button onclick="continueShopping()" class="btn btn-secondary">Seguir Comprando</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content error-modal">
+            <span class="close" onclick="closeModal('errorModal')">&times;</span>
+            <div class="error-icon">✕</div>
+            <h3>Error en el Pago</h3>
+            <p id="errorMessage"></p>
+            <button onclick="closeModal('errorModal')" class="btn btn-primary">Intentar de Nuevo</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/theme-switch.js"></script>
+
+    <script src="js/add-to-cart.js"></script>
+    <script src="js/checkout.js"></script>
+    <script src="js/sidebar-manager.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/footer.js"></script>
+    <script src="js/toast.js"></script>
+</body>
+</html>
