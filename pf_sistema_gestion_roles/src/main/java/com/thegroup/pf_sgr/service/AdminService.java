@@ -68,6 +68,11 @@ public class AdminService implements IAdminService {
         String requestedRole = request.getRole();
         validateRole(requestedRole);
 
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && user.getEmail().equals(auth.getName()) && !requestedRole.equalsIgnoreCase("ADMIN")) {
+            throw new IllegalArgumentException("No puedes quitarte los privilegios de Administrador a ti mismo.");
+        }
+
         user.setRole(Role.valueOf(requestedRole.toUpperCase()));
         return mapToProfileResponse(userRepository.save(user));
     }
@@ -78,6 +83,16 @@ public class AdminService implements IAdminService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         validateRole(request.getRole());
+
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && user.getEmail().equals(auth.getName())) {
+            if (!request.getIsActive()) {
+                throw new IllegalArgumentException("No puedes desactivar tu propia cuenta.");
+            }
+            if (!request.getRole().equalsIgnoreCase("ADMIN")) {
+                throw new IllegalArgumentException("No puedes quitarte los privilegios de Administrador a ti mismo.");
+            }
+        }
 
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -98,6 +113,12 @@ public class AdminService implements IAdminService {
     public String deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && user.getEmail().equals(auth.getName())) {
+            throw new IllegalArgumentException("No puedes eliminar tu propia cuenta.");
+        }
+
         userRepository.deleteById(id);
         return "Usuario " + user.getFirstName() + " eliminado exitosamente";
     }
