@@ -17,7 +17,7 @@
     let userNameHTML = '';
 
     try {
-      const res = await fetch('http://localhost:8080/api/profile', {
+      const res = await fetch(`${API_BASE_URL}/profile`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

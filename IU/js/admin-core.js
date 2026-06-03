@@ -4,7 +4,7 @@ window.escapeHTML = function(str) {
     div.textContent = str;
     return div.innerHTML;
 };
-const API = 'http://localhost:8080/api';
+const API = API_BASE_URL;
 
 function getToken() {
   return localStorage.getItem('authToken');
