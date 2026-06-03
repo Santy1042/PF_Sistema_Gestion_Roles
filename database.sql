@@ -559,6 +559,7 @@ CREATE TABLE public.users (
     id_role integer NOT NULL,
     is_active boolean DEFAULT true,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    last_access timestamp without time zone,
     address text
 );
 

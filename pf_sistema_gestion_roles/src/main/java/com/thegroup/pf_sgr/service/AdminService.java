@@ -34,6 +34,8 @@ public class AdminService implements IAdminService {
                 .address(user.getAddress())
                 .role(user.getRole().name())
                 .active(user.getIsActive())
+                .createdAt(user.getCreatedAt())
+                .lastAccess(user.getLastAccess())
                 .build();
     }
 

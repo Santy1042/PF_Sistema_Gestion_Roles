@@ -22,6 +22,13 @@ public class ProfileService implements IProfileService {
         return mapToResponse(user);
     }
 
+    public void deactivateProfile(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        user.setIsActive(false);
+        userRepository.save(user);
+    }
+
     public ProfileResponse updateProfile(String email, ProfileRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
@@ -44,6 +51,9 @@ public class ProfileService implements IProfileService {
                 .phoneNumber(user.getPhoneNumber())
                 .address(user.getAddress())
                 .role(user.getRole().name())
+                .active(user.getIsActive())
+                .createdAt(user.getCreatedAt())
+                .lastAccess(user.getLastAccess())
                 .build();
     }
 }

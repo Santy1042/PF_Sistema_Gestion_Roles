@@ -25,10 +25,25 @@
     </div>
 
     <div class="profile-page">
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h4>Fecha de Registro</h4>
+          <p id="createdAtDisplay">Cargando...</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Último Acceso</h4>
+          <p id="lastAccessDisplay">Cargando...</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Rol de Usuario</h4>
+          <p id="roleDisplay">Cargando...</p>
+        </div>
+      </div>
+
       <section class="profile-panel">
         <article class="summary-card">
           <h3>Información de usuario</h3>
-          <p>Modifica tu nombre, correo, teléfono y contraseña. Estos cambios se guardarán cuando termines y envíes el formulario.</p>
+          <p>Modifica tu nombre, correo, teléfono y contraseña. Estos cambios se guardarán cuando termines y envíes el formulario. Dejar en blanco si no se quiere cambiar</p>
         </article>
 
         <article class="profile-panel">
@@ -58,12 +73,30 @@
               <label for="newPassword">Nueva contraseña</label>
               <input type="password" id="newPassword" name="newPassword" placeholder="••••••••">
             </div>
-            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <div class="form-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+              <button type="submit" class="btn btn-primary">Guardar cambios</button>
+              <button type="button" id="deactivateBtn" class="btn btn-danger">Dar de baja mi cuenta</button>
+            </div>
           </form>
         </article>
       </section>
     </div>
   </main>
+
+  <!-- Modal de Confirmación para Dar de Baja -->
+  <div class="custom-modal-overlay" id="deactivateModal">
+    <div class="custom-modal">
+      <div class="custom-modal-icon">
+        ⚠
+      </div>
+      <h3>¿Estás completamente seguro?</h3>
+      <p>Esta acción desactivará tu cuenta y serás desconectado inmediatamente. Ya no podrás acceder a tu perfil a menos que un administrador reactive tu cuenta.</p>
+      <div class="custom-modal-actions">
+        <button class="btn btn-secondary" id="cancelDeactivateBtn">Cancelar</button>
+        <button class="btn btn-danger" id="confirmDeactivateBtn">Sí, dar de baja</button>
+      </div>
+    </div>
+  </div>
 
   <div id="footer-container"></div>
 

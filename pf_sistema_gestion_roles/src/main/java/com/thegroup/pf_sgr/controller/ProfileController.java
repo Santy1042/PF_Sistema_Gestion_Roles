@@ -27,4 +27,11 @@ public class ProfileController {
         String email = authentication.getName();
         return ResponseEntity.ok(profileService.updateProfile(email, request));
     }
+
+    @DeleteMapping
+    public ResponseEntity<String> deactivateProfile(Authentication authentication) {
+        String email = authentication.getName();
+        profileService.deactivateProfile(email);
+        return ResponseEntity.ok("Perfil desactivado exitosamente");
+    }
 }

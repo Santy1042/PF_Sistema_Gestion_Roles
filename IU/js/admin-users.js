@@ -16,8 +16,14 @@ async function cargarUsuarios(busqueda = '', tipo = '') {
     document.getElementById('statUsers').textContent = data.length;
   }
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '—';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  };
+
   body.innerHTML = data.length === 0
-    ? '<tr><td colspan="6" style="text-align:center">Sin usuarios</td></tr>'
+    ? '<tr><td colspan="9" style="text-align:center">Sin usuarios</td></tr>'
     : data.map((u, idx) => `
       <tr>
         <td>${window.escapeHTML(u.firstName)} ${window.escapeHTML(u.lastName)}</td>
@@ -26,6 +32,8 @@ async function cargarUsuarios(busqueda = '', tipo = '') {
         <td>${u.address || '—'}</td>
         <td><span class="badge ${u.active ? 'badge-success' : 'badge-danger'}">${u.active ? 'Activo' : 'Inactivo'}</span></td>
         <td>${u.role}</td>
+        <td>${formatDate(u.createdAt)}</td>
+        <td>${formatDate(u.lastAccess)}</td>
         <td>
           <button class="btn btn-outline btn-sm" onclick="abrirModalUsuario(${u.id}, '${u.role}', '${window.escapeHTML(u.firstName)}', '${window.escapeHTML(u.lastName)}', '${window.escapeHTML(u.email)}', '${u.phoneNumber || ''}', '${u.address || ''}', ${u.active})">Editar Usuario</button>
         </td>

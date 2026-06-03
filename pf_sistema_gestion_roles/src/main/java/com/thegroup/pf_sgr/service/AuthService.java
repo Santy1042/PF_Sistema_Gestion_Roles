@@ -53,6 +53,13 @@ public class AuthService implements IAuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
+        if (!user.getIsActive()) {
+            throw new IllegalArgumentException("Tu cuenta ha sido desactivada. Por favor contacta a soporte.");
+        }
+
+        user.setLastAccess(java.time.LocalDateTime.now());
+        userRepository.save(user);
+
         String token = jwtProvider.generateToken(user);
         return new AuthResponse(token);
     }

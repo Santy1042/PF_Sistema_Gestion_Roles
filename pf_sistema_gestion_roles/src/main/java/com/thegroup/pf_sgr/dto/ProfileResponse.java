@@ -18,4 +18,6 @@ public class ProfileResponse {
     private String address;
     private String role;
     private Boolean active;
+    private java.time.LocalDateTime createdAt;
+    private java.time.LocalDateTime lastAccess;
 }
