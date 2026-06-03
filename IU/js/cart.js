@@ -26,7 +26,7 @@ async function loadCart() {
 
 function mapBackendCart(data) {
     if (!data) return { cartItems: [] };
-    console.log("Raw cart data from backend:", data);
+
     return {
         cartItems: (data.items || []).map(backendItem => {
             const variant = backendItem.productVariant;

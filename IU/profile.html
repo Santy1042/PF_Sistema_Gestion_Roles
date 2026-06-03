@@ -67,79 +67,8 @@
 
   <div id="footer-container"></div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        window.location.href = 'login.html';
-        return;
-      }
-      
-      try {
-        const res = await fetch('http://localhost:8080/api/profile', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (res.ok) {
-          const user = await res.json();
-          document.getElementById('fullname').value = (user.firstName || '') + ' ' + (user.lastName || '');
-          document.getElementById('email').value = user.email || '';
-          document.getElementById('phone').value = user.phoneNumber || '';
-          document.getElementById('address').value = user.address || '';
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    });
-
-    document.getElementById('profileForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const token = localStorage.getItem('authToken');
-      if (!token) return;
-
-      const fullName = document.getElementById('fullname').value.trim();
-      const nameParts = fullName.split(' ');
-      const firstName = nameParts[0] || '';
-      const lastName = nameParts.slice(1).join(' ') || '';
-      const phoneNumber = document.getElementById('phone').value;
-      const address = document.getElementById('address').value;
-
-      const requestData = {
-          firstName,
-          lastName,
-          phoneNumber,
-          address
-      };
-
-      try {
-          const res = await fetch('http://localhost:8080/api/profile', {
-              method: 'PUT',
-              headers: {
-                  'Authorization': `Bearer ${token}`,
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(requestData)
-          });
-          
-          if (res.ok) {
-              const user = await res.json();
-              localStorage.setItem('userInfo', JSON.stringify(user));
-              if(window.showNotification) {
-                  showNotification('Perfil actualizado correctamente', 'success');
-              } else {
-                  alert('Perfil actualizado correctamente');
-              }
-          } else {
-              if(window.showNotification) showNotification('Error al actualizar el perfil', 'error');
-          }
-      } catch (err) {
-          console.error(err);
-          if(window.showNotification) showNotification('Error de conexión', 'error');
-      }
-    });
-  </script>
+  <script src="js/profile.js"></script>
   <script src="js/theme-switch.js"></script>
-
   <script src="js/add-to-cart.js"></script>
   <script src="js/sidebar-manager.js"></script>
   <script src="js/navbar.js"></script>

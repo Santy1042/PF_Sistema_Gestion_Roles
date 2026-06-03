@@ -24,8 +24,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       document.getElementById('fullname').value = fullname;
       document.getElementById('email').value = profile.email || '';
-      document.getElementById('email').disabled = true; // El email usualmente no se cambia directamente sin validación
+      document.getElementById('email').disabled = true;
       document.getElementById('phone').value = profile.phoneNumber || '';
+      if(document.getElementById('address')) document.getElementById('address').value = profile.address || '';
     } else {
       console.error('Error al cargar el perfil');
       if (response.status === 401 || response.status === 403) {
@@ -44,6 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const submitBtn = profileForm.querySelector('button[type="submit"]');
       const fullname = document.getElementById('fullname').value.trim();
       const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address') ? document.getElementById('address').value.trim() : '';
 
       const nameParts = fullname.split(' ');
       const firstName = nameParts[0];
@@ -62,7 +64,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           body: JSON.stringify({
             firstName: firstName,
             lastName: lastName,
-            phoneNumber: phone
+            phoneNumber: phone,
+            address: address
           })
         });
 
