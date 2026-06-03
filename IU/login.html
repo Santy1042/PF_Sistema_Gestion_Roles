@@ -1,17 +1,48 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar Sesión - Tienda de Ropa</title>
-  <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
-  <link rel="stylesheet" href="style/styles.css">  <link rel=\"stylesheet\" href=\"sidebar-styles.css\"></head>
+  <title>Iniciar Sesión - AURA Essentials</title>
+  <link rel="icon" type="image/png" href="img/dark_logo.png">
+  <link rel="stylesheet" href="style/styles.css">
+  <link rel="stylesheet" href="style/sidebar-styles.css">
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      background-color: var(--surface);
+      margin: 10% auto;
+      padding: 2rem;
+      border: 1px solid var(--border-color);
+      width: 90%;
+      max-width: 500px;
+      border-radius: 12px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .error-icon {
+      font-size: 4rem;
+      color: var(--error);
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
 <body>
   <div class="auth-container">
     <div class="auth-wrapper">
       <div class="auth-side">
         <div class="image-panel">
-          <img src="img/ropa_exibida.jpg" alt="Exhibición de ropa" class="auth-image" />
+          <img src="img/login_image.jpg" alt="Exhibición de ropa" class="auth-image" />
         </div>
       </div>
 
@@ -42,14 +73,18 @@
 
           <div class="form-group">
             <label for="password">Contraseña</label>
-            <input 
-              type="password" 
-              id="password" 
-              name="password"
-              placeholder="••••••••" 
-              autocomplete="current-password"
-              required
-            />
+            <div style="position: relative;">
+              <input 
+                type="password" 
+                id="password" 
+                name="password"
+                placeholder="••••••••" 
+                autocomplete="current-password"
+                required
+                style="padding-right: 40px; width: 100%; box-sizing: border-box;"
+              />
+              <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-secondary);">👁</button>
+            </div>
           </div>
 
           
@@ -67,8 +102,34 @@
     </div>
   </div>
 
+  <!-- Inactive Account Modal -->
+  <div id="inactiveModal" class="modal">
+    <div class="modal-content">
+      <div class="error-icon">✕</div>
+      <h3>Cuenta Inactiva</h3>
+      <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">Tu cuenta está inactiva y no puedes iniciar sesión en este momento. Por favor, contacta al soporte.</p>
+      <button onclick="document.getElementById('inactiveModal').style.display='none'" class="btn btn-primary" style="width: auto; padding: 10px 20px;">Aceptar</button>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
   <script src="js/login.js"></script>
-  <script src="js/theme-switch.js"></script>  <script src=\"sidebar-manager.js\"></script>  <script src="js/navbar.js"></script>
+  <script src="js/theme-switch.js"></script>
+  <script>
+    function togglePasswordVisibility(id) {
+      const input = document.getElementById(id);
+      const btn = input.nextElementSibling;
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁';
+      }
+    }
+  </script>
+  <script src="js/sidebar-manager.js"></script>
+  <script src="js/navbar.js"></script>
   <script src="js/toast.js"></script>
 </body>
 </html>

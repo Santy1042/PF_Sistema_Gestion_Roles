@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoleChangeRequest {
-    
+
     @NotBlank(message = "El rol no puede estar vacío")
     private String role;
-    
+
 }

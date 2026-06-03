@@ -26,7 +26,7 @@ function handleAddToCartClick(productId, productName, productPrice, fallbackImag
         else alert('Este producto no tiene variantes configuradas');
         return;
     }
-    
+
     const imgElement = document.getElementById(`product-img-${productId}`);
     if (imgElement && imgElement.src && !imgElement.src.includes('data:image')) {
         image = imgElement.src;
@@ -96,16 +96,20 @@ function changeVariant(productId, btnElement) {
 
 function createProductCardHTML(product) {
     const pId = product.productId || product.id;
-    const hasVariants = product.variants && product.variants.length > 0;
-    const defaultVariant = hasVariants ? product.variants[0] : null;
+    let activeVariants = [];
+    if (product.variants && product.variants.length > 0) {
+        activeVariants = product.variants.filter(v => v.isActive !== false);
+    }
+    const hasVariants = activeVariants.length > 0;
+    const defaultVariant = hasVariants ? activeVariants[0] : null;
 
-    let imageUrl = defaultVariant && defaultVariant.imageUrl ? defaultVariant.imageUrl : (product.imageUrl || product.image || 'productos/default.jpg');
+    let imageUrl = defaultVariant && defaultVariant.imageUrl ? defaultVariant.imageUrl : (product.imageUrl || product.image || 'img/default_product.png');
     let initialStock = defaultVariant ? defaultVariant.stock : (product.stock || 0);
     let stockInfo = getStockInfo(initialStock);
 
     let variantsHtml = '';
     if (hasVariants) {
-        const pills = product.variants.map((v, index) => {
+        const pills = activeVariants.map((v, index) => {
             const isSelected = index === 0;
             const activeStyle = isSelected
                 ? 'background-color: var(--primary); color: white; border-color: var(--primary);'
@@ -149,7 +153,7 @@ function createProductCardHTML(product) {
     let priceHtml = '';
     const originalPrice = Number(product.price);
     let currentPrice = originalPrice;
-    
+
     if (product.discountPercentage && product.discountPercentage > 0) {
         currentPrice = originalPrice - (originalPrice * product.discountPercentage / 100);
         priceHtml = `
@@ -166,7 +170,7 @@ function createProductCardHTML(product) {
     <article class="product-card" id="product-${pId}">
       <div class="product-image" style="position: relative;">
         ${badgesHtml}
-        <img id="product-img-${pId}" src="${imageUrl}" alt="${product.name}" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23666%22%3E🛍️%3C/text%3E%3C/svg%3E'" />
+        <img id="product-img-${pId}" src="${imageUrl}" alt="${product.name}" onerror="this.onerror=null; this.src='img/default_product.png'" />
       </div>
       <div class="product-info">
         <span class="product-category">${product.category || product.categoryName || 'General'}</span>

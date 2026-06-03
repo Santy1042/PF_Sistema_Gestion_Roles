@@ -7,5 +7,5 @@ import com.thegroup.pf_sgr.dto.RegisterRequest;
 public interface IAuthService {
     AuthResponse register(RegisterRequest request);
     AuthResponse login(LoginRequest request);
-    
+
 }

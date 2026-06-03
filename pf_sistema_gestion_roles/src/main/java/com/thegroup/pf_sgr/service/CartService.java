@@ -40,7 +40,7 @@ public class CartService implements ICartService {
     @Override
     public Cart addItemToCart(Long userId, Integer productVariantId, Integer quantity) {
         Cart cart = getOrCreateCart(userId);
-        
+
         ProductVariant variant = productVariantRepository.findById(productVariantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Variante de producto no encontrada"));
 
@@ -96,24 +96,24 @@ public class CartService implements ICartService {
     @Override
     public Cart syncCart(Long userId, List<CartItemRequest> frontendItems) {
         Cart cart = getOrCreateCart(userId);
-        
+
         List<Integer> variantIds = frontendItems.stream()
                 .map(CartItemRequest::getProductVariantId)
                 .toList();
 
         List<ProductVariant> variants = productVariantRepository.findAllById(variantIds);
-        
+
         Map<Integer, ProductVariant> variantMap = variants.stream()
                 .collect(Collectors.toMap(ProductVariant::getVariantId, v -> v));
 
         for (CartItemRequest request : frontendItems) {
             ProductVariant variant = variantMap.get(request.getProductVariantId());
             if (variant == null) continue;
-                        
+
             Optional<CartItem> existingItem = cart.getItems().stream()
                     .filter(item -> item.getProductVariant().getVariantId().equals(variant.getVariantId()))
                     .findFirst();
-                    
+
             if (existingItem.isPresent()) {
                 existingItem.get().setQuantity(existingItem.get().getQuantity() + request.getQuantity());
             } else {
@@ -124,7 +124,7 @@ public class CartService implements ICartService {
                 cart.getItems().add(newItem);
             }
         }
-        
+
         return cartRepository.save(cart);
     }
 }

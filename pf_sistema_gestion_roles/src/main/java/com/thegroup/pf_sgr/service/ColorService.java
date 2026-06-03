@@ -34,6 +34,15 @@ public class ColorService implements IColorService {
     }
 
     @Override
+    public Color updateColor(Integer colorId, Color colorDetails) {
+        Color color = colorRepository.findById(colorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Color no encontrado con el ID: " + colorId));
+
+        color.setName(colorDetails.getName());
+        return colorRepository.save(color);
+    }
+
+    @Override
     public void deleteColor(Integer colorId) {
         Color color = colorRepository.findById(colorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Color no encontrado con el ID: " + colorId));

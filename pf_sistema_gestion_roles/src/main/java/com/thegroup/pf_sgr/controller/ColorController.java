@@ -35,6 +35,12 @@ public class ColorController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/updateColor")
+    public ResponseEntity<Color> updateColor(@RequestParam Integer colorId, @RequestBody Color color) {
+        return ResponseEntity.ok(colorService.updateColor(colorId, color));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/deleteColor")
     public ResponseEntity<Void> deleteColor(@RequestParam Integer colorId) {
         colorService.deleteColor(colorId);

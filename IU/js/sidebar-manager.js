@@ -1,9 +1,7 @@
-// Los listeners se asignarán después de que se inyecte el HTML en DOMContentLoaded
-
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('authToken');
   if (!token) {
-    // Si no está logueado, no mostramos el menú lateral ni su botón
+
     return;
   }
 
@@ -13,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <h3>Menú</h3>
     <button class="sidebar-close" id="sidebarClose">✕</button>
   </div>
-  
+
   <div class="sidebar-content">
     <div class="sidebar-section">
       <div class="sidebar-section-title">Mi Cuenta</div>
@@ -42,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <button class="sidebar-toggle" id="sidebarToggle">☰</button>`;
 
   document.body.insertAdjacentHTML('afterbegin', sidebarHTML);
-  
+
   const newSidebarToggle = document.getElementById('sidebarToggle');
   const newSidebar = document.getElementById('sidebar');
   const newSidebarClose = document.getElementById('sidebarClose');
@@ -75,11 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
     newSidebarThemeToggle.addEventListener('click', () => {
       const current = document.body.classList.contains('theme-dark') ? 'dark' : 'light';
       const newTheme = current === 'dark' ? 'light' : 'dark';
-      
+
       document.body.classList.toggle('theme-dark', newTheme === 'dark');
       document.body.classList.toggle('theme-light', newTheme === 'light');
       localStorage.setItem('theme', newTheme);
-      
+
       const toggle = document.getElementById('themeToggle');
       if (toggle) {
         toggle.textContent = newTheme === 'dark' ? 'Modo claro' : 'Modo oscuro';
@@ -95,6 +93,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-
-

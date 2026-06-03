@@ -34,6 +34,15 @@ public class SizeService implements ISizeService {
     }
 
     @Override
+    public Size updateSize(Integer sizeId, Size sizeDetails) {
+        Size size = sizeRepository.findById(sizeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Talla no encontrada con el ID: " + sizeId));
+
+        size.setName(sizeDetails.getName());
+        return sizeRepository.save(size);
+    }
+
+    @Override
     public void deleteSize(Integer sizeId) {
         Size size = sizeRepository.findById(sizeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Talla no encontrada con el ID: " + sizeId));

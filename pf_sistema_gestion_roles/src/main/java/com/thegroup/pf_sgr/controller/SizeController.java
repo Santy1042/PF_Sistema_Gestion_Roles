@@ -35,6 +35,12 @@ public class SizeController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/updateSize")
+    public ResponseEntity<Size> updateSize(@RequestParam Integer sizeId, @RequestBody Size size) {
+        return ResponseEntity.ok(sizeService.updateSize(sizeId, size));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/deleteSize")
     public ResponseEntity<Void> deleteSize(@RequestParam Integer sizeId) {
         sizeService.deleteSize(sizeId);

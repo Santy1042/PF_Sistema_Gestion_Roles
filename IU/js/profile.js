@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // Cargar datos del perfil
   try {
     const response = await fetch(`${API_BASE_URL}/profile`, {
       method: 'GET',
@@ -22,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (response.ok) {
       const profile = await response.json();
       const fullname = `${profile.firstName} ${profile.lastName}`.trim();
-      
+
       document.getElementById('fullname').value = fullname;
       document.getElementById('email').value = profile.email || '';
       document.getElementById('email').disabled = true; // El email usualmente no se cambia directamente sin validación
@@ -41,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (profileForm) {
     profileForm.addEventListener('submit', async function(e) {
       e.preventDefault();
-      
+
       const submitBtn = profileForm.querySelector('button[type="submit"]');
       const fullname = document.getElementById('fullname').value.trim();
       const phone = document.getElementById('phone').value.trim();

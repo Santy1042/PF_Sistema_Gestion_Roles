@@ -2,6 +2,7 @@ package com.thegroup.pf_sgr.interfaces;
 
 import com.thegroup.pf_sgr.dto.CheckoutResponseDTO;
 import com.thegroup.pf_sgr.dto.SaleResponseDTO;
+import com.thegroup.pf_sgr.dto.AdminSaleUpdateRequest;
 import java.util.List;
 
 public interface ISaleService {
@@ -11,4 +12,6 @@ public interface ISaleService {
     SaleResponseDTO refundOrder(Long saleId);
     List<SaleResponseDTO> getSalesByUser(Long userId);
     SaleResponseDTO getSaleDetail(Long saleId, Long userId);
+    List<SaleResponseDTO> getAllSales();
+    SaleResponseDTO updateSaleAdmin(Long saleId, AdminSaleUpdateRequest request);
 }

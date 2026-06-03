@@ -1,4 +1,10 @@
-// orders.js
+window.escapeHTML = function(str) {
+    if (str === null || str === undefined) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+};
+
 const API_BASE_URL = 'http://localhost:8080/api';
 const authToken = localStorage.getItem('authToken');
 
@@ -39,7 +45,7 @@ async function loadOrders() {
 
 function renderOrders() {
     const container = document.getElementById('ordersList');
-    
+
     if (currentOrders.length === 0) {
         container.innerHTML = `
             <div class="no-orders">
@@ -50,7 +56,6 @@ function renderOrders() {
         return;
     }
 
-    // Ordenar de más reciente a más antiguo
     currentOrders.sort((a, b) => new Date(b.saleDate) - new Date(a.saleDate));
 
     container.innerHTML = currentOrders.map(order => {
@@ -64,13 +69,14 @@ function renderOrders() {
 
         let statusText = order.status;
         let actionButtons = '';
-        
+
         if (order.status === 'PENDING') {
             statusText = 'PENDIENTE';
             actionButtons = `
                 <div class="order-actions">
                     <button class="btn btn-primary" onclick="goToCheckout(${order.idSale})">Pagar</button>
                     <button class="btn btn-outline" onclick="openReportModal(${order.idSale}, 'cancel')" style="color: var(--error); border-color: var(--error);">Cancelar</button>
+                    <button class="btn btn-outline" onclick="verDetallesVenta(${order.idSale})">Ver Productos</button>
                 </div>
             `;
         } else if (order.status === 'PAID') {
@@ -78,15 +84,22 @@ function renderOrders() {
             actionButtons = `
                 <div class="order-actions">
                     <button class="btn btn-secondary" onclick="openInvoiceModal(${order.idSale})">Ver Factura</button>
+                    <button class="btn btn-outline" onclick="verDetallesVenta(${order.idSale})">Ver Productos</button>
                 </div>
             `;
         } else if (order.status === 'CANCELLED') {
             statusText = 'CANCELADO';
+            actionButtons = `
+                <div class="order-actions">
+                    <button class="btn btn-outline" onclick="verDetallesVenta(${order.idSale})">Ver Productos</button>
+                </div>
+            `;
         } else if (order.status === 'REFUNDED') {
             statusText = 'REEMBOLSADO';
             actionButtons = `
                 <div class="order-actions">
                     <button class="btn btn-secondary" onclick="openInvoiceModal(${order.idSale})">Ver Factura</button>
+                    <button class="btn btn-outline" onclick="verDetallesVenta(${order.idSale})">Ver Productos</button>
                 </div>
             `;
         }
@@ -94,7 +107,7 @@ function renderOrders() {
         const reportHtml = order.statusReport ? `
             <div class="order-report">
                 <strong>Reporte de Estado:</strong><br>
-                ${order.statusReport}
+                ${window.escapeHTML(order.statusReport)}
             </div>
         ` : '';
 
@@ -109,7 +122,7 @@ function renderOrders() {
                         ${statusText}
                     </div>
                 </div>
-                
+
                 <div class="order-details">
                     <div>
                         <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Total de Productos: ${order.details ? order.details.length : 0}</p>
@@ -118,7 +131,7 @@ function renderOrders() {
                         $${order.total.toLocaleString()}
                     </div>
                 </div>
-                
+
                 ${reportHtml}
                 ${actionButtons}
             </div>
@@ -133,15 +146,15 @@ function goToCheckout(saleId) {
 
 function openReportModal(saleId, action) {
     pendingAction = { saleId, action };
-    
+
     document.getElementById('reportModalTitle').textContent = 'Cancelar Pedido';
     document.getElementById('reportModalDesc').textContent = 'Por favor, ingresa el motivo de la cancelación (opcional): ';
-    
+
     document.getElementById('statusReportText').value = '';
-    
+
     const confirmBtn = document.getElementById('confirmActionBtn');
     confirmBtn.onclick = executePendingAction;
-    
+
     document.getElementById('reportModal').style.display = 'block';
 }
 
@@ -152,18 +165,18 @@ function closeReportModal() {
 
 async function executePendingAction() {
     if (!pendingAction) return;
-    
+
     const { saleId, action } = pendingAction;
     const reportText = document.getElementById('statusReportText').value;
-    
+
     const endpoint = action === 'pay' ? `/sales/${saleId}/pay` : `/sales/${saleId}/cancel`;
     const btn = document.getElementById('confirmActionBtn');
     const originalText = btn.textContent;
-    
+
     try {
         btn.disabled = true;
         btn.textContent = 'Procesando...';
-        
+
         const response = await fetch(`${API_BASE_URL}${endpoint}`, {
             method: 'POST',
             headers: {
@@ -178,10 +191,9 @@ async function executePendingAction() {
             throw new Error(err.message || 'Error al procesar la acción');
         }
 
-        // Action successful, reload orders
         closeReportModal();
         await loadOrders();
-        
+
     } catch (error) {
         console.error(error);
         alert('Error: ' + error.message);
@@ -252,8 +264,8 @@ function openInvoiceModal(saleId) {
                         ${variantStr}
                     </td>
                     <td style="padding: 0.5rem;">${detail.quantity}</td>
-                    <td style="padding: 0.5rem;">$${detail.unitPrice.toLocaleString()}</td>
-                    <td style="padding: 0.5rem;">$${(detail.unitPrice * detail.quantity).toLocaleString()}</td>
+                    <td style="padding: 0.5rem;">$${(detail.unitPrice || 0).toLocaleString()}</td>
+                    <td style="padding: 0.5rem;">$${((detail.unitPrice || 0) * detail.quantity).toLocaleString()}</td>
                 </tr>
             `;
         });
@@ -281,3 +293,29 @@ function printInvoice() {
     window.print();
     document.title = originalTitle;
 }
+
+window.verDetallesVenta = function(saleId) {
+    const order = currentOrders.find(o => o.idSale === saleId);
+    if (!order) return;
+    const details = order.details || [];
+    const tbody = document.getElementById('bodyDetallesVenta');
+    if (details.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center">Sin productos</td></tr>';
+    } else {
+        tbody.innerHTML = details.map(d => `
+            <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.5rem;">
+                    <div style="font-weight: 500;">${d.productName || 'Producto'}</div>
+                    <div style="margin-top: 4px; display: flex; gap: 4px;">
+                        <span class="badge" style="font-size: 0.75rem; padding: 2px 6px; border: 1px solid var(--border-color); background: var(--surface-muted);">${d.color || 'Sin Color'}</span>
+                        <span class="badge" style="font-size: 0.75rem; padding: 2px 6px; border: 1px solid var(--border-color); background: var(--surface-muted);">${d.size || 'Sin Talla'}</span>
+                    </div>
+                </td>
+                <td style="padding: 0.5rem;">${d.quantity}</td>
+                <td style="padding: 0.5rem;">$${parseFloat(d.totalPrice).toFixed(2)}</td>
+            </tr>
+        `).join('');
+    }
+    document.getElementById('modalDetallesVentaSaleId').textContent = saleId;
+    document.getElementById('modalDetallesVenta').style.display = 'block';
+};

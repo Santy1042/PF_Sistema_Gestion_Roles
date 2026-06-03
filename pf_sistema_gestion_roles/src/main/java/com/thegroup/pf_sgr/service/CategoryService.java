@@ -34,6 +34,15 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    public Category updateCategory(Integer categoryId, Category categoryDetails) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con el ID: " + categoryId));
+
+        category.setName(categoryDetails.getName());
+        return categoryRepository.save(category);
+    }
+
+    @Override
     public void deleteCategory(Integer categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con el ID: " + categoryId));

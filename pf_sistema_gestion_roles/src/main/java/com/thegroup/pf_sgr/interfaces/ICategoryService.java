@@ -7,5 +7,6 @@ public interface ICategoryService {
     Page<Category> getAllCategories(int page, int size);
     Category getCategoryById(Integer categoryId);
     Category saveCategory(Category category);
+    Category updateCategory(Integer categoryId, Category category);
     void deleteCategory(Integer categoryId);
 }

@@ -11,8 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.className = `toast ${type}`;
         toast.textContent = message;
         toastContainer.appendChild(toast);
-        
-        // Trigger animation
+
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 toast.classList.add('show');
@@ -25,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     };
 
-    // Check for flash messages
     const flash = sessionStorage.getItem('flashMessage');
     const flashType = sessionStorage.getItem('flashType') || 'success';
     if (flash) {

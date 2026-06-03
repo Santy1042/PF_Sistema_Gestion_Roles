@@ -1,16 +1,11 @@
-// API Configuration
-var API_BASE_URL = 'http://localhost:8080/api';
 var CART_API = `${API_BASE_URL}/cart`;
-var STORAGE_KEY = 'localCart';
 
-// Cart state
 let currentCart = null;
 let currentEditingItemId = null;
 let pendingRemovalItemId = null;
 let authToken = localStorage.getItem('authToken');
 let isAuthenticated = !!authToken;
 
-// Initialize cart on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadCart();
     initializeSidebar();
@@ -37,7 +32,7 @@ function mapBackendCart(data) {
             const variant = backendItem.productVariant;
             const product = variant?.product;
             const imageUrl = variant?.imageUrl || product?.imageUrl || product?.image || 'productos/default.jpg';
-            
+
             return {
                 idCartItem: backendItem.itemCartId,
                 productVariantId: variant?.variantId,
@@ -46,7 +41,8 @@ function mapBackendCart(data) {
                 price: product?.price || 0,
                 productImage: imageUrl,
                 color: variant?.color?.name,
-                size: variant?.size?.name
+                size: variant?.size?.name,
+                isActive: (variant?.isActive !== false) && (product?.isActive !== false) && (product?.category?.isActive !== false)
             };
         })
     };
@@ -97,14 +93,12 @@ function loadCartFromLocalStorage() {
     renderCart();
 }
 
-// Save cart to localStorage
 function saveCartToLocalStorage() {
     if (currentCart) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(currentCart));
     }
 }
 
-// Render cart items
 function renderCart() {
     const container = document.getElementById('cartItemsContainer');
     const emptyMessage = document.getElementById('emptyCartMessage');
@@ -123,20 +117,21 @@ function renderCart() {
     updateCartSummary();
 }
 
-// Create HTML for a single cart item
 function createCartItemHTML(item) {
     const itemTotal = item.quantity * item.price;
-    const imageUrl = item.productImage || 'img/placeholder.png';
+    const imageUrl = item.productImage || 'img/default_product.png';
+    const isInactive = item.isActive === false;
 
     return `
-        <div class="cart-item" data-item-id="${item.idCartItem}">
+        <div class="cart-item ${isInactive ? 'inactive-item' : ''}" data-item-id="${item.idCartItem}" style="${isInactive ? 'opacity: 0.5;' : ''}">
             <div class="item-image">
                 <img src="${imageUrl}" alt="${item.productName}" 
-                     onerror="this.src='img/placeholder.png'">
+                     onerror="this.src='img/default_product.png'">
             </div>
-            
+
             <div class="item-details">
-                <h3>${item.productName}</h3>
+                <h3 style="${isInactive ? 'text-decoration: line-through;' : ''}">${item.productName}</h3>
+                ${isInactive ? '<span style="color: var(--error); font-size: 0.8em; font-weight: bold;">Producto o Variante Inactiva</span>' : ''}
                 <div class="item-specs">
                     ${item.color ? `<span class="spec">🎨 ${item.color}</span>` : ''}
                     ${item.size ? `<span class="spec">📏 ${item.size}</span>` : ''}
@@ -144,6 +139,7 @@ function createCartItemHTML(item) {
             </div>
 
             <div class="item-quantity">
+                ${isInactive ? '<span style="color: var(--error);">No disponible</span>' : `
                 <div class="quantity-control">
                     <button class="qty-btn" onclick="decreaseItemQty(${item.idCartItem})">−</button>
                     <span class="qty-display">${item.quantity}</span>
@@ -151,12 +147,13 @@ function createCartItemHTML(item) {
                 </div>
                 <button class="btn-edit" onclick="openEditQuantityModal(${item.idCartItem}, ${item.quantity})" 
                         title="Editar cantidad">✎</button>
+                `}
             </div>
 
             <div class="item-price">
                 <div class="price-breakdown">
                     <span class="unit-price">$${item.price.toFixed(2)}</span>
-                    <span class="item-total">Total: $${itemTotal.toFixed(2)}</span>
+                    <span class="item-total">Total: $${isInactive ? '0.00' : itemTotal.toFixed(2)}</span>
                 </div>
             </div>
 
@@ -168,7 +165,6 @@ function createCartItemHTML(item) {
     `;
 }
 
-// Update cart summary
 function updateCartSummary() {
     if (!currentCart || !currentCart.cartItems) {
         document.getElementById('subtotal').textContent = '$0.00';
@@ -178,7 +174,9 @@ function updateCartSummary() {
 
     let subtotal = 0;
     currentCart.cartItems.forEach(item => {
-        subtotal += item.quantity * item.price;
+        if (item.isActive !== false) {
+            subtotal += item.quantity * item.price;
+        }
     });
 
     const total = subtotal;
@@ -186,11 +184,9 @@ function updateCartSummary() {
     document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
     document.getElementById('total').textContent = `$${total.toFixed(2)}`;
 
-    // Update cart counter in other pages
     updateCartCounterInOtherPages();
 }
 
-// Increase item quantity
 async function increaseItemQty(itemId) {
     const item = currentCart.cartItems.find(i => i.idCartItem === itemId);
     if (item && item.quantity < 99) {
@@ -198,7 +194,6 @@ async function increaseItemQty(itemId) {
     }
 }
 
-// Decrease item quantity
 async function decreaseItemQty(itemId) {
     const item = currentCart.cartItems.find(i => i.idCartItem === itemId);
     if (item && item.quantity > 1) {
@@ -208,7 +203,6 @@ async function decreaseItemQty(itemId) {
     }
 }
 
-// Open quantity edit modal
 function openEditQuantityModal(itemId, currentQty) {
     currentEditingItemId = itemId;
     document.getElementById('modalQuantity').value = currentQty;
@@ -216,7 +210,6 @@ function openEditQuantityModal(itemId, currentQty) {
     document.getElementById('modalQuantity').focus();
 }
 
-// Quantity modal controls
 function increaseQty() {
     const input = document.getElementById('modalQuantity');
     if (parseInt(input.value) < 99) {
@@ -231,7 +224,6 @@ function decreaseQty() {
     }
 }
 
-// Update quantity from modal
 async function updateQuantity() {
     const newQty = parseInt(document.getElementById('modalQuantity').value);
     if (newQty > 0 && newQty < 100) {
@@ -240,11 +232,10 @@ async function updateQuantity() {
     }
 }
 
-// Update item quantity via API or localStorage
 async function updateItemQuantity(itemId, quantity) {
     try {
         if (isAuthenticated) {
-            // Authenticated user - use API
+
             const response = await fetch(`${CART_API}/updateItemQuantity?itemCartId=${itemId}&quantity=${quantity}`, {
                 method: 'PUT',
                 headers: {
@@ -258,14 +249,14 @@ async function updateItemQuantity(itemId, quantity) {
             const data = await response.json();
             currentCart = mapBackendCart(data);
         } else {
-            // Unauthenticated user - use localStorage
+
             const item = currentCart.cartItems.find(i => i.idCartItem === itemId);
             if (item) {
                 item.quantity = quantity;
                 saveCartToLocalStorage();
             }
         }
-        
+
         renderCart();
         showNotification('✓ Cantidad actualizada', 'success');
     } catch (error) {
@@ -274,7 +265,6 @@ async function updateItemQuantity(itemId, quantity) {
     }
 }
 
-// Open remove confirmation modal
 function openRemoveConfirm(itemId, productName) {
     pendingRemovalItemId = itemId;
     document.getElementById('confirmMessage').textContent = 
@@ -282,7 +272,6 @@ function openRemoveConfirm(itemId, productName) {
     document.getElementById('confirmModal').style.display = 'block';
 }
 
-// Confirm and remove item
 async function confirmRemove() {
     if (pendingRemovalItemId) {
         await removeFromCart(pendingRemovalItemId);
@@ -290,11 +279,10 @@ async function confirmRemove() {
     }
 }
 
-// Remove item from cart via API or localStorage
 async function removeFromCart(itemId) {
     try {
         if (isAuthenticated) {
-            // Authenticated user - use API
+
             const response = await fetch(`${CART_API}/removeItemFromCart?itemCartId=${itemId}`, {
                 method: 'DELETE',
                 headers: {
@@ -308,7 +296,7 @@ async function removeFromCart(itemId) {
             const data = await response.json();
             currentCart = mapBackendCart(data);
         } else {
-            // Unauthenticated user - use localStorage
+
             currentCart.cartItems = currentCart.cartItems.filter(item => item.idCartItem !== itemId);
             saveCartToLocalStorage();
         }
@@ -321,7 +309,6 @@ async function removeFromCart(itemId) {
     }
 }
 
-// Apply promo code
 function applyPromoCode() {
     const code = document.getElementById('promoCode').value.trim().toUpperCase();
     const messageDiv = document.getElementById('promoMessage');
@@ -331,7 +318,6 @@ function applyPromoCode() {
         return;
     }
 
-    // Simple promo codes for demo
     const promoCodes = {
         'DESCUENTO10': 0.10,
         'DESCUENTO20': 0.20,
@@ -351,10 +337,9 @@ function applyPromoCode() {
     }
 }
 
-// Proceed to checkout
 async function proceedToCheckout() {
     if (!isAuthenticated) {
-        // Save current cart state and redirect
+
         saveCartToLocalStorage();
         window.location.href = 'login.html?redirect=cart';
         return;
@@ -362,6 +347,12 @@ async function proceedToCheckout() {
 
     if (!currentCart || !currentCart.cartItems || currentCart.cartItems.length === 0) {
         showNotification('Tu carrito está vacío', 'error');
+        return;
+    }
+
+    const hasInactive = currentCart.cartItems.some(i => i.isActive === false);
+    if (hasInactive) {
+        showNotification('Elimina los productos inactivos para proceder al pago', 'error');
         return;
     }
 
@@ -387,11 +378,10 @@ async function proceedToCheckout() {
         }
 
         const saleData = await response.json();
-        
-        // Redirigir a checkout.html pasando el ID de la orden en localStorage
+
         localStorage.setItem('pendingSaleId', saleData.idSale || saleData.id || saleData.saleId || saleData.saleNumber || '');
         saveCartToLocalStorage(); 
-        
+
         window.location.href = 'checkout.html';
     } catch (error) {
         console.error('Error procesando checkout:', error);
@@ -403,7 +393,6 @@ async function proceedToCheckout() {
     }
 }
 
-// Modal management
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
@@ -417,38 +406,19 @@ window.onclick = function(event) {
     });
 }
 
-// Notification system
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
-
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
-// Initialize sidebar
 function initializeSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (sidebar) {
         sidebar.innerHTML = `
             <div id="sidebarContent"></div>
         `;
-        // Sidebar manager will handle the rest
+
         if (typeof loadSidebar === 'function') {
             loadSidebar();
         }
     }
 }
 
-// Update cart counter in other pages (for consistency)
 function updateCartCounterInOtherPages() {
     if (currentCart && currentCart.cartItems) {
         localStorage.setItem('cartItemCount', currentCart.cartItems.length);

@@ -32,7 +32,7 @@ public class ProfileService implements IProfileService {
         user.setAddress(request.getAddress());
 
         User updatedUser = userRepository.save(user);
-        
+
         return mapToResponse(updatedUser);
     }
 

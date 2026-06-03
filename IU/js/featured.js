@@ -5,10 +5,11 @@ async function fetchFeaturedProducts() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        
-        const allProducts = data.content ? data.content : data;
+
+        let allProducts = data.content ? data.content : data;
+        allProducts = allProducts.filter(p => p.isActive !== false);
         const featuredProducts = allProducts.filter(p => p.isFeatured);
-        
+
         renderFeaturedCarousel(featuredProducts);
     } catch (error) {
         console.error('Error fetching featured products:', error);
@@ -22,12 +23,12 @@ async function fetchFeaturedProducts() {
 function renderFeaturedCarousel(products) {
     const container = document.getElementById('productsContainer');
     if (!container) return;
-    
+
     if (products.length === 0) {
         container.innerHTML = '<p style="text-align: center; width: 100%; color: var(--text-secondary);">No hay productos destacados en este momento.</p>';
         return;
     }
-    
+
     container.style.display = 'flex';
     container.style.gap = '2rem';
     container.style.overflowX = 'auto';
@@ -35,7 +36,7 @@ function renderFeaturedCarousel(products) {
     container.style.paddingBottom = '1rem';
     container.style.scrollbarWidth = 'thin';
     container.style.scrollbarColor = 'var(--primary) var(--surface-light)';
-    
+
     container.innerHTML = products.map(product => {
         return `<div style="min-width: 300px; max-width: 300px; scroll-snap-align: start; flex-shrink: 0;">
             ${createProductCardHTML(product)}

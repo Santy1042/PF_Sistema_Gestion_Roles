@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Productos - Tienda de Ropa</title>
-  <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
+  <title>Productos - AURA Essentials</title>
+  <link rel="icon" type="image/png" href="img/dark_logo.png">
   <link rel="stylesheet" href="style/styles.css">
   <link rel="stylesheet" href="style/sidebar-styles.css">
 </head>
@@ -19,65 +19,32 @@
       <p>Explora nuestros mejores artículos de ropa, calzado y accesorios</p>
     </div>
 
+    <div class="catalog-search-bar" style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center;">
+      <input type="text" id="catalogSearchInput" placeholder="Buscar producto por nombre..." style="flex:1;min-width:200px;padding:0.6rem 1rem;border-radius:8px;border:1px solid var(--border-color);background:var(--surface);color:var(--text-primary);font-size:0.95rem;outline:none;">
+      <select id="catalogCategoryFilter" style="padding:0.6rem 1rem;border-radius:8px;border:1px solid var(--border-color);background:var(--surface);color:var(--text-primary);font-size:0.9rem;outline:none;">
+        <option value="">Todas las categorías</option>
+      </select>
+      <button id="catalogSearchBtn" class="btn btn-primary" style="padding:0.6rem 1.2rem;">Buscar</button>
+      <button id="catalogClearBtn" class="btn btn-outline" style="padding:0.6rem 1rem;">Limpiar</button>
+    </div>
+
+    <div id="catalogResultCount" style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;"></div>
+
     <div class="products-grid" id="productsGrid">
       <!-- Los productos se cargarán aquí con JavaScript -->
     </div>
   </main>
 
-  <footer>
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>Sobre nuestra tienda</h3>
-        <ul>
-          <li><a href="#">Acerca de nosotros</a></li>
-          <li><a href="#">Nuestro equipo</a></li>
-          <li><a href="#">Carreras</a></li>
-          <li><a href="#">Blog</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Compra</h3>
-        <ul>
-          <li><a href="#">Catálogo</a></li>
-          <li><a href="#">Ofertas</a></li>
-          <li><a href="#">Nuevos productos</a></li>
-          <li><a href="#">Envío y devoluciones</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Soporte</h3>
-        <ul>
-          <li><a href="#">Contacto</a></li>
-          <li><a href="#">Preguntas frecuentes</a></li>
-          <li><a href="#">Estado del pedido</a></li>
-          <li><a href="#">Garantía</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Legal</h3>
-        <ul>
-          <li><a href="#">Privacidad</a></li>
-          <li><a href="#">Términos de servicio</a></li>
-          <li><a href="#">Política de cookies</a></li>
-          <li><a href="#">Declaración de accesibilidad</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 Tienda de Ropa. Todos los derechos reservados.</p>
-    </div>
-  </footer>
+  <div id="footer-container"></div>
+  <script src="js/config.js"></script>
   <script src="js/theme-switch.js"></script>
-  <script src="js/cart-counter.js"></script>
+
   <script src="js/add-to-cart.js"></script>
   <script src="js/product-card.js"></script>
   <script src="js/products.js"></script>
-    <script src="js/sidebar-manager.js"></script>
+  <script src="js/sidebar-manager.js"></script>
   <script src="js/navbar.js"></script>
+  <script src="js/footer.js"></script>
   <script src="js/toast.js"></script>
 </body>
 </html>
-
-
-
-

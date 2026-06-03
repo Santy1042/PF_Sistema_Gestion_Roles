@@ -55,5 +55,4 @@ public class AuthService implements IAuthService {
         return new AuthResponse(token);
     }
 
-    
 }

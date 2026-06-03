@@ -3,37 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Perfil - Tienda de Ropa</title>
-  <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
+  <title>Mi Perfil - AURA Essentials</title>
+  <link rel="icon" type="image/png" href="img/dark_logo.png">
   <link rel="stylesheet" href="style/styles.css">
   <link rel="stylesheet" href="style/sidebar-styles.css">
-</head>
-<body>
-  <div id="navbar-container"></div>
-
-  <main class="section">
-    <div class="profile-header">
-      <div class="profile-intro">
-        <h1>Mi Perfil</h1>
-        <p>Actualiza tu información personal y ajusta tus datos de usuario directamente desde aquí.</p>
-      </div>
-      <div>
-        <a href="index.html" class="btn btn-outline">Volver al inicio</a>
-      </div>
-    </div>
-
-    <div class="profile-page">
-      <section class="profile-panel">
-        <article class="summary-card">
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Perfil - Tienda de Ropa</title>
-  <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
-  <link rel="stylesheet" href="style/styles.css">
-  <link rel="stylesheet" href="style/sidebar-styles.css">
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
 </head>
 <body>
   <div id="navbar-container"></div>
@@ -90,41 +65,7 @@
     </div>
   </main>
 
-  <!-- ==================== FOOTER ==================== -->
-  <footer>
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>Sobre nuestra tienda</h3>
-        <ul>
-          <li><a href="#">Acerca de nosotros</a></li>
-          <li><a href="#">Nuestro equipo</a></li>
-          <li><a href="#">Carreras</a></li>
-          <li><a href="#">Blog</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Política y Legal</h3>
-        <ul>
-          <li><a href="#">Términos de servicio</a></li>
-          <li><a href="#">Política de privacidad</a></li>
-          <li><a href="#">Política de cookies</a></li>
-          <li><a href="#">Política de devoluciones</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Contacto</h3>
-        <ul>
-          <li><a href="mailto:info@tienda.com">info@tienda.com</a></li>
-          <li><a href="tel:+34123456789">+34 123 456 789</a></li>
-          <li><a href="#">Síguenos en redes</a></li>
-          <li><a href="#">Centro de ayuda</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2024 Tienda de Ropa Premium. Todos los derechos reservados.</p>
-    </div>
-  </footer>
+  <div id="footer-container"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
@@ -142,7 +83,7 @@
           const user = await res.json();
           document.getElementById('fullname').value = (user.firstName || '') + ' ' + (user.lastName || '');
           document.getElementById('email').value = user.email || '';
-          document.getElementById('phone').value = user.phone || '';
+          document.getElementById('phone').value = user.phoneNumber || '';
           document.getElementById('address').value = user.address || '';
         }
       } catch (err) {
@@ -183,23 +124,26 @@
           if (res.ok) {
               const user = await res.json();
               localStorage.setItem('userInfo', JSON.stringify(user));
-              showNotification('Perfil actualizado correctamente', 'success');
+              if(window.showNotification) {
+                  showNotification('Perfil actualizado correctamente', 'success');
+              } else {
+                  alert('Perfil actualizado correctamente');
+              }
           } else {
-              showNotification('Error al actualizar el perfil', 'error');
+              if(window.showNotification) showNotification('Error al actualizar el perfil', 'error');
           }
       } catch (err) {
           console.error(err);
-          showNotification('Error de conexión', 'error');
+          if(window.showNotification) showNotification('Error de conexión', 'error');
       }
     });
   </script>
   <script src="js/theme-switch.js"></script>
-  <script src="js/cart-counter.js"></script>
+
   <script src="js/add-to-cart.js"></script>
-    <script src="js/sidebar-manager.js"></script>
+  <script src="js/sidebar-manager.js"></script>
   <script src="js/navbar.js"></script>
+  <script src="js/footer.js"></script>
   <script src="js/toast.js"></script>
 </body>
 </html>
-
-

@@ -6,5 +6,5 @@ import com.thegroup.pf_sgr.model.ProductVariant;
 
 @Repository
 public interface ProductVariantRepository extends JpaRepository<ProductVariant, Integer> {
-    
+
 }

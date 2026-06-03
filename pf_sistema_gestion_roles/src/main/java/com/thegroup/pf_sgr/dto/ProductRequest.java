@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class ProductRequest {
     @NotBlank(message = "El nombre es obligatorio")
     private String name;
-    
+
     @NotNull(message = "El precio es obligatorio")
     @Min(value = 0, message = "El precio no puede ser negativo")
     private BigDecimal price;

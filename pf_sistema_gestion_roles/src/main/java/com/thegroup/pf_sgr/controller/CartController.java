@@ -4,8 +4,8 @@ import com.thegroup.pf_sgr.dto.CartItemRequest;
 import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import com.thegroup.pf_sgr.interfaces.ICartService;
 import com.thegroup.pf_sgr.model.Cart;
-import com.thegroup.pf_sgr.model.User;
 import com.thegroup.pf_sgr.repository.UserRepository;
+import com.thegroup.pf_sgr.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +24,7 @@ public class CartController {
     private final UserRepository userRepository;
 
     private Long getAuthenticatedUserId(Authentication authentication) {
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
-        return user.getIdUser(); 
+        return AuthUtils.getUserId(authentication, userRepository);
     }
 
     @GetMapping("/getCart")

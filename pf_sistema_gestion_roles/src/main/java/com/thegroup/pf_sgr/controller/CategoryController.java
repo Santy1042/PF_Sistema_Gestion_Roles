@@ -35,6 +35,12 @@ public class CategoryController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/updateCategory")
+    public ResponseEntity<Category> updateCategory(@RequestParam Integer categoryId, @RequestBody Category category) {
+        return ResponseEntity.ok(categoryService.updateCategory(categoryId, category));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/deleteCategory")
     public ResponseEntity<Void> deleteCategory(@RequestParam Integer categoryId) {
         categoryService.deleteCategory(categoryId);

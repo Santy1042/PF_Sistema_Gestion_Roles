@@ -6,4 +6,3 @@ public interface IUserRepository {
     User findByEmail(String email);
     boolean existsByEmail(String email);
 }
-

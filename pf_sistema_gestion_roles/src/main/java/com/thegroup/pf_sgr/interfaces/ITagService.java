@@ -7,5 +7,6 @@ public interface ITagService {
     Page<Tag> getAllTags(int page, int size);
     Tag getTagById(Integer tagId);
     Tag saveTag(Tag tag);
+    Tag updateTag(Integer tagId, Tag tag);
     void deleteTag(Integer tagId);
 }

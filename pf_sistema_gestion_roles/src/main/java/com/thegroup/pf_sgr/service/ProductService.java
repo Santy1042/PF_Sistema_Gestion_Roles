@@ -24,7 +24,7 @@ import java.util.ArrayList;
 @Transactional
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
-    
+
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
@@ -78,12 +78,12 @@ public class ProductService implements IProductService {
         product.setIsFeatured(request.getIsFeatured() != null ? request.getIsFeatured() : false);
         product.setDiscountPercentage(request.getDiscountPercentage() != null ? request.getDiscountPercentage() : 0);
         product.setCreatedAt(LocalDate.now());
-        
+
         if (request.getCategoryId() != null) {
             Category category = categoryRepository.getReferenceById(request.getCategoryId());
             product.setCategory(category);
         }
-        
+
         Product savedProduct = productRepository.save(product);
         return mapToResponse(savedProduct);
     }
@@ -93,18 +93,18 @@ public class ProductService implements IProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
-        product.setName(request.getName());
-        product.setPrice(request.getPrice());
-        
+        if (request.getName() != null && !request.getName().isEmpty()) product.setName(request.getName());
+        if (request.getPrice() != null) product.setPrice(request.getPrice());
+
         if(request.getIsActive() != null) product.setIsActive(request.getIsActive());
         if(request.getIsFeatured() != null) product.setIsFeatured(request.getIsFeatured());
         if(request.getDiscountPercentage() != null) product.setDiscountPercentage(request.getDiscountPercentage());
-        
+
         if (request.getCategoryId() != null) {
             Category category = categoryRepository.getReferenceById(request.getCategoryId());
             product.setCategory(category);
         }
-        
+
         return mapToResponse(productRepository.save(product));
     }
 
@@ -123,7 +123,7 @@ public class ProductService implements IProductService {
         product.setIsActive(true);
         productRepository.save(product);
     }
-    
+
     @Override
     public void deleteProduct(Integer productId) {
         Product product = productRepository.findById(productId)

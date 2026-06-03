@@ -22,7 +22,7 @@ public class CloudinaryService implements ICloudinaryService {
             @Value("${cloudinary.cloud_name}") String cloudName,
             @Value("${cloudinary.api_key}") String apiKey,
             @Value("${cloudinary.api_secret}") String apiSecret) {
-        
+
         this.cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", cloudName,
                 "api_key", apiKey,
@@ -32,15 +32,15 @@ public class CloudinaryService implements ICloudinaryService {
     @Override
     @SuppressWarnings("unchecked")
     public String uploadImage(MultipartFile file) {
-        
+
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("El archivo de imagen no puede estar vacío");
         }
-        
+
         if (file.getSize() > MAX_FILE_SIZE) {
             throw new IllegalArgumentException("La imagen excede el límite máximo permitido de 2MB");
         }
-        
+
         if (!ALLOWED_MIME_TYPES.contains(file.getContentType())) {
             throw new IllegalArgumentException("Formato no soportado. Solo se permite JPG, PNG o WEBP");
         }

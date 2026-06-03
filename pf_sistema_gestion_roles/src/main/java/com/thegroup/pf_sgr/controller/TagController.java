@@ -35,6 +35,12 @@ public class TagController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/updateTag")
+    public ResponseEntity<Tag> updateTag(@RequestParam Integer tagId, @RequestBody Tag tag) {
+        return ResponseEntity.ok(tagService.updateTag(tagId, tag));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/deleteTag")
     public ResponseEntity<Void> deleteTag(@RequestParam Integer tagId) {
         tagService.deleteTag(tagId);

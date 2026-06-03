@@ -44,11 +44,11 @@ public class ProductVariantService implements IProductVariantService {
         if (updatedVariant.getProduct() != null) variant.setProduct(updatedVariant.getProduct());
         if (updatedVariant.getSize() != null) variant.setSize(updatedVariant.getSize());
         if (updatedVariant.getColor() != null) variant.setColor(updatedVariant.getColor());
-        if (updatedVariant.getImageUrl() != null) variant.setImageUrl(updatedVariant.getImageUrl());
-        
-        variant.setStock(updatedVariant.getStock());
-        variant.setIsActive(updatedVariant.getIsActive());
-        
+        if (updatedVariant.getImageUrl() != null && !updatedVariant.getImageUrl().isEmpty()) variant.setImageUrl(updatedVariant.getImageUrl());
+
+        if (updatedVariant.getStock() != null) variant.setStock(updatedVariant.getStock());
+        if (updatedVariant.getIsActive() != null) variant.setIsActive(updatedVariant.getIsActive());
+
         return productVariantRepository.save(variant);
     }
 

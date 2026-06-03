@@ -1,38 +1,31 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito de Compras</title>
-    <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
+    <title>Carrito de Compras - AURA Essentials</title>
+    <link rel="icon" type="image/png" href="img/dark_logo.png">
     <link rel="stylesheet" href="style/styles.css">
     <link rel="stylesheet" href="style/sidebar-styles.css">
     <link rel="stylesheet" href="style/cart-styles.css">
 </head>
 
 <body>
-    <!-- ==================== HEADER Y NAVEGACIÓN ==================== -->
     <div id="navbar-container"></div>
-
-    <!-- Sidebar Navigation -->
     <div id="sidebar"></div>
 
     <main class="main-container">
         <div class="container">
-            <!-- Page Header -->
             <div class="cart-header">
                 <h1>🛒 Carrito de Compras</h1>
                 <p class="cart-subtitle">Revisa los artículos en tu carrito y procede al pago</p>
             </div>
 
-            <!-- Cart Content -->
             <div class="cart-content">
-                <!-- Cart Items Section -->
                 <section class="cart-items-section">
                     <h2>Artículos en tu carrito</h2>
                     <div id="cartItemsContainer" class="cart-items-container">
-                        <!-- Items will be loaded here by JavaScript -->
                         <div class="cart-loading">
                             <div class="spinner"></div>
                             <p>Cargando carrito...</p>
@@ -40,7 +33,6 @@
                     </div>
                 </section>
 
-                <!-- Empty Cart Message -->
                 <div id="emptyCartMessage" class="empty-cart" style="display: none;">
                     <div class="empty-cart-content">
                         <div class="empty-cart-icon">🛒</div>
@@ -50,10 +42,8 @@
                     </div>
                 </div>
 
-                <!-- Cart Summary Section -->
                 <aside class="cart-summary">
                     <h2>Resumen del Pedido</h2>
-
                     <div class="summary-content">
                         <div class="summary-row">
                             <span>Subtotal:</span>
@@ -68,73 +58,21 @@
                             <span id="total">$0.00</span>
                         </div>
                     </div>
-
                     <button id="checkoutBtn" class="btn btn-primary btn-large" onclick="proceedToCheckout()">
                         Proceder al Pago
                     </button>
                     <a href="products.html" class="btn btn-secondary btn-large">
                         Seguir Comprando
                     </a>
-
-                    <div class="promo-section">
-                        <label for="promoCode">Código de descuento:</label>
-                        <div class="promo-input-group">
-                            <input type="text" id="promoCode" placeholder="Ingresa tu código">
-                            <button onclick="applyPromoCode()" class="btn-small">Aplicar</button>
-                        </div>
-                        <div id="promoMessage" style="display: none;"></div>
-                    </div>
                 </aside>
             </div>
 
-            <!-- Related Products -->
-            <section class="related-products">
-                <h2>Podrías estar interesado en:</h2>
-                <div id="relatedProductsContainer" class="products-grid">
-                    <!-- Related products will be loaded here -->
-                </div>
-            </section>
         </div>
     </main>
 
-    <!-- ==================== FOOTER ==================== -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Sobre nuestra tienda</h3>
-                <ul>
-                    <li><a href="#">Acerca de nosotros</a></li>
-                    <li><a href="#">Nuestro equipo</a></li>
-                    <li><a href="#">Carreras</a></li>
-                    <li><a href="#">Blog</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Política y Legal</h3>
-                <ul>
-                    <li><a href="#">Términos de servicio</a></li>
-                    <li><a href="#">Política de privacidad</a></li>
-                    <li><a href="#">Política de cookies</a></li>
-                    <li><a href="#">Política de devoluciones</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Contacto</h3>
-                <ul>
-                    <li><a href="mailto:info@tienda.com">info@tienda.com</a></li>
-                    <li><a href="tel:+34123456789">+34 123 456 789</a></li>
-                    <li><a href="#">Síguenos en redes</a></li>
-                    <li><a href="#">Centro de ayuda</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Tienda de Ropa Premium. Todos los derechos reservados.</p>
-        </div>
-    </footer>
+    <div id="footer-container"></div>
 
     <!-- Modals -->
-    <!-- Quantity Modal -->
     <div id="quantityModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('quantityModal')">&times;</span>
@@ -149,7 +87,6 @@
         </div>
     </div>
 
-    <!-- Confirmation Modal -->
     <div id="confirmModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('confirmModal')">&times;</span>
@@ -162,7 +99,6 @@
         </div>
     </div>
 
-    <!-- Success Modal -->
     <div id="successModal" class="modal">
         <div class="modal-content success-modal">
             <div class="success-icon">✓</div>
@@ -172,16 +108,15 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="js/theme-switch.js"></script>
-    <script src="js/cart-counter.js"></script>
+    <script src="js/config.js"></script>
+  <script src="js/theme-switch.js"></script>
+
     <script src="js/add-to-cart.js"></script>
     <script src="js/cart.js"></script>
-      <script src="js/sidebar-manager.js"></script>
-  <script src="js/navbar.js"></script>
-  <script src="js/toast.js"></script>
+    <script src="js/sidebar-manager.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/footer.js"></script>
+    <script src="js/toast.js"></script>
 </body>
 
 </html>
-
-

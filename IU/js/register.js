@@ -1,17 +1,15 @@
-var API_BASE_URL = 'http://localhost:8080/api';
-
 document.addEventListener('DOMContentLoaded', () => {
   const registerForm = document.getElementById('registerForm');
   if (registerForm) {
     registerForm.addEventListener('submit', async function(e) {
       e.preventDefault();
-      
+
       const fullname = document.getElementById('fullname').value.trim();
       const email = document.getElementById('email').value.trim();
       const phone = document.getElementById('phone') ? document.getElementById('phone').value.trim() : '';
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
-      const terms = registerForm.elements['terms'].checked;
+      const address = document.getElementById('address').value.trim();
       const submitBtn = document.querySelector('.form-submit');
 
       if (!fullname || !email || !password || !confirmPassword) {
@@ -21,20 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (password !== confirmPassword) {
-        if (window.showToast) showToast('Las contraseÃ±as no coinciden', 'error');
-        else alert('Las contraseÃ±as no coinciden');
+        if (window.showToast) showToast('Las contraseñas no coinciden', 'error');
+        else alert('Las contraseñas no coinciden');
         return;
       }
 
       if (password.length < 6) {
-        if (window.showToast) showToast('La contraseÃ±a debe tener al menos 6 caracteres', 'error');
-        else alert('La contraseÃ±a debe tener al menos 6 caracteres');
-        return;
-      }
-
-      if (!terms) {
-        if (window.showToast) showToast('Debes aceptar los tÃ©rminos de servicio', 'error');
-        else alert('Debes aceptar los tÃ©rminos de servicio');
+        if (window.showToast) showToast('La contraseña debe tener al menos 6 caracteres', 'error');
+        else alert('La contraseña debe tener al menos 6 caracteres');
         return;
       }
 
@@ -56,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lastName: lastName,
             email: email,
             phoneNumber: phone,
+            address: address,
             password: password
           })
         });
@@ -73,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.token) {
           localStorage.setItem('authToken', data.token);
 
-          // Sincronizar carrito local si existe
           const localCartStr = localStorage.getItem('localCart');
           if (localCartStr) {
             try {
@@ -98,8 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           }
         }
-        
-        sessionStorage.setItem('flashMessage', 'ÂCuenta creada exitosamente');
+
+        sessionStorage.setItem('flashMessage', '¡Cuenta creada exitosamente!');
         window.location.href = 'index.html';
       } catch (error) {
         console.error('Error:', error);
@@ -134,5 +126,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-

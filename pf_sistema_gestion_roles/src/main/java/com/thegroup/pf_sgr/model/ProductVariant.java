@@ -53,4 +53,3 @@ public class ProductVariant {
     @Column(name = "image_url")
     private String imageUrl;
 }
-

@@ -34,6 +34,15 @@ public class TagService implements ITagService {
     }
 
     @Override
+    public Tag updateTag(Integer tagId, Tag tagDetails) {
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tag no encontrado con el ID: " + tagId));
+
+        tag.setName(tagDetails.getName());
+        return tagRepository.save(tag);
+    }
+
+    @Override
     public void deleteTag(Integer tagId) {
         Tag tag = tagRepository.findById(tagId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tag no encontrada con el ID: " + tagId));

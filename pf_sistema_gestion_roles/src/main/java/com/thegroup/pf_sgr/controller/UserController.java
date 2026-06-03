@@ -18,7 +18,7 @@ public class UserController {
     @DeleteMapping("/account")
     public ResponseEntity<?> deleteAccount(Authentication authentication) {
         String email = authentication.getName();
-        
+
         userService.deleteAccount(email);
 
         return ResponseEntity.ok(Map.of(

@@ -25,7 +25,7 @@
 
 body.theme-dark {
   --background: #200432;
-  --surface: #4a0730;
+  --surface: #44062d;
   --surface-strong: #6b1b47;
   --surface-light: #6b1b47;
   --surface-muted: rgba(255, 255, 255, 0.04);
@@ -37,7 +37,7 @@ body.theme-dark {
 
 body.theme-light {
   --background: #cb9c6d;
-  --surface: #edceb7;
+  --surface: #f2d4bd;
   --surface-strong: #f0e3d3;
   --surface-light: #cf724b;
   --surface-muted: #9b6b40;

@@ -8,7 +8,14 @@ function applyTheme(theme) {
 
   const oldBtn = document.getElementById('themeToggle');
   if (oldBtn) oldBtn.style.display = 'none';
+
+  const navLogo = document.getElementById('navLogo');
+  if (navLogo) {
+    navLogo.src = theme === 'dark' ? 'img/dark_logo.png' : 'img/light_logo.png';
+  }
 }
+
+window.applyTheme = applyTheme;
 
 function toggleTheme() {
   const current = document.body.classList.contains('theme-light') ? 'light' : 'dark';

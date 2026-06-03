@@ -1,24 +1,16 @@
-// API Configuration
-var API_BASE_URL = 'http://localhost:8080/api';
-var SALES_API = `${API_BASE_URL}/sale`;
-
-// State
 let checkoutCart = null;
 let authToken = localStorage.getItem('authToken');
 
-// Initialize checkout on page load
 document.addEventListener('DOMContentLoaded', () => {
     initializeCheckout();
 });
 
-// Initialize checkout form
 function initializeCheckout() {
     if (!authToken) {
         window.location.href = 'login.html';
         return;
     }
 
-    // Load cart from localStorage
     const savedCart = localStorage.getItem('localCart');
     if (!savedCart) {
         window.location.href = 'cart.html';
@@ -31,7 +23,6 @@ function initializeCheckout() {
     setupFormHandlers();
 }
 
-// Load user data from localStorage or profile
 function loadUserData() {
     const userInfo = localStorage.getItem('userInfo');
     if (userInfo) {
@@ -43,31 +34,48 @@ function loadUserData() {
     }
 }
 
-// Render order summary
 function renderOrderSummary() {
     if (!checkoutCart || !checkoutCart.cartItems) return;
 
-    const itemsHTML = checkoutCart.cartItems.map(item => `
-        <div class="order-item">
+    let hasInactive = false;
+    const itemsHTML = checkoutCart.cartItems.map(item => {
+        const isInactive = item.isActive === false;
+        if (isInactive) hasInactive = true;
+
+        return `
+        <div class="order-item" style="${isInactive ? 'opacity: 0.5;' : ''}">
             <div class="item-info">
-                <span class="item-name">${item.productName}</span>
-                <span class="item-qty">x${item.quantity}</span>
+                <span class="item-name" style="${isInactive ? 'text-decoration: line-through;' : ''}">${item.productName}</span>
+                <span class="item-qty">${isInactive ? 'No disponible' : 'x' + item.quantity}</span>
             </div>
-            <span class="item-price">$${(item.quantity * item.price).toFixed(2)}</span>
+            <span class="item-price">$${isInactive ? '0.00' : (item.quantity * item.price).toFixed(2)}</span>
         </div>
-    `).join('');
+        `;
+    }).join('');
 
     document.getElementById('orderItems').innerHTML = itemsHTML;
     document.getElementById('mobileSummary').innerHTML = itemsHTML;
 
     updateTotals();
+
+    if (hasInactive) {
+        showNotification('Tienes productos inactivos. Regresa al carrito y elimínalos.', 'error');
+        const completeBtn = document.getElementById('completeOrderBtn');
+        if (completeBtn) {
+            completeBtn.disabled = true;
+            completeBtn.style.opacity = '0.5';
+            completeBtn.style.cursor = 'not-allowed';
+            completeBtn.title = 'Elimina los productos inactivos del carrito para continuar';
+        }
+    }
 }
 
-// Update order totals
 function updateTotals() {
     let subtotal = 0;
     checkoutCart.cartItems.forEach(item => {
-        subtotal += item.quantity * item.price;
+        if (item.isActive !== false) {
+            subtotal += item.quantity * item.price;
+        }
     });
 
     const total = subtotal;
@@ -76,10 +84,8 @@ function updateTotals() {
     document.getElementById('summaryTotal').textContent = `$${total.toFixed(2)}`;
 }
 
-// Setup form handlers
 function setupFormHandlers() {
 
-    // Payment method change
     document.querySelectorAll('input[name="payment"]').forEach(radio => {
         radio.addEventListener('change', (e) => {
             document.getElementById('cardPaymentForm').style.display = 
@@ -87,7 +93,6 @@ function setupFormHandlers() {
         });
     });
 
-    // Card number formatting
     const cardNumberInput = document.getElementById('cardNumber');
     if (cardNumberInput) {
         cardNumberInput.addEventListener('input', (e) => {
@@ -97,7 +102,6 @@ function setupFormHandlers() {
         });
     }
 
-    // Expiry formatting
     const expiryInput = document.getElementById('expiry');
     if (expiryInput) {
         expiryInput.addEventListener('input', (e) => {
@@ -109,7 +113,6 @@ function setupFormHandlers() {
         });
     }
 
-    // CVV formatting
     const cvvInput = document.getElementById('cvv');
     if (cvvInput) {
         cvvInput.addEventListener('input', (e) => {
@@ -118,12 +121,10 @@ function setupFormHandlers() {
     }
 }
 
-// Validate shipping form (deprecated since there's no shipping info sent to backend yet)
 function validateShippingForm() {
     return true;
 }
 
-// Validate card form
 function validateCardForm() {
     const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
 
@@ -159,16 +160,19 @@ function validateCardForm() {
     return true;
 }
 
-// Complete order
 async function completeOrder() {
-    // Validate forms
+    if (checkoutCart && checkoutCart.cartItems && checkoutCart.cartItems.some(i => i.isActive === false)) {
+        showNotification('Tienes productos inactivos. Regresa al carrito y elimínalos.', 'error');
+        return;
+    }
+
     if (!validateShippingForm() || !validateCardForm()) {
         return;
     }
 
     let originalText = '';
     try {
-        // Show loading state
+
         const btn = document.getElementById('completeOrderBtn');
         originalText = btn.textContent;
         btn.disabled = true;
@@ -197,11 +201,9 @@ async function completeOrder() {
 
         const sale = await response.json();
 
-        // Show success modal
         document.getElementById('orderNumber').textContent = `Número de Pedido: ${sale.idSale || sale.id || sale.saleId || sale.saleNumber || pendingSaleId}`;
         document.getElementById('successModal').style.display = 'block';
 
-        // Clear cart from localStorage
         localStorage.removeItem('localCart');
         localStorage.removeItem('pendingSaleId');
 
@@ -213,7 +215,6 @@ async function completeOrder() {
     }
 }
 
-// Modal functions
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
@@ -226,7 +227,6 @@ function continueShopping() {
     window.location.href = 'products.html';
 }
 
-// Close modal on outside click
 window.onclick = function(event) {
     const modals = document.querySelectorAll('.modal');
     modals.forEach(modal => {
@@ -234,21 +234,4 @@ window.onclick = function(event) {
             modal.style.display = 'none';
         }
     });
-}
-
-// Notification system
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
-
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 4000);
 }

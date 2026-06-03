@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Pedidos - Sistema Gestión</title>
+    <title>Mis Pedidos - AURA Essentials</title>
+    <link rel="icon" type="image/png" href="img/dark_logo.png">
     <link rel="stylesheet" href="style/styles.css">
     <link rel="stylesheet" href="style/sidebar-styles.css">
+    <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
     <style>
         .orders-container {
             max-width: 1000px;
@@ -141,6 +144,34 @@
             justify-content: flex-end;
             gap: 1rem;
         }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #invoiceModal, #invoiceModal * {
+                visibility: visible;
+            }
+            #invoiceModal {
+                position: absolute;
+                left: 0;
+                top: 0;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                background: none;
+            }
+            .modal-content {
+                box-shadow: none;
+                border: none;
+                margin: 0;
+                padding: 0;
+                max-width: 100%;
+            }
+            .modal-actions {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -153,6 +184,8 @@
             <div style="text-align: center; padding: 2rem;">Cargando pedidos...</div>
         </div>
     </main>
+
+    <div id="footer-container"></div>
 
     <!-- Report Modal -->
     <div id="reportModal" class="modal">
@@ -181,10 +214,31 @@
         </div>
     </div>
 
+    <!-- Modal Detalles Venta -->
+    <div id="modalDetallesVenta" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h3>Productos de la Venta #<span id="modalDetallesVentaSaleId"></span></h3>
+            <table style="width: 100%; margin-top: 1rem; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-color); text-align: left;">
+                        <th style="padding: 0.5rem;">Producto</th>
+                        <th style="padding: 0.5rem;">Cantidad</th>
+                        <th style="padding: 0.5rem;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="bodyDetallesVenta">
+                </tbody>
+            </table>
+            <div class="modal-actions" style="margin-top: 1.5rem;">
+                <button class="btn btn-outline" onclick="document.getElementById('modalDetallesVenta').style.display='none'">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
-    <script src="js/auth-check.js"></script>
     <script src="js/navbar.js"></script>
     <script src="js/sidebar-manager.js"></script>
+    <script src="js/footer.js"></script>
     <script src="js/orders.js"></script>
 </body>
 </html>

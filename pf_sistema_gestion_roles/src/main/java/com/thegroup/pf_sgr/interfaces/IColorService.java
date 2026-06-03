@@ -7,5 +7,6 @@ public interface IColorService {
     Page<Color> getAllColors(int page, int size);
     Color getColorById(Integer colorId);
     Color saveColor(Color color);
+    Color updateColor(Integer colorId, Color color);
     void deleteColor(Integer colorId);
 }

@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SaleResponseDTO {
     private Long idSale;
+    private Long idUser;
     private SaleStatus status;
     private BigDecimal subtotal;
     private BigDecimal total;

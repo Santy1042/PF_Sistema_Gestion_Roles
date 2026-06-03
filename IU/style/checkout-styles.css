@@ -15,8 +15,6 @@
     --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* El dark mode ya se maneja desde styles.css globalmente */
-
 .main-container {
     min-height: 100vh;
     background-color: var(--bg-color);

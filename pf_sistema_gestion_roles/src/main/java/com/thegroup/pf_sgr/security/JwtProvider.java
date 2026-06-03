@@ -1,10 +1,16 @@
 package com.thegroup.pf_sgr.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +19,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class JwtProvider {
 
@@ -29,6 +37,10 @@ public class JwtProvider {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        String roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+        claims.put("roles", roles);
         return createToken(claims, userDetails.getUsername());
     }
 
@@ -74,8 +86,17 @@ public class JwtProvider {
                     .build()
                     .parseClaimsJws(token);
             return !isTokenExpired(token);
-        } catch (Exception e) {
-            return false;
+        } catch (ExpiredJwtException e) {
+            log.warn("Token JWT expirado: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.warn("Token JWT con formato inválido: {}", e.getMessage());
+        } catch (SignatureException e) {
+            log.warn("Firma JWT inválida: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.warn("Token JWT no soportado: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.warn("Claims JWT vacíos o nulos: {}", e.getMessage());
         }
+        return false;
     }
 }
