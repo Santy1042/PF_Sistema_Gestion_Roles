@@ -2,7 +2,11 @@ package com.thegroup.pf_sgr.controller;
 
 import com.thegroup.pf_sgr.dto.CheckoutResponseDTO;
 import com.thegroup.pf_sgr.dto.SaleResponseDTO;
+import com.thegroup.pf_sgr.dto.StatusReportRequest;
 import com.thegroup.pf_sgr.interfaces.ISaleService;
+import com.thegroup.pf_sgr.repository.UserRepository;
+import com.thegroup.pf_sgr.model.User;
+import com.thegroup.pf_sgr.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +23,9 @@ public class SaleController {
     @Autowired
     private ISaleService saleService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @PostMapping("/checkout")
     public ResponseEntity<CheckoutResponseDTO> createOrder(Authentication authentication) {
         Long userId = getUserIdFromAuthentication(authentication);
@@ -27,16 +34,18 @@ public class SaleController {
     }
 
     @PostMapping("/{id}/pay")
-    public ResponseEntity<SaleResponseDTO> confirmPayment(@PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<SaleResponseDTO> confirmPayment(@PathVariable Long id, @RequestBody(required = false) StatusReportRequest report, Authentication authentication) {
         Long userId = getUserIdFromAuthentication(authentication);
-        SaleResponseDTO response = saleService.confirmPayment(id, userId);
+        String status = report != null ? report.getStatusReport() : null;
+        SaleResponseDTO response = saleService.confirmPayment(id, userId, status);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<SaleResponseDTO> cancelOrder(@PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<SaleResponseDTO> cancelOrder(@PathVariable Long id, @RequestBody(required = false) StatusReportRequest report, Authentication authentication) {
         Long userId = getUserIdFromAuthentication(authentication);
-        SaleResponseDTO response = saleService.cancelOrder(id, userId);
+        String status = report != null ? report.getStatusReport() : null;
+        SaleResponseDTO response = saleService.cancelOrder(id, userId, status);
         return ResponseEntity.ok(response);
     }
 
@@ -62,9 +71,9 @@ public class SaleController {
     }
 
     private Long getUserIdFromAuthentication(Authentication authentication) {
-        // Extract user ID from authentication principal
-        // This assumes the principal contains user ID information
-        // Adjust based on your security configuration
-        return Long.parseLong(authentication.getName());
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        return user.getIdUser();
     }
 }

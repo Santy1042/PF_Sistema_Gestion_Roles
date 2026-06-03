@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -24,14 +24,10 @@
                 <div class="checkout-steps">
                     <div class="step active">
                         <span class="step-number">1</span>
-                        <span class="step-label">Envío</span>
-                    </div>
-                    <div class="step active">
-                        <span class="step-number">2</span>
                         <span class="step-label">Pago</span>
                     </div>
                     <div class="step">
-                        <span class="step-number">3</span>
+                        <span class="step-number">2</span>
                         <span class="step-label">Confirmación</span>
                     </div>
                 </div>
@@ -41,102 +37,14 @@
             <div class="checkout-content">
                 <!-- Forms Section -->
                 <section class="checkout-forms">
-                    <!-- Shipping Information -->
-                    <div class="form-section">
-                        <h2>📦 Información de Envío</h2>
-                        <form id="shippingForm">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="firstName">Nombre *</label>
-                                    <input type="text" id="firstName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="lastName">Apellido *</label>
-                                    <input type="text" id="lastName" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="email">Email *</label>
-                                <input type="email" id="email" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="phone">Teléfono *</label>
-                                <input type="tel" id="phone" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="address">Dirección *</label>
-                                <input type="text" id="address" placeholder="Calle, número" required>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="city">Ciudad *</label>
-                                    <input type="text" id="city" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="state">Estado/Provincia *</label>
-                                    <input type="text" id="state" required>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="zipCode">Código Postal *</label>
-                                    <input type="text" id="zipCode" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="country">País *</label>
-                                    <select id="country" required>
-                                        <option value="">Selecciona un país</option>
-                                        <option value="MX">México</option>
-                                        <option value="CO">Colombia</option>
-                                        <option value="AR">Argentina</option>
-                                        <option value="CL">Chile</option>
-                                        <option value="ES">España</option>
-                                        <option value="US">Estados Unidos</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group checkbox">
-                                <input type="checkbox" id="sameAsBilling">
-                                <label for="sameAsBilling">La dirección de facturación es la misma</label>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Shipping Method -->
-                    <div class="form-section">
-                        <h2>🚚 Método de Envío</h2>
-                        <div class="shipping-options">
-                            <div class="shipping-option">
-                                <input type="radio" name="shipping" id="standard" value="standard" checked>
-                                <label for="standard">
-                                    <span class="option-title">Envío Estándar</span>
-                                    <span class="option-description">5-7 días hábiles</span>
-                                    <span class="option-price">Gratis</span>
-                                </label>
-                            </div>
-                            <div class="shipping-option">
-                                <input type="radio" name="shipping" id="express" value="express">
-                                <label for="express">
-                                    <span class="option-title">Envío Express</span>
-                                    <span class="option-description">2-3 días hábiles</span>
-                                    <span class="option-price">$10.00</span>
-                                </label>
-                            </div>
-                            <div class="shipping-option">
-                                <input type="radio" name="shipping" id="overnight" value="overnight">
-                                <label for="overnight">
-                                    <span class="option-title">Envío Nocturno</span>
-                                    <span class="option-description">Entrega al siguiente día</span>
-                                    <span class="option-price">$25.00</span>
-                                </label>
-                            </div>
-                        </div>
+                    
+                    <div class="form-section" style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); margin-bottom: 2rem;">
+                        <h2>📍 Dirección de Envío</h2>
+                        <p id="checkoutAddressDisplay" style="color: var(--text-color); margin-bottom: 1rem; font-weight: 500;">Cargando dirección...</p>
+                        <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.9rem;">
+                            Para cambiar la dirección de envío o facturación, por favor diríjase a su perfil.
+                        </p>
+                        <a href="profile.html" class="btn btn-secondary" style="display: inline-block;">Ir a Mi Perfil</a>
                     </div>
 
                     <!-- Payment Information -->
@@ -207,10 +115,6 @@
                             <span>Subtotal:</span>
                             <span id="summarySubtotal">$0.00</span>
                         </div>
-                        <div class="summary-row">
-                            <span>Envío:</span>
-                            <span id="summaryShipping">Gratis</span>
-                        </div>
                         <div class="summary-row total">
                             <span>Total:</span>
                             <span id="summaryTotal">$0.00</span>
@@ -274,7 +178,7 @@
             <div class="success-icon">✓</div>
             <h3>¡Pedido Completado!</h3>
             <p id="orderNumber"></p>
-            <p class="success-message">Tu pedido ha sido recibido exitosamente.</p>
+            <p class="success-message">Tu pedido ha sido recibido exitosamente y el pago fue aprobado.</p>
             <div class="modal-actions">
                 <button onclick="goToOrders()" class="btn btn-primary">Ver Mis Pedidos</button>
                 <button onclick="continueShopping()" class="btn btn-secondary">Seguir Comprando</button>
@@ -303,7 +207,3 @@
   <script src="js/toast.js"></script>
 </body>
 </html>
-
-
-
-

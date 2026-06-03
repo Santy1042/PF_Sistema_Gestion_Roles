@@ -41,6 +41,9 @@ public class User implements UserDetails {
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
+    @Column(name = "address", columnDefinition = "TEXT")
+    private String address;
+
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 

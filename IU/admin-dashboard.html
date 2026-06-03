@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -50,7 +50,6 @@
     <!-- TABS DE NAVEGACIÓN -->
     <div class="admin-tabs">
       <button class="admin-tab active" data-tab="productos">Productos</button>
-      <button class="admin-tab" data-tab="variantes">Variantes</button>
       <button class="admin-tab" data-tab="usuarios">Usuarios</button>
       <button class="admin-tab" data-tab="categorias">Categorías</button>
       <button class="admin-tab" data-tab="tags">Tags</button>
@@ -118,61 +117,60 @@
       </div>
     </section>
 
-    <!-- ===================== TAB: VARIANTES ===================== -->
-    <section class="tab-content" id="tab-variantes">
-      <div class="section-actions">
-        <h2>Variantes de Producto</h2>
-        <button class="btn btn-primary" id="btnNuevaVariante">+ Nueva Variante</button>
-      </div>
+    <!-- Modal Gestion de Variantes -->
+    <div class="admin-modal" id="modalVariantes" style="display:none">
+      <div class="modal-content" style="max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2 id="modalVariantesTitle">Variantes de Producto</h2>
+          <button class="btn btn-outline" id="btnCerrarModalVariantes">Cerrar</button>
+        </div>
+        
+        <div style="margin-bottom: 1rem;">
+          <button class="btn btn-primary" id="btnNuevaVariante">+ Añadir Variante</button>
+        </div>
 
-      <div class="admin-form-panel" id="formVariante" style="display:none">
-        <h3 id="formVarianteTitle">Crear Variante</h3>
-        <div class="form-grid">
-          <input type="hidden" id="varianteId">
-          <div class="form-group">
-            <label>Producto ID *</label>
-            <input type="number" id="varianteProductoId" placeholder="ID del producto">
+        <div class="admin-form-panel" id="formVariante" style="display:none; margin-bottom: 2rem;">
+          <h3 id="formVarianteTitle">Crear Variante</h3>
+          <div class="form-grid">
+            <input type="hidden" id="varianteId">
+            <input type="hidden" id="varianteProductoId">
+            <input type="hidden" id="varianteImageUrl">
+            <div class="form-group">
+              <label>Color</label>
+              <select id="varianteColorId"><option value="">Sin color</option></select>
+            </div>
+            <div class="form-group">
+              <label>Talla</label>
+              <select id="varianteTallaId"><option value="">Sin talla</option></select>
+            </div>
+            <div class="form-group">
+              <label>Stock *</label>
+              <input type="number" id="varianteStock" placeholder="0" min="0">
+            </div>
+            <div class="form-group">
+              <label>Subir imagen (opcional)</label>
+              <input type="file" id="varianteImageFile" accept="image/*">
+            </div>
           </div>
-          <div class="form-group">
-            <label>Color</label>
-            <select id="varianteColorId"><option value="">Sin color</option></select>
-          </div>
-          <div class="form-group">
-            <label>Talla</label>
-            <select id="varianteTallaId"><option value="">Sin talla</option></select>
-          </div>
-          <div class="form-group">
-            <label>Stock *</label>
-            <input type="number" id="varianteStock" placeholder="0" min="0">
-          </div>
-          <div class="form-group">
-            <label>URL Imagen</label>
-            <input type="text" id="varianteImageUrl" placeholder="https://...">
-          </div>
-          <div class="form-group">
-            <label>O subir imagen</label>
-            <input type="file" id="varianteImageFile" accept="image/*">
+          <div class="form-actions">
+            <button class="btn btn-primary" id="btnGuardarVariante">Guardar</button>
+            <button class="btn btn-outline" id="btnCancelarVariante">Cancelar</button>
           </div>
         </div>
-        <div class="form-actions">
-          <button class="btn btn-primary" id="btnGuardarVariante">Guardar</button>
-          <button class="btn btn-outline" id="btnCancelarVariante">Cancelar</button>
+
+        <div class="table-panel">
+          <table id="tablaVariantes">
+            <thead>
+              <tr>
+                <th>ID</th><th>Imagen</th><th>Color</th><th>Talla</th>
+                <th>Stock</th><th>Estado</th><th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="bodyVariantes"><tr><td colspan="7">Cargando...</td></tr></tbody>
+          </table>
         </div>
       </div>
-
-      <div class="table-panel">
-        <table id="tablaVariantes">
-          <thead>
-            <tr>
-              <th>ID</th><th>Producto ID</th><th>Color</th><th>Talla</th>
-              <th>Stock</th><th>Estado</th><th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="bodyVariantes"><tr><td colspan="7">Cargando...</td></tr></tbody>
-        </table>
-        <div class="pagination" id="paginacionVariantes"></div>
-      </div>
-    </section>
+    </div>
 
     <!-- ===================== TAB: USUARIOS ===================== -->
     <section class="tab-content" id="tab-usuarios">

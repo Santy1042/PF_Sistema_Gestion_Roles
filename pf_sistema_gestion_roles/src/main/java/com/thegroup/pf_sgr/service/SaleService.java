@@ -48,6 +48,15 @@ public class SaleService implements ISaleService {
     @Autowired
     private ProductVariantRepository productVariantRepository;
 
+    @Autowired
+    private com.thegroup.pf_sgr.repository.PaymentRepository paymentRepository;
+
+    @Autowired
+    private com.thegroup.pf_sgr.repository.PaymentStatusRepository paymentStatusRepository;
+
+    @Autowired
+    private com.thegroup.pf_sgr.repository.UserRepository userRepository;
+
     @Override
     public CheckoutResponseDTO createOrder(Long userId) {
         Cart cart = cartRepository.findByUserId(userId)
@@ -115,7 +124,7 @@ public class SaleService implements ISaleService {
     }
 
     @Override
-    public SaleResponseDTO confirmPayment(Long saleId, Long userId) {
+    public SaleResponseDTO confirmPayment(Long saleId, Long userId, String statusReport) {
         Sale sale = saleRepository.findByIdSaleAndIdUser(saleId, userId)
                 .orElseThrow(() -> new SaleNotFoundException(
                     "Sale not found for user"
@@ -143,13 +152,37 @@ public class SaleService implements ISaleService {
         }
         productVariantRepository.saveAll(variantsToUpdate);
         sale.setStatus(SaleStatus.PAID);
+        java.util.Optional<com.thegroup.pf_sgr.model.User> optUser = userRepository.findById(sale.getIdUser());
+        if (optUser.isPresent()) {
+            sale.setShippingAddress(optUser.get().getAddress());
+        }
+        if (statusReport != null && !statusReport.trim().isEmpty()) {
+            sale.setStatusReport(statusReport);
+        }
         sale = saleRepository.save(sale);
+
+        // Extract payment method from statusReport or default to "UNKNOWN"
+        String paymentMethod = "UNKNOWN";
+        if (statusReport != null && statusReport.contains("método: ")) {
+            paymentMethod = statusReport.substring(statusReport.indexOf("método: ") + 8).trim();
+        }
+
+        com.thegroup.pf_sgr.model.PaymentStatus approvedStatus = paymentStatusRepository.findByStatusName("APPROVED")
+                .orElseThrow(() -> new RuntimeException("Payment status APPROVED not found in DB"));
+
+        com.thegroup.pf_sgr.model.Payment payment = com.thegroup.pf_sgr.model.Payment.builder()
+                .sale(sale)
+                .paymentMethod(paymentMethod)
+                .amount(sale.getTotal())
+                .status(approvedStatus)
+                .build();
+        paymentRepository.save(payment);
 
         return buildSaleResponseDTO(sale, details);
     }
 
     @Override
-    public SaleResponseDTO cancelOrder(Long saleId, Long userId) {
+    public SaleResponseDTO cancelOrder(Long saleId, Long userId, String statusReport) {
         Sale sale = saleRepository.findByIdSaleAndIdUser(saleId, userId)
                 .orElseThrow(() -> new SaleNotFoundException(
                     "Sale not found for user"
@@ -160,6 +193,9 @@ public class SaleService implements ISaleService {
             );
         }
         sale.setStatus(SaleStatus.CANCELLED);
+        if (statusReport != null && !statusReport.trim().isEmpty()) {
+            sale.setStatusReport(statusReport);
+        }
         sale = saleRepository.save(sale);
         List<SaleDetail> details = saleDetailRepository.findBySale_IdSale(saleId);
 
@@ -188,6 +224,15 @@ public class SaleService implements ISaleService {
 
         sale.setStatus(SaleStatus.REFUNDED);
         sale = saleRepository.save(sale);
+
+        java.util.Optional<com.thegroup.pf_sgr.model.Payment> paymentOpt = paymentRepository.findBySale_IdSale(saleId);
+        if (paymentOpt.isPresent()) {
+            com.thegroup.pf_sgr.model.Payment payment = paymentOpt.get();
+            com.thegroup.pf_sgr.model.PaymentStatus refundedStatus = paymentStatusRepository.findByStatusName("REFUNDED")
+                    .orElseThrow(() -> new RuntimeException("Payment status REFUNDED not found in DB"));
+            payment.setStatus(refundedStatus);
+            paymentRepository.save(payment);
+        }
 
         return buildSaleResponseDTO(sale, details);
     }
@@ -220,8 +265,24 @@ public class SaleService implements ISaleService {
                         .quantity(detail.getQuantity())
                         .unitPrice(detail.getUnitPrice())
                         .totalPrice(detail.getTotalPrice())
+                        .productName(detail.getProductVariant().getProduct().getName())
+                        .color(detail.getProductVariant().getColor() != null ? detail.getProductVariant().getColor().getName() : "N/A")
+                        .size(detail.getProductVariant().getSize() != null ? detail.getProductVariant().getSize().getName() : "N/A")
                         .build())
                 .collect(Collectors.toList());
+
+        com.thegroup.pf_sgr.dto.PaymentDTO paymentDTO = null;
+        java.util.Optional<com.thegroup.pf_sgr.model.Payment> paymentOpt = paymentRepository.findBySale_IdSale(sale.getIdSale());
+        if (paymentOpt.isPresent()) {
+            com.thegroup.pf_sgr.model.Payment payment = paymentOpt.get();
+            paymentDTO = com.thegroup.pf_sgr.dto.PaymentDTO.builder()
+                    .idPayment(payment.getIdPayment())
+                    .paymentMethod(payment.getPaymentMethod())
+                    .amount(payment.getAmount())
+                    .paymentDate(payment.getPaymentDate())
+                    .status(payment.getStatus().getStatusName())
+                    .build();
+        }
 
         return SaleResponseDTO.builder()
                 .idSale(sale.getIdSale())
@@ -229,6 +290,9 @@ public class SaleService implements ISaleService {
                 .subtotal(sale.getSubtotal())
                 .total(sale.getTotal())
                 .saleDate(sale.getSaleDate())
+                .statusReport(sale.getStatusReport())
+                .shippingAddress(sale.getShippingAddress())
+                .payment(paymentDTO)
                 .details(detailDTOs)
                 .build();
     }

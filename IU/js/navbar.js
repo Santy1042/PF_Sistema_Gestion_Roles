@@ -37,22 +37,47 @@
     } catch (error) {
       console.error(error);
     }
-
     return `
       ${adminButton}
 
-      <a href="profile.html" title="Mi Perfil">
+      <div class="profile-dropdown" style="position: relative; display: inline-block;">
         <img src="img/profile_placeholder.png"
-            alt="Perfil"
-            class="nav-profile-pic"
-            onerror="this.src='img/APOLO_2 (1).png'">
-      </a>
+             alt="Perfil"
+             class="nav-profile-pic"
+             style="cursor: pointer;"
+             onerror="this.src='img/APOLO_2 (1).png'"
+             onclick="this.nextElementSibling.classList.toggle('show')">
+        <div class="dropdown-content" style="display: none; position: absolute; right: 0; background-color: var(--surface); min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color);">
+          <a href="profile.html" style="color: var(--text-primary); padding: 12px 16px; text-decoration: none; display: block; border-bottom: 1px solid var(--border-color);">👤 Editar Perfil</a>
+          <a href="orders.html" style="color: var(--text-primary); padding: 12px 16px; text-decoration: none; display: block;">📦 Mis Pedidos</a>
+        </div>
+      </div>
 
-      <button id="navbarLogoutBtn" class="btn btn-primary">
+      <button id="navbarLogoutBtn" class="btn btn-primary" style="margin-left: 10px;">
         Cerrar Sesión
       </button>
     `;
   }
+
+  // Cierra el dropdown si se hace click fuera
+  window.addEventListener('click', function(e) {
+    if (!e.target.matches('.nav-profile-pic')) {
+      var dropdowns = document.getElementsByClassName("dropdown-content");
+      for (var d of dropdowns) {
+        if (d.classList.contains('show')) {
+          d.classList.remove('show');
+          d.style.display = 'none';
+        }
+      }
+    } else {
+      var dropdown = e.target.nextElementSibling;
+      if (dropdown.classList.contains('show')) {
+        dropdown.style.display = 'block';
+      } else {
+        dropdown.style.display = 'none';
+      }
+    }
+  });
 
   async function renderNavbar() {
 

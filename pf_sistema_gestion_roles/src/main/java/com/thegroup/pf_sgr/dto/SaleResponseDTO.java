@@ -19,5 +19,8 @@ public class SaleResponseDTO {
     private BigDecimal subtotal;
     private BigDecimal total;
     private LocalDateTime saleDate;
+    private String statusReport;
+    private String shippingAddress;
+    private PaymentDTO payment;
     private List<SaleDetailDTO> details;
 }

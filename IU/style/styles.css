@@ -1092,3 +1092,35 @@ footer {
   outline-offset: 2px;
 }
 
+/* =========================================
+   Print Styles for Invoice
+========================================= */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  
+  #invoiceModal, #invoiceModal * {
+    visibility: visible;
+  }
+  
+  #invoiceModal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: transparent !important;
+  }
+  
+  .modal-content {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .modal-actions {
+    display: none !important;
+  }
+}

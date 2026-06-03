@@ -40,6 +40,12 @@ public class Sale {
     @Column(name = "id_status", columnDefinition = "integer")
     private SaleStatus status;
 
+    @Column(name = "status_report", columnDefinition = "TEXT")
+    private String statusReport;
+
+    @Column(name = "shipping_address", columnDefinition = "TEXT")
+    private String shippingAddress;
+
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SaleDetail> details;
 }

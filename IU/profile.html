@@ -1,4 +1,31 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - Tienda de Ropa</title>
+  <link rel="icon" type="image/png" href="img/APOLO_2 (1).png">
+  <link rel="stylesheet" href="style/styles.css">
+  <link rel="stylesheet" href="style/sidebar-styles.css">
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main class="section">
+    <div class="profile-header">
+      <div class="profile-intro">
+        <h1>Mi Perfil</h1>
+        <p>Actualiza tu información personal y ajusta tus datos de usuario directamente desde aquí.</p>
+      </div>
+      <div>
+        <a href="index.html" class="btn btn-outline">Volver al inicio</a>
+      </div>
+    </div>
+
+    <div class="profile-page">
+      <section class="profile-panel">
+        <article class="summary-card">
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -33,19 +60,20 @@
           <form id="profileForm">
             <div class="form-group">
               <label for="fullname">Nombre completo</label>
-              <input type="text" id="fullname" name="fullname" value="Ana Torres" required>
+              <input type="text" id="fullname" name="fullname" required>
             </div>
             <div class="form-group">
               <label for="email">Correo electrónico</label>
-              <input type="email" id="email" name="email" value="ana.torres@example.com" required>
+              <input type="email" id="email" name="email" required disabled>
+              <small style="color: var(--text-secondary);">El correo no se puede modificar.</small>
             </div>
             <div class="form-group">
               <label for="phone">Teléfono</label>
-              <input type="tel" id="phone" name="phone" value="+56 9 8765 4321">
+              <input type="tel" id="phone" name="phone">
             </div>
             <div class="form-group">
               <label for="address">Dirección</label>
-              <textarea id="address" name="address">Calle Falsa 123, Santiago</textarea>
+              <textarea id="address" name="address"></textarea>
             </div>
             <div class="form-group">
               <label for="currentPassword">Contraseña actual</label>
@@ -59,13 +87,6 @@
           </form>
         </article>
       </section>
-
-      <aside class="summary-card">
-        <h3>Consejos rápidos</h3>
-        <p>Usa un correo activo para recibir notificaciones. Cambia tu contraseña cada cierto tiempo para mantener seguro tu acceso.</p>
-        <p>Si necesitas soporte, contacta con el administrador.</p>
-        <a href="#" class="btn btn-secondary">Solicitar ayuda</a>
-      </aside>
     </div>
   </main>
 
@@ -106,9 +127,70 @@
   </footer>
 
   <script>
-    document.getElementById('profileForm').addEventListener('submit', function(e) {
+    document.addEventListener('DOMContentLoaded', async () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      try {
+        const res = await fetch('http://localhost:8080/api/profile', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const user = await res.json();
+          document.getElementById('fullname').value = (user.firstName || '') + ' ' + (user.lastName || '');
+          document.getElementById('email').value = user.email || '';
+          document.getElementById('phone').value = user.phone || '';
+          document.getElementById('address').value = user.address || '';
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    document.getElementById('profileForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      alert('Tus datos se guardaron correctamente. Pronto se conectará con el backend para que los cambios se apliquen de verdad.');
+      
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+
+      const fullName = document.getElementById('fullname').value.trim();
+      const nameParts = fullName.split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+      const phoneNumber = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+
+      const requestData = {
+          firstName,
+          lastName,
+          phoneNumber,
+          address
+      };
+
+      try {
+          const res = await fetch('http://localhost:8080/api/profile', {
+              method: 'PUT',
+              headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(requestData)
+          });
+          
+          if (res.ok) {
+              const user = await res.json();
+              localStorage.setItem('userInfo', JSON.stringify(user));
+              showNotification('Perfil actualizado correctamente', 'success');
+          } else {
+              showNotification('Error al actualizar el perfil', 'error');
+          }
+      } catch (err) {
+          console.error(err);
+          showNotification('Error de conexión', 'error');
+      }
     });
   </script>
   <script src="js/theme-switch.js"></script>

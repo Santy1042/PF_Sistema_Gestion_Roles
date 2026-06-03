@@ -1,27 +1,21 @@
 /* Checkout Styles */
 
 :root {
-    --primary-color: #3b82f6;
-    --secondary-color: #8b5cf6;
-    --success-color: #10b981;
-    --danger-color: #ef4444;
-    --warning-color: #f59e0b;
-    --text-color: #1f2937;
-    --text-light: #6b7280;
-    --border-color: #e5e7eb;
-    --bg-color: #f9fafb;
-    --card-bg: #ffffff;
+    --primary-color: var(--primary, #3b82f6);
+    --secondary-color: var(--secondary, #8b5cf6);
+    --success-color: var(--success, #10b981);
+    --danger-color: var(--error, #ef4444);
+    --warning-color: var(--warning, #f59e0b);
+    --text-color: var(--text-primary);
+    --text-light: var(--text-secondary);
+    --border-color: var(--border-color);
+    --bg-color: var(--background);
+    --card-bg: var(--surface);
     --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-[data-theme="dark"] {
-    --text-color: #f3f4f6;
-    --text-light: #d1d5db;
-    --bg-color: #111827;
-    --card-bg: #1f2937;
-    --border-color: #374151;
-}
+/* El dark mode ya se maneja desde styles.css globalmente */
 
 .main-container {
     min-height: 100vh;

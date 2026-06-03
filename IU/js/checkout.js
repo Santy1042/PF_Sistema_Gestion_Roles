@@ -19,7 +19,7 @@ function initializeCheckout() {
     }
 
     // Load cart from localStorage
-    const savedCart = localStorage.getItem('checkoutCart');
+    const savedCart = localStorage.getItem('localCart');
     if (!savedCart) {
         window.location.href = 'cart.html';
         return;
@@ -36,10 +36,10 @@ function loadUserData() {
     const userInfo = localStorage.getItem('userInfo');
     if (userInfo) {
         const user = JSON.parse(userInfo);
-        document.getElementById('email').value = user.email || '';
-        document.getElementById('firstName').value = user.firstName || '';
-        document.getElementById('lastName').value = user.lastName || '';
-        document.getElementById('phone').value = user.phone || '';
+        const addressDisplay = document.getElementById('checkoutAddressDisplay');
+        if (addressDisplay) {
+            addressDisplay.textContent = user.address || 'No tienes una dirección registrada.';
+        }
     }
 }
 
@@ -70,31 +70,14 @@ function updateTotals() {
         subtotal += item.quantity * item.price;
     });
 
-    const shippingMethod = document.querySelector('input[name="shipping"]:checked').value;
-    let shippingCost = 0;
-    let shippingLabel = 'Gratis';
-
-    if (shippingMethod === 'express') {
-        shippingCost = 10;
-        shippingLabel = '$10.00';
-    } else if (shippingMethod === 'overnight') {
-        shippingCost = 25;
-        shippingLabel = '$25.00';
-    }
-
-    const total = subtotal + shippingCost;
+    const total = subtotal;
 
     document.getElementById('summarySubtotal').textContent = `$${subtotal.toFixed(2)}`;
-    document.getElementById('summaryShipping').textContent = shippingLabel;
     document.getElementById('summaryTotal').textContent = `$${total.toFixed(2)}`;
 }
 
 // Setup form handlers
 function setupFormHandlers() {
-    // Shipping method change
-    document.querySelectorAll('input[name="shipping"]').forEach(radio => {
-        radio.addEventListener('change', updateTotals);
-    });
 
     // Payment method change
     document.querySelectorAll('input[name="payment"]').forEach(radio => {
@@ -135,35 +118,8 @@ function setupFormHandlers() {
     }
 }
 
-// Validate shipping form
+// Validate shipping form (deprecated since there's no shipping info sent to backend yet)
 function validateShippingForm() {
-    const requiredFields = [
-        'firstName', 'lastName', 'email', 'phone', 
-        'address', 'city', 'state', 'zipCode', 'country'
-    ];
-
-    for (const field of requiredFields) {
-        const value = document.getElementById(field).value.trim();
-        if (!value) {
-            showNotification(`Por favor completa el campo: ${field}`, 'error');
-            return false;
-        }
-    }
-
-    // Validate email
-    const email = document.getElementById('email').value;
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showNotification('Email inválido', 'error');
-        return false;
-    }
-
-    // Validate phone
-    const phone = document.getElementById('phone').value;
-    if (!/^\+?[\d\s\-()]{10,}$/.test(phone)) {
-        showNotification('Teléfono inválido', 'error');
-        return false;
-    }
-
     return true;
 }
 
@@ -210,43 +166,29 @@ async function completeOrder() {
         return;
     }
 
+    let originalText = '';
     try {
         // Show loading state
         const btn = document.getElementById('completeOrderBtn');
-        const originalText = btn.textContent;
+        originalText = btn.textContent;
         btn.disabled = true;
         btn.textContent = 'Procesando...';
 
-        // Create sale/checkout request
-        const checkoutData = {
-            items: checkoutCart.cartItems.map(item => ({
-                productVariantId: item.productVariantId,
-                quantity: item.quantity,
-                price: item.price
-            })),
-            shippingAddress: {
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value,
-                city: document.getElementById('city').value,
-                state: document.getElementById('state').value,
-                zipCode: document.getElementById('zipCode').value,
-                country: document.getElementById('country').value
-            },
-            shippingMethod: document.querySelector('input[name="shipping"]:checked').value,
-            paymentMethod: document.querySelector('input[name="payment"]:checked').value
-        };
+        const pendingSaleId = localStorage.getItem('pendingSaleId');
+        if (!pendingSaleId) {
+            throw new Error('No se encontró una orden pendiente. Vuelve al carrito.');
+        }
 
-        // Call API to create sale
-        const response = await fetch(`${SALES_API}/createSale`, {
+        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+        const reportText = `Pagado a través de checkout usando método: ${paymentMethod.toUpperCase()}`;
+
+        const response = await fetch(`${API_BASE_URL}/sales/${pendingSaleId}/pay`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${authToken}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(checkoutData)
+            body: JSON.stringify({ statusReport: reportText })
         });
 
         if (!response.ok) {
@@ -256,12 +198,12 @@ async function completeOrder() {
         const sale = await response.json();
 
         // Show success modal
-        document.getElementById('orderNumber').textContent = `Número de Pedido: ${sale.saleNumber || sale.id}`;
+        document.getElementById('orderNumber').textContent = `Número de Pedido: ${sale.idSale || sale.id || sale.saleId || sale.saleNumber || pendingSaleId}`;
         document.getElementById('successModal').style.display = 'block';
 
         // Clear cart from localStorage
-        localStorage.removeItem('checkoutCart');
-        localStorage.removeItem('cart');
+        localStorage.removeItem('localCart');
+        localStorage.removeItem('pendingSaleId');
 
     } catch (error) {
         console.error('Error:', error);
@@ -277,7 +219,7 @@ function closeModal(modalId) {
 }
 
 function goToOrders() {
-    window.location.href = 'profile.html';
+    window.location.href = 'orders.html';
 }
 
 function continueShopping() {

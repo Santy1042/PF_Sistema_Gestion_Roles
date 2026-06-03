@@ -29,6 +29,7 @@ public class ProfileService implements IProfileService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setPhoneNumber(request.getPhoneNumber());
+        user.setAddress(request.getAddress());
 
         User updatedUser = userRepository.save(user);
         
@@ -41,6 +42,7 @@ public class ProfileService implements IProfileService {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
+                .address(user.getAddress())
                 .role(user.getRole().name())
                 .build();
     }

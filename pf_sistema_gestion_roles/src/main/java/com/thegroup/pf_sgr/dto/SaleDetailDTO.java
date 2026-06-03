@@ -15,4 +15,7 @@ public class SaleDetailDTO {
     private Integer quantity;
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
+    private String productName;
+    private String color;
+    private String size;
 }

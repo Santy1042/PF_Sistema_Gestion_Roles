@@ -1,4 +1,4 @@
-﻿// Los listeners se asignarán después de que se inyecte el HTML en DOMContentLoaded
+// Los listeners se asignarán después de que se inyecte el HTML en DOMContentLoaded
 
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('authToken');
@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="sidebar-section-title">Mi Cuenta</div>
       <ul class="sidebar-menu">
         <li><a href="profile.html">👤 Mi Perfil</a></li>
-        <li><a href="products.html">📦 Productos</a></li>
+        <li><a href="orders.html">📦 Mis Pedidos</a></li>
+        <li><a href="products.html">🛍️ Productos</a></li>
         <li><a href="cart.html">🛒 Carrito</a></li>
       </ul>
     </div>

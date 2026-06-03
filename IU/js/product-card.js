@@ -21,6 +21,10 @@ function handleAddToCartClick(productId, productName, productPrice, fallbackImag
                 size = parts[1].replace('Talla', '').trim();
             }
         }
+    } else {
+        if (window.showToast) showToast('Este producto no tiene variantes configuradas', 'error');
+        else alert('Este producto no tiene variantes configuradas');
+        return;
     }
     
     const imgElement = document.getElementById(`product-img-${productId}`);

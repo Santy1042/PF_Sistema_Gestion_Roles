@@ -77,6 +77,7 @@ async function cargarProductos(page = 0, nombre = '') {
         <td><span class="badge ${p.isActive ? 'badge-success' : 'badge-danger'}">${p.isActive ? 'Activo' : 'Inactivo'}</span></td>
         <td>${p.isFeatured ? '⭐' : '—'}</td>
         <td style="display:flex;gap:4px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" onclick="abrirModalVariantes(${p.productId}, '${p.name.replace(/'/g, "\\'")}')">Ver Variantes</button>
           <button class="btn btn-outline btn-sm" onclick="editarProducto(${p.productId})">Editar</button>
           <button class="btn btn-sm ${p.isActive ? 'btn-danger' : 'btn-outline'}" onclick="toggleProducto(${p.productId}, ${p.isActive})">
             ${p.isActive ? 'Desactivar' : 'Activar'}
@@ -179,21 +180,25 @@ function cancelarFormProducto() {
   document.getElementById('formProductoTitle').textContent = 'Crear Producto';
 }
 
-// =====================================================
-// =================== VARIANTES =======================
-// =====================================================
-let variantePage = 0;
+let currentProductoIdParaVariantes = null;
 
-async function cargarVariantes(page = 0) {
-  variantePage = page;
-  const res = await fetch(
-  `${API}/variants/getAllVariants?page=${page}&size=10`,
-  {
-    headers: authHeaders()
-  }
-);
+async function abrirModalVariantes(productId, productName) {
+  currentProductoIdParaVariantes = productId;
+  document.getElementById('modalVariantesTitle').textContent = `Variantes de: ${productName}`;
+  document.getElementById('modalVariantes').style.display = 'flex';
+  cancelarFormVariante();
+  await cargarVariantesPorProducto(productId);
+}
+
+document.getElementById('btnCerrarModalVariantes').addEventListener('click', () => {
+  document.getElementById('modalVariantes').style.display = 'none';
+  currentProductoIdParaVariantes = null;
+});
+
+async function cargarVariantesPorProducto(productId) {
+  const res = await fetch(`${API}/products/${productId}`, { headers: authHeaders() });
   const data = await res.json();
-  const items = data.content || [];
+  const items = data.variants || [];
   const body = document.getElementById('bodyVariantes');
 
   body.innerHTML = items.length === 0
@@ -201,7 +206,7 @@ async function cargarVariantes(page = 0) {
     : items.map(v => `
       <tr>
         <td>${v.id ?? v.variantId ?? '—'}</td>
-        <td>${v.product?.productId ?? v.productId ?? '—'}</td>
+        <td><img src="${v.imageUrl || 'img/placeholder.png'}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;"></td>
         <td>${v.color?.name ?? '—'}</td>
         <td>${v.size?.name ?? '—'}</td>
         <td>${v.stock ?? 0}</td>
@@ -211,8 +216,6 @@ async function cargarVariantes(page = 0) {
           <button class="btn btn-danger btn-sm" onclick="eliminarVariante(${v.id ?? v.variantId})">Eliminar</button>
         </td>
       </tr>`).join('');
-
-  renderPagination('paginacionVariantes', page, data.totalPages, cargarVariantes);
 }
 
 async function editarVariante(id) {
@@ -230,8 +233,6 @@ async function editarVariante(id) {
 
 async function guardarVariante() {
   const id = document.getElementById('varianteId').value;
-
-  // Subir imagen si hay archivo seleccionado
   let imageUrl = document.getElementById('varianteImageUrl').value.trim();
   const fileInput = document.getElementById('varianteImageFile');
   if (fileInput.files.length > 0) {
@@ -251,7 +252,7 @@ async function guardarVariante() {
   }
 
   const body = {
-    product: { productId: parseInt(document.getElementById('varianteProductoId').value) },
+    product: { productId: currentProductoIdParaVariantes },
     color: document.getElementById('varianteColorId').value
       ? { id: parseInt(document.getElementById('varianteColorId').value) } : null,
     size: document.getElementById('varianteTallaId').value
@@ -274,7 +275,7 @@ async function guardarVariante() {
   if (res.ok) {
     showToastMsg(id ? 'Variante actualizada' : 'Variante creada');
     cancelarFormVariante();
-    cargarVariantes(variantePage);
+    cargarVariantesPorProducto(currentProductoIdParaVariantes);
   } else {
     showToastMsg('Error al guardar variante', 'error');
   }
@@ -283,7 +284,6 @@ async function guardarVariante() {
 function cancelarFormVariante() {
   document.getElementById('formVariante').style.display = 'none';
   document.getElementById('varianteId').value = '';
-  document.getElementById('varianteProductoId').value = '';
   document.getElementById('varianteStock').value = '';
   document.getElementById('varianteImageUrl').value = '';
   document.getElementById('varianteImageFile').value = '';
@@ -298,11 +298,12 @@ async function eliminarVariante(id) {
   });
   if (res.ok) {
     showToastMsg('Variante eliminada');
-    cargarVariantes(variantePage);
+    cargarVariantesPorProducto(currentProductoIdParaVariantes);
   } else {
     showToastMsg('Error al eliminar', 'error');
   }
 }
+
 
 // =====================================================
 // =================== USUARIOS ========================
@@ -678,8 +679,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       tab.classList.add('active');
       document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
 
-      // Cargar variantes al entrar a su tab (más pesado, cargamos bajo demanda)
-      if (tab.dataset.tab === 'variantes') cargarVariantes();
+      if (tab.dataset.tab === 'productos') cargarProductos(0);
     });
   });
 

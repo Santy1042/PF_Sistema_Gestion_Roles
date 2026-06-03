@@ -31,17 +31,24 @@ async function loadCart() {
 
 function mapBackendCart(data) {
     if (!data) return { cartItems: [] };
+    console.log("Raw cart data from backend:", data);
     return {
-        cartItems: (data.items || []).map(backendItem => ({
-            idCartItem: backendItem.itemCartId,
-            productVariantId: backendItem.productVariant?.variantId,
-            productName: backendItem.productVariant?.product?.name || 'Producto',
-            quantity: backendItem.quantity,
-            price: backendItem.productVariant?.product?.price || 0,
-            productImage: backendItem.productVariant?.imageUrl || backendItem.productVariant?.product?.imageUrl || 'img/placeholder.png',
-            color: backendItem.productVariant?.color?.name,
-            size: backendItem.productVariant?.size?.name
-        }))
+        cartItems: (data.items || []).map(backendItem => {
+            const variant = backendItem.productVariant;
+            const product = variant?.product;
+            const imageUrl = variant?.imageUrl || product?.imageUrl || product?.image || 'productos/default.jpg';
+            
+            return {
+                idCartItem: backendItem.itemCartId,
+                productVariantId: variant?.variantId,
+                productName: product?.name || 'Producto',
+                quantity: backendItem.quantity,
+                price: product?.price || 0,
+                productImage: imageUrl,
+                color: variant?.color?.name,
+                size: variant?.size?.name
+            };
+        })
     };
 }
 
@@ -346,30 +353,53 @@ function applyPromoCode() {
 
 // Proceed to checkout
 async function proceedToCheckout() {
-    if (!currentCart || !currentCart.cartItems || currentCart.cartItems.length === 0) {
-        showNotification('Tu carrito está vacío', 'warning');
+    if (!isAuthenticated) {
+        // Save current cart state and redirect
+        saveCartToLocalStorage();
+        window.location.href = 'login.html?redirect=cart';
         return;
     }
 
-    // If user is not authenticated, redirect to login
-    if (!isAuthenticated) {
-        // Save cart to localStorage before redirecting
-        saveCartToLocalStorage();
-        localStorage.setItem('checkoutCart', JSON.stringify(currentCart));
-        showNotification('Por favor inicia sesión para proceder al pago', 'info');
-        setTimeout(() => {
-            window.location.href = 'login.html?redirect=checkout';
-        }, 1500);
+    if (!currentCart || !currentCart.cartItems || currentCart.cartItems.length === 0) {
+        showNotification('Tu carrito está vacío', 'error');
         return;
+    }
+
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    if (checkoutBtn) {
+        checkoutBtn.disabled = true;
+        checkoutBtn.textContent = 'Procesando...';
     }
 
     try {
-        // User is authenticated - redirect to checkout
-        localStorage.setItem('checkoutCart', JSON.stringify(currentCart));
+        const response = await fetch(`${API_BASE_URL}/sales/checkout`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            console.error("Backend error response:", errData);
+            throw new Error(errData.message || 'Error al generar la orden');
+        }
+
+        const saleData = await response.json();
+        
+        // Redirigir a checkout.html pasando el ID de la orden en localStorage
+        localStorage.setItem('pendingSaleId', saleData.idSale || saleData.id || saleData.saleId || saleData.saleNumber || '');
+        saveCartToLocalStorage(); 
+        
         window.location.href = 'checkout.html';
     } catch (error) {
-        console.error('Error:', error);
-        showNotification('Error al proceder al pago', 'error');
+        console.error('Error procesando checkout:', error);
+        showNotification('Error al iniciar el pago', 'error');
+        if (checkoutBtn) {
+            checkoutBtn.disabled = false;
+            checkoutBtn.textContent = 'Proceder al pago';
+        }
     }
 }
 
