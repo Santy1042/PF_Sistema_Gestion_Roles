@@ -548,3 +548,4 @@ document.addEventListener('DOMContentLoaded', async () => {
       showToastMsg('Error de red al actualizar', 'error');
     }
   });
+});

@@ -1,6 +1,7 @@
 package com.thegroup.pf_sgr.repository;
 
 import com.thegroup.pf_sgr.model.Sale;
+import com.thegroup.pf_sgr.model.SaleStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
@@ -19,6 +20,6 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     @Query("SELECT DISTINCT s FROM Sale s LEFT JOIN FETCH s.details")
     List<Sale> findAllWithDetails();
 
-    @Query("SELECT SUM(s.total) FROM Sale s WHERE CAST(s.status AS string) IN :statuses")
-    BigDecimal sumTotalByStatuses(@Param("statuses") List<String> statuses);
+    @Query("SELECT SUM(s.total) FROM Sale s WHERE s.status IN :statuses")
+    BigDecimal sumTotalByStatuses(@Param("statuses") List<SaleStatus> statuses);
 }

@@ -5,7 +5,7 @@ window.escapeHTML = function(str) {
     return div.innerHTML;
 };
 
-const API_BASE_URL = 'http://localhost:8080/api';
+
 const authToken = localStorage.getItem('authToken');
 
 let currentOrders = [];

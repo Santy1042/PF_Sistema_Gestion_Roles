@@ -31,7 +31,7 @@ function mapBackendCart(data) {
         cartItems: (data.items || []).map(backendItem => {
             const variant = backendItem.productVariant;
             const product = variant?.product;
-            const imageUrl = variant?.imageUrl || product?.imageUrl || product?.image || 'productos/default.jpg';
+            const imageUrl = variant?.imageUrl || product?.imageUrl || product?.image || 'img/default_product.png';
 
             return {
                 idCartItem: backendItem.itemCartId,

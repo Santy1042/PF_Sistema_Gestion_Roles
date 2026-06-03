@@ -18,7 +18,7 @@ async function fetchProducts() {
 
 async function loadCategories() {
     try {
-        const res = await fetch(`${API_URL}/categories?page=0&size=100`);
+        const res = await fetch(`${API_BASE_URL}/categories?page=0&size=100`);
         if (!res.ok) return;
         const data = await res.json();
         const items = data.content || [];

@@ -115,7 +115,7 @@ public class AdminService implements IAdminService {
         long totalUsers = userRepository.count();
         long totalOrders = saleRepository.count();
 
-        BigDecimal totalSalesAmount = saleRepository.sumTotalByStatuses(List.of("PAID", "PENDING"));
+        BigDecimal totalSalesAmount = saleRepository.sumTotalByStatuses(List.of(com.thegroup.pf_sgr.model.SaleStatus.PAID, com.thegroup.pf_sgr.model.SaleStatus.PENDING));
         if (totalSalesAmount == null) totalSalesAmount = BigDecimal.ZERO;
 
         return DashboardStatsResponse.builder()
