@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem('authToken');
 
   if (!token) {
-    alert('Debes iniciar sesión para ver tu perfil.');
+    sessionStorage.setItem('flashMessage', 'Debes iniciar sesión para ver tu perfil.');
+    sessionStorage.setItem('flashType', 'error');
     window.location.href = 'login.html';
     return;
   }
@@ -74,10 +75,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const data = await response.json();
-        alert('Tus datos se guardaron correctamente.');
+        if (window.showNotification) {
+          showNotification('Tus datos se guardaron correctamente.', 'success');
+        } else {
+          alert('Tus datos se guardaron correctamente.');
+        }
       } catch (error) {
         console.error('Error:', error);
-        alert('Error al guardar: ' + error.message);
+        if (window.showNotification) {
+          showNotification('Error al guardar: ' + error.message, 'error');
+        } else {
+          alert('Error al guardar: ' + error.message);
+        }
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Guardar cambios';

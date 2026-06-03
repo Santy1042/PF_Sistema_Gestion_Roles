@@ -20,9 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
             toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
         }, 3000);
     };
+
+    window.showNotification = window.showToast;
 
     const flash = sessionStorage.getItem('flashMessage');
     const flashType = sessionStorage.getItem('flashType') || 'success';
