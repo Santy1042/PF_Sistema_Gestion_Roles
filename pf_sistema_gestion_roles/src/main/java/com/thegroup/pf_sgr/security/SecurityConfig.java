@@ -66,7 +66,8 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(List.of(
             "http://localhost:[*]",
             "http://127.0.0.1:[*]",
-            "file://*"
+            "file://*",
+            "https://aura-essentials-gray.vercel.app"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
