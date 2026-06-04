@@ -28,13 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
           body: JSON.stringify({ email, password })
         });
 
-        if (response.status === 403) {
-          throw new Error('INACTIVO_403');
-        }
-
         if (!response.ok) {
           const errData = await response.json().catch(() => ({}));
           const msg = errData.message || 'Credenciales incorrectas o error en el servidor';
+          
+          if (msg === 'INACTIVO_403' || msg.toLowerCase().includes('desactivada')) {
+              throw new Error('INACTIVO_403');
+          }
+          
           throw new Error(msg);
         }
 

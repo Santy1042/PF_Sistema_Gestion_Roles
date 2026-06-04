@@ -33,12 +33,21 @@ function mapBackendCart(data) {
             const product = variant?.product;
             const imageUrl = variant?.imageUrl || product?.imageUrl || product?.image || 'img/default_product.png';
 
+            const originalPrice = product?.price || 0;
+            const discountPercentage = product?.discountPercentage || 0;
+            let currentPrice = originalPrice;
+            if (discountPercentage > 0) {
+                currentPrice = originalPrice - (originalPrice * discountPercentage / 100);
+            }
+
             return {
                 idCartItem: backendItem.itemCartId,
                 productVariantId: variant?.variantId,
                 productName: product?.name || 'Producto',
                 quantity: backendItem.quantity,
-                price: product?.price || 0,
+                price: currentPrice,
+                originalPrice: originalPrice,
+                discountPercentage: discountPercentage,
                 productImage: imageUrl,
                 color: variant?.color?.name,
                 size: variant?.size?.name,
@@ -122,6 +131,25 @@ function createCartItemHTML(item) {
     const imageUrl = item.productImage || 'img/default_product.png';
     const isInactive = item.isActive === false;
 
+    let priceHtml = '';
+    if (item.discountPercentage && item.discountPercentage > 0) {
+        priceHtml = `
+            <div class="price-breakdown">
+                <span style="text-decoration: line-through; color: var(--text-secondary); font-size: 0.9em; margin-right: 0.5rem;">$${item.originalPrice.toFixed(2)}</span>
+                <span class="unit-price" style="color: var(--error); font-weight: bold;">$${item.price.toFixed(2)}</span>
+                <span style="background: var(--error); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; font-weight: bold; margin-left: 0.5rem;">-${item.discountPercentage}%</span>
+            </div>
+            <div class="item-total" style="margin-top: 0.25rem;">Total: $${isInactive ? '0.00' : itemTotal.toFixed(2)}</div>
+        `;
+    } else {
+        priceHtml = `
+            <div class="price-breakdown">
+                <span class="unit-price">$${item.price.toFixed(2)}</span>
+                <span class="item-total">Total: $${isInactive ? '0.00' : itemTotal.toFixed(2)}</span>
+            </div>
+        `;
+    }
+
     return `
         <div class="cart-item ${isInactive ? 'inactive-item' : ''}" data-item-id="${item.idCartItem}" style="${isInactive ? 'opacity: 0.5;' : ''}">
             <div class="item-image">
@@ -151,10 +179,7 @@ function createCartItemHTML(item) {
             </div>
 
             <div class="item-price">
-                <div class="price-breakdown">
-                    <span class="unit-price">$${item.price.toFixed(2)}</span>
-                    <span class="item-total">Total: $${isInactive ? '0.00' : itemTotal.toFixed(2)}</span>
-                </div>
+                ${priceHtml}
             </div>
 
             <div class="item-actions">

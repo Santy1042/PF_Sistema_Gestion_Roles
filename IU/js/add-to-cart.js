@@ -53,6 +53,8 @@ function addToCartLocalStorage(productVariantId, quantity, productName, productD
             productName: productName,
             quantity: quantity,
             price: productData?.price || 29.99,
+            originalPrice: productData?.originalPrice || productData?.price || 29.99,
+            discountPercentage: productData?.discountPercentage || 0,
             productImage: productData?.image || 'img/default_product.png',
             color: productData?.color || null,
             size: productData?.size || null,

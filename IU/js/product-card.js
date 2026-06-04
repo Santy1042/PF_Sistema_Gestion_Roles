@@ -4,7 +4,7 @@ function getStockInfo(stock) {
     return `Agotado (0 disponibles)`;
 }
 
-function handleAddToCartClick(productId, productName, productPrice, fallbackImage) {
+function handleAddToCartClick(productId, productName, productPrice, fallbackImage, originalPrice, discountPercentage) {
     let variantId = productId;
     let color = null;
     let size = null;
@@ -34,6 +34,8 @@ function handleAddToCartClick(productId, productName, productPrice, fallbackImag
 
     const productData = {
         price: productPrice,
+        originalPrice: originalPrice || productPrice,
+        discountPercentage: discountPercentage || 0,
         image: image,
         color: color,
         size: size,
@@ -181,7 +183,7 @@ function createProductCardHTML(product) {
         <div class="product-stock" id="product-stock-${pId}">
           <span>${stockInfo}</span>
         </div>
-        <button id="add-to-cart-btn-${pId}" class="btn btn-primary" onclick="handleAddToCartClick(${pId}, '${product.name.replace(/'/g, "\\'")}', ${currentPrice}, '${imageUrl}')" ${initialStock <= 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+        <button id="add-to-cart-btn-${pId}" class="btn btn-primary" onclick="handleAddToCartClick(${pId}, '${product.name.replace(/'/g, "\\'")}', ${currentPrice}, '${imageUrl}', ${originalPrice}, ${product.discountPercentage || 0})" ${initialStock <= 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
           ${initialStock <= 0 ? 'Agotado' : 'Agregar al carrito'}
         </button>
       </div>
