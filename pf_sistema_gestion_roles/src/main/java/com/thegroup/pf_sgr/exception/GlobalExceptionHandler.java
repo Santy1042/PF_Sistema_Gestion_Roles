@@ -84,4 +84,18 @@ public class GlobalExceptionHandler {
                 "message", ex.getMessage()
         ));
     }
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> handleDataIntegrityViolation(org.springframework.dao.DataIntegrityViolationException ex) {
+        String message = "Ya existe un registro con estas características. Evite duplicados.";
+        if (ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+            org.hibernate.exception.ConstraintViolationException cve = (org.hibernate.exception.ConstraintViolationException) ex.getCause();
+            if (cve.getConstraintName() != null) {
+                message += " (Violación de restricción: " + cve.getConstraintName() + ")";
+            }
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                "error", "Conflicto de integridad de datos",
+                "message", message
+        ));
+    }
 }

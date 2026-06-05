@@ -17,7 +17,9 @@ import lombok.Setter;
 
 @Entity
 @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name = "product_variants")
+@Table(name = "product_variants", uniqueConstraints = {
+    @jakarta.persistence.UniqueConstraint(columnNames = {"id_product", "id_size", "id_color"})
+})
 @Getter
 @Setter
 @NoArgsConstructor

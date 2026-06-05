@@ -94,27 +94,27 @@ function editarCategoria(id, name, isActive) {
 }
 
 async function guardarCategoria() {
-  const id = document.getElementById('categoriaId').value;
-  const name = document.getElementById('categoriaNombre').value.trim();
-  if (!name) { showToastMsg('Nombre requerido', 'error'); return; }
+  const btn = document.getElementById('btnGuardarCategoria');
+  if (btn) { btn.disabled = true; btn.textContent = 'Guardando...'; }
+  try {
+    const id = document.getElementById('categoriaId').value;
+    const body = { name: document.getElementById('categoriaNombre').value.trim() };
+    if (!body.name) { showToastMsg('Nombre obligatorio', 'error'); return; }
 
-  const method = id ? 'PUT' : 'POST';
-  const url = id ? `${API}/categories/updateCategory?categoryId=${id}` : `${API}/categories/createCategory`;
-
-  const res = await fetch(url, {
-    method, headers: authHeaders(),
-    body: JSON.stringify({ name })
-  });
-  if (res.ok) {
-    showToastMsg(id ? 'Categoría actualizada' : 'Categoría creada');
-    document.getElementById('formCategoria').style.display = 'none';
-    document.getElementById('categoriaId').value = '';
-    document.getElementById('categoriaNombre').value = '';
-    document.getElementById('formCategoriaTitle').textContent = 'Crear Categoría';
-    cargarCategorias();
-    cargarSelectCategorias(); // Actualizar selectores
-  } else {
-    showToastMsg('Error al guardar categoría', 'error');
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `${API}/categories/${id}` : `${API}/categories/createCategory`;
+    const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
+    if (res.ok) {
+      showToastMsg(id ? 'Categoría actualizada' : 'Categoría creada');
+      cancelarFormCategoria();
+      cargarCategorias();
+      cargarSelectCategorias();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      showToastMsg(err.message || 'Error al guardar categoría', 'error');
+    }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Guardar'; }
   }
 }
 
@@ -184,26 +184,26 @@ function editarTag(id, name) {
 }
 
 async function guardarTag() {
-  const id = document.getElementById('tagId').value;
-  const name = document.getElementById('tagNombre').value.trim();
-  if (!name) { showToastMsg('Nombre requerido', 'error'); return; }
+  const btn = document.getElementById('btnGuardarTag');
+  if (btn) { btn.disabled = true; btn.textContent = 'Guardando...'; }
+  try {
+    const id = document.getElementById('tagId').value;
+    const body = { name: document.getElementById('tagNombre').value.trim() };
+    if (!body.name) { showToastMsg('Nombre obligatorio', 'error'); return; }
 
-  const method = id ? 'PUT' : 'POST';
-  const url = id ? `${API}/tags/updateTag?tagId=${id}` : `${API}/tags/createTag`;
-
-  const res = await fetch(url, {
-    method, headers: authHeaders(),
-    body: JSON.stringify({ name })
-  });
-  if (res.ok) {
-    showToastMsg(id ? 'Tag actualizado' : 'Tag creado');
-    document.getElementById('formTag').style.display = 'none';
-    document.getElementById('tagId').value = '';
-    document.getElementById('tagNombre').value = '';
-    document.getElementById('formTagTitle').textContent = 'Crear Tag';
-    cargarTags();
-  } else {
-    showToastMsg('Error al guardar tag', 'error');
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `${API}/tags/${id}` : `${API}/tags/createTag`;
+    const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
+    if (res.ok) {
+      showToastMsg(id ? 'Tag actualizado' : 'Tag creado');
+      cancelarFormTag();
+      cargarTags();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      showToastMsg(err.message || 'Error al guardar tag', 'error');
+    }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Guardar'; }
   }
 }
 
@@ -264,26 +264,26 @@ function editarColor(id, name) {
 }
 
 async function guardarColor() {
-  const id = document.getElementById('colorId').value;
-  const name = document.getElementById('colorNombre').value.trim();
-  if (!name) { showToastMsg('Nombre requerido', 'error'); return; }
+  const btn = document.getElementById('btnGuardarColor');
+  if (btn) { btn.disabled = true; btn.textContent = 'Guardando...'; }
+  try {
+    const id = document.getElementById('colorId').value;
+    const body = { name: document.getElementById('colorNombre').value.trim() };
+    if (!body.name) { showToastMsg('Nombre obligatorio', 'error'); return; }
 
-  const method = id ? 'PUT' : 'POST';
-  const url = id ? `${API}/colors/updateColor?colorId=${id}` : `${API}/colors/createColor`;
-
-  const res = await fetch(url, {
-    method, headers: authHeaders(),
-    body: JSON.stringify({ name })
-  });
-  if (res.ok) {
-    showToastMsg(id ? 'Color actualizado' : 'Color creado');
-    document.getElementById('formColor').style.display = 'none';
-    document.getElementById('colorId').value = '';
-    document.getElementById('colorNombre').value = '';
-    document.getElementById('formColorTitle').textContent = 'Crear Color';
-    cargarColores();
-  } else {
-    showToastMsg('Error al guardar color', 'error');
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `${API}/colors/${id}` : `${API}/colors/createColor`;
+    const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
+    if (res.ok) {
+      showToastMsg(id ? 'Color actualizado' : 'Color creado');
+      cancelarFormColor();
+      cargarColores();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      showToastMsg(err.message || 'Error al guardar color', 'error');
+    }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Guardar'; }
   }
 }
 
@@ -344,26 +344,26 @@ function editarTalla(id, name) {
 }
 
 async function guardarTalla() {
-  const id = document.getElementById('tallaId').value;
-  const name = document.getElementById('tallaNombre').value.trim();
-  if (!name) { showToastMsg('Nombre requerido', 'error'); return; }
+  const btn = document.getElementById('btnGuardarTalla');
+  if (btn) { btn.disabled = true; btn.textContent = 'Guardando...'; }
+  try {
+    const id = document.getElementById('tallaId').value;
+    const body = { name: document.getElementById('tallaNombre').value.trim() };
+    if (!body.name) { showToastMsg('Nombre obligatorio', 'error'); return; }
 
-  const method = id ? 'PUT' : 'POST';
-  const url = id ? `${API}/sizes/updateSize?sizeId=${id}` : `${API}/sizes/createSize`;
-
-  const res = await fetch(url, {
-    method, headers: authHeaders(),
-    body: JSON.stringify({ name })
-  });
-  if (res.ok) {
-    showToastMsg(id ? 'Talla actualizada' : 'Talla creada');
-    document.getElementById('formTalla').style.display = 'none';
-    document.getElementById('tallaId').value = '';
-    document.getElementById('tallaNombre').value = '';
-    document.getElementById('formTallaTitle').textContent = 'Crear Talla';
-    cargarTallas();
-  } else {
-    showToastMsg('Error al guardar talla', 'error');
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `${API}/sizes/${id}` : `${API}/sizes/createSize`;
+    const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
+    if (res.ok) {
+      showToastMsg(id ? 'Talla actualizada' : 'Talla creada');
+      cancelarFormTalla();
+      cargarTallas();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      showToastMsg(err.message || 'Error al guardar talla', 'error');
+    }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Guardar'; }
   }
 }
 

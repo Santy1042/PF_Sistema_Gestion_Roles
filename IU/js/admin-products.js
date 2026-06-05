@@ -109,8 +109,12 @@ async function toggleProducto(id, isActive) {
 
 
 async function guardarProducto() {
-  const id = document.getElementById('productoId').value;
-  const body = {
+  const btn = document.getElementById('btnGuardarProducto');
+  if (btn) { btn.disabled = true; btn.textContent = 'Guardando...'; }
+
+  try {
+    const id = document.getElementById('productoId').value;
+    const body = {
     name: document.getElementById('productoNombre').value.trim(),
     price: parseFloat(document.getElementById('productoPrecio').value),
     categoryId: document.getElementById('productoCategoriaId').value ? parseInt(document.getElementById('productoCategoriaId').value) : null,
@@ -146,6 +150,9 @@ async function guardarProducto() {
   } else {
     const err = await res.json().catch(() => ({}));
     showToastMsg(err.message || 'Error al guardar', 'error');
+  }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Guardar'; }
   }
 }
 
@@ -232,9 +239,13 @@ async function editarVariante(id) {
 }
 
 async function guardarVariante() {
-  const id = document.getElementById('varianteId').value;
-  let imageUrl = document.getElementById('varianteImageUrl').value.trim();
-  const fileInput = document.getElementById('varianteImageFile');
+  const btn = document.getElementById('btnGuardarVariante');
+  if (btn) { btn.disabled = true; btn.textContent = 'Guardando...'; }
+
+  try {
+    const id = document.getElementById('varianteId').value;
+    let imageUrl = document.getElementById('varianteImageUrl').value.trim();
+    const fileInput = document.getElementById('varianteImageFile');
   
   if (!imageUrl && fileInput.files.length === 0) {
     showToastMsg('La imagen de la variante es obligatoria', 'error');
@@ -294,7 +305,11 @@ async function guardarVariante() {
     cancelarFormVariante();
     cargarVariantesPorProducto(currentProductoIdParaVariantes);
   } else {
-    showToastMsg('Error al guardar variante', 'error');
+    const err = await res.json().catch(() => ({}));
+    showToastMsg(err.message || 'Error al guardar variante', 'error');
+  }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Guardar'; }
   }
 }
 
