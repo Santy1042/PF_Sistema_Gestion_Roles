@@ -1,10 +1,10 @@
 package com.thegroup.pf_sgr.dto;
 
-import com.thegroup.pf_sgr.model.SaleStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckoutResponseDTO {
-    private Long idSale;
-    private SaleStatus status;
-    private BigDecimal subtotal;
-    private BigDecimal total;
-    private LocalDateTime saleDate;
+public class PaymentResponse {
+    private Long idPayment;
+    private String paymentMethod;
+    private BigDecimal amount;
+    private LocalDateTime paymentDate;
+    private String status;
 }

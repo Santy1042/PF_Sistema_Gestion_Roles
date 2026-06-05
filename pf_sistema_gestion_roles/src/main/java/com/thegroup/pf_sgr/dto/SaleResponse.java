@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SaleResponseDTO {
+public class SaleResponse {
     private Long idSale;
     private Long idUser;
     private SaleStatus status;
@@ -22,6 +22,7 @@ public class SaleResponseDTO {
     private LocalDateTime saleDate;
     private String statusReport;
     private String shippingAddress;
-    private PaymentDTO payment;
-    private List<SaleDetailDTO> details;
+    private PaymentResponse payment;
+    private List<PaymentResponse> payments;
+    private List<SaleDetailResponse> details;
 }

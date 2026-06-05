@@ -42,7 +42,7 @@ async function cargarStats() {
             <td style="display:flex;gap:4px;flex-wrap:wrap">
               <button class="btn btn-outline btn-sm" onclick="editarVenta(${v.idSale}, '${v.status}', '${(window.escapeHTML(v.shippingAddress || '')).replace(/'/g, "\\'")}', '${(window.escapeHTML(v.statusReport || '')).replace(/'/g, "\\'")}')">Administrar</button>
               <button class="btn btn-outline btn-sm" onclick="verDetallesVenta(${v.idSale})">Ver Productos</button>
-              ${hasPago && v.payment ? `<button class="btn btn-sm badge-info" style="border:1px solid var(--primary);cursor:pointer" onclick="verPago(${JSON.stringify(v.payment).replace(/"/g,'&quot;')}, ${v.idSale})">Ver Pago</button>` : ''}
+              ${hasPago && v.payments && v.payments.length > 0 ? `<button class="btn btn-sm badge-info" style="border:1px solid var(--primary);cursor:pointer" onclick="verPago(${JSON.stringify(v.payments).replace(/"/g,'&quot;')}, ${v.idSale})">Ver Pagos</button>` : ''}
             </td>
           </tr>`;
         }).join('');
@@ -62,13 +62,18 @@ async function cargarStats() {
     document.getElementById('modalVenta').style.display = 'flex';
   };
 
-  window.verPago = function(payment, saleId) {
+  window.verPago = function(payments, saleId) {
     document.getElementById('modalPagoSaleId').textContent = saleId;
-    document.getElementById('modalPagoMetodo').textContent = payment.paymentMethod || '—';
-    document.getElementById('modalPagoMonto').textContent = `$${parseFloat(payment.amount).toFixed(2)}`;
-    document.getElementById('modalPagoEstado').textContent = payment.status || '—';
-    document.getElementById('modalPagoFecha').textContent = payment.paymentDate ? new Date(payment.paymentDate).toLocaleString() : '—';
-    document.getElementById('modalPagoId').textContent = payment.idPayment || '—';
+    const tbody = document.getElementById('bodyModalPagos');
+    tbody.innerHTML = payments.map(p => `
+      <tr>
+        <td>${p.idPayment || '—'}</td>
+        <td>${p.paymentMethod || '—'}</td>
+        <td style="font-weight:700;color:var(--primary);">$${parseFloat(p.amount).toFixed(2)}</td>
+        <td><span class="badge ${p.status === 'APPROVED' ? 'badge-success' : p.status === 'PENDING' ? 'badge-warning' : 'badge-danger'}">${p.status || '—'}</span></td>
+        <td>${p.paymentDate ? new Date(p.paymentDate).toLocaleString() : '—'}</td>
+      </tr>
+    `).join('');
     document.getElementById('modalPago').style.display = 'flex';
   };
 

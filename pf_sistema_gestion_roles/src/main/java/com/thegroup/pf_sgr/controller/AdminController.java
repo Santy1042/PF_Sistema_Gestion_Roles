@@ -5,7 +5,7 @@ import com.thegroup.pf_sgr.dto.RoleChangeRequest;
 import com.thegroup.pf_sgr.interfaces.IAdminService;
 import com.thegroup.pf_sgr.interfaces.ISaleService;
 import com.thegroup.pf_sgr.dto.DashboardStatsResponse;
-import com.thegroup.pf_sgr.dto.SaleResponseDTO;
+import com.thegroup.pf_sgr.dto.SaleResponse;
 import com.thegroup.pf_sgr.dto.AdminSaleUpdateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +32,13 @@ public class AdminController {
 
     @GetMapping("/sales")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<SaleResponseDTO>> getAllSales() {
+    public ResponseEntity<List<SaleResponse>> getAllSales() {
         return ResponseEntity.ok(saleService.getAllSales());
     }
 
     @PutMapping("/sales/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<SaleResponseDTO> updateSaleAdmin(
+    public ResponseEntity<SaleResponse> updateSaleAdmin(
             @PathVariable Long id, 
             @Valid @RequestBody AdminSaleUpdateRequest request) {
         return ResponseEntity.ok(saleService.updateSaleAdmin(id, request));

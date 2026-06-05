@@ -47,8 +47,8 @@ function handleAddToCartClick(productId, productName, productPrice, fallbackImag
     }
 }
 
-function changeVariant(productId, btnElement) {
-    const allBtns = document.querySelectorAll(`.variant-btn-${productId}`);
+function selectColor(productId, btnElement) {
+    const allBtns = document.querySelectorAll(`.color-btn-${productId}`);
     allBtns.forEach(btn => {
         btn.style.backgroundColor = 'transparent';
         btn.style.color = 'var(--text-primary)';
@@ -58,6 +58,51 @@ function changeVariant(productId, btnElement) {
     btnElement.style.backgroundColor = 'var(--primary)';
     btnElement.style.color = 'white';
     btnElement.style.borderColor = 'var(--primary)';
+
+    const color = btnElement.getAttribute('data-color');
+    const activeVariants = window.activeProductVariants[productId] || [];
+    const colorVariants = activeVariants.filter(v => v.color === color);
+
+    const sizesContainer = document.getElementById(`sizes-container-${productId}`);
+    if (sizesContainer && colorVariants.length > 0) {
+        sizesContainer.innerHTML = colorVariants.map((v, index) => {
+            const isSelected = index === 0;
+            const activeStyle = isSelected
+                ? 'background-color: var(--primary); color: white; border-color: var(--primary);'
+                : 'background-color: transparent; color: var(--text-primary); border-color: var(--border-color);';
+            return `<button type="button" 
+                       class="size-btn-${productId}" 
+                       data-id="${v.id}" 
+                       data-img="${v.imageUrl || ''}" 
+                       data-stock="${v.stock}" 
+                       data-text="${v.color} - Talla ${v.size}"
+                       onclick="selectSize(${productId}, this)"
+                       style="padding: 4px 10px; margin: 0 6px 6px 0; border: 1px solid; border-radius: 8px; cursor: pointer; font-size: 0.85em; font-weight: 500; transition: all 0.2s ease; ${activeStyle}">
+                       ${v.size}
+                   </button>`;
+        }).join('');
+
+        // Automatically select the first size of the new color
+        const firstSizeBtn = sizesContainer.querySelector(`.size-btn-${productId}`);
+        if (firstSizeBtn) {
+            selectSize(productId, firstSizeBtn, true);
+        }
+    }
+}
+
+function selectSize(productId, btnElement, isAutoSelect = false) {
+    if (!isAutoSelect) {
+        const allBtns = document.querySelectorAll(`.size-btn-${productId}`);
+        allBtns.forEach(btn => {
+            btn.style.backgroundColor = 'transparent';
+            btn.style.color = 'var(--text-primary)';
+            btn.style.borderColor = 'var(--border-color)';
+        });
+
+        btnElement.style.backgroundColor = 'var(--primary)';
+        btnElement.style.color = 'white';
+        btnElement.style.borderColor = 'var(--primary)';
+    }
 
     const hiddenInput = document.getElementById(`variant-select-${productId}`);
     if (hiddenInput) {
@@ -111,27 +156,52 @@ function createProductCardHTML(product) {
 
     let variantsHtml = '';
     if (hasVariants) {
-        const pills = activeVariants.map((v, index) => {
+        window.activeProductVariants = window.activeProductVariants || {};
+        window.activeProductVariants[pId] = activeVariants;
+        
+        const colors = [...new Set(activeVariants.map(v => v.color))];
+        const defaultColor = colors[0];
+        const defaultVariantsForColor = activeVariants.filter(v => v.color === defaultColor);
+
+        const colorBtns = colors.map((c, index) => {
             const isSelected = index === 0;
             const activeStyle = isSelected
                 ? 'background-color: var(--primary); color: white; border-color: var(--primary);'
                 : 'background-color: transparent; color: var(--text-primary); border-color: var(--border-color);';
-
             return `<button type="button" 
-                       class="variant-btn-${pId}" 
+                       class="color-btn-${pId}" 
+                       data-color="${c}"
+                       onclick="selectColor(${pId}, this)"
+                       style="padding: 6px 14px; margin: 0 8px 8px 0; border: 1px solid; border-radius: 999px; cursor: pointer; font-size: 0.9em; font-weight: 500; transition: all 0.2s ease; ${activeStyle}">
+                       ${c}
+                   </button>`;
+        }).join('');
+
+        const sizeBtns = defaultVariantsForColor.map((v, index) => {
+            const isSelected = index === 0;
+            const activeStyle = isSelected
+                ? 'background-color: var(--primary); color: white; border-color: var(--primary);'
+                : 'background-color: transparent; color: var(--text-primary); border-color: var(--border-color);';
+            return `<button type="button" 
+                       class="size-btn-${pId}" 
                        data-id="${v.id}" 
                        data-img="${v.imageUrl || ''}" 
                        data-stock="${v.stock}" 
                        data-text="${v.color} - Talla ${v.size}"
-                       onclick="changeVariant(${pId}, this)"
-                       style="padding: 6px 14px; margin: 0 8px 8px 0; border: 1px solid; border-radius: 999px; cursor: pointer; font-size: 0.9em; font-weight: 500; transition: all 0.2s ease; ${activeStyle}">
-                       ${v.color} - ${v.size}
+                       onclick="selectSize(${pId}, this)"
+                       style="padding: 4px 10px; margin: 0 6px 6px 0; border: 1px solid; border-radius: 8px; cursor: pointer; font-size: 0.85em; font-weight: 500; transition: all 0.2s ease; ${activeStyle}">
+                       ${v.size}
                    </button>`;
         }).join('');
 
         variantsHtml = `
-            <div class="product-variant-selector" style="margin-bottom: 1rem; display: flex; flex-wrap: wrap;">
-                ${pills}
+            <div style="margin-bottom: 0.4rem; font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Color:</div>
+            <div class="product-color-selector" style="margin-bottom: 0.8rem; display: flex; flex-wrap: wrap;">
+                ${colorBtns}
+            </div>
+            <div style="margin-bottom: 0.4rem; font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Talla:</div>
+            <div id="sizes-container-${pId}" class="product-size-selector" style="margin-bottom: 1rem; display: flex; flex-wrap: wrap;">
+                ${sizeBtns}
             </div>
             <input type="hidden" id="variant-select-${pId}" value="${defaultVariant.id}" data-text="${defaultVariant.color} - Talla ${defaultVariant.size}">
         `;

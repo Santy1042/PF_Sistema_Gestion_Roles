@@ -1,9 +1,9 @@
 package com.thegroup.pf_sgr.service;
 
-import com.thegroup.pf_sgr.dto.CheckoutResponseDTO;
-import com.thegroup.pf_sgr.dto.PaymentDTO;
-import com.thegroup.pf_sgr.dto.SaleDetailDTO;
-import com.thegroup.pf_sgr.dto.SaleResponseDTO;
+import com.thegroup.pf_sgr.dto.CheckoutResponse;
+import com.thegroup.pf_sgr.dto.PaymentResponse;
+import com.thegroup.pf_sgr.dto.SaleDetailResponse;
+import com.thegroup.pf_sgr.dto.SaleResponse;
 import com.thegroup.pf_sgr.dto.AdminSaleUpdateRequest;
 import com.thegroup.pf_sgr.exception.EmptyCartException;
 import com.thegroup.pf_sgr.exception.InsufficientStockException;
@@ -53,7 +53,7 @@ public class SaleService implements ISaleService {
     private final UserRepository userRepository;
 
     @Override
-    public CheckoutResponseDTO createOrder(Long userId) {
+    public CheckoutResponse createOrder(Long userId) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new EmptyCartException("Cart not found for user"));
 
@@ -115,7 +115,7 @@ public class SaleService implements ISaleService {
 
         cartItemRepository.deleteAllByCart_CartId(cart.getCartId());
 
-        return CheckoutResponseDTO.builder()
+        return CheckoutResponse.builder()
                 .idSale(sale.getIdSale())
                 .status(sale.getStatus())
                 .subtotal(sale.getSubtotal())
@@ -125,7 +125,7 @@ public class SaleService implements ISaleService {
     }
 
     @Override
-    public SaleResponseDTO confirmPayment(Long saleId, Long userId, String statusReport) {
+    public SaleResponse confirmPayment(Long saleId, Long userId, String statusReport) {
         Sale sale = saleRepository.findByIdSaleAndIdUser(saleId, userId)
                 .orElseThrow(() -> new SaleNotFoundException("Sale not found for user"));
 
@@ -166,7 +166,7 @@ public class SaleService implements ISaleService {
     }
 
     @Override
-    public SaleResponseDTO cancelOrder(Long saleId, Long userId, String statusReport) {
+    public SaleResponse cancelOrder(Long saleId, Long userId, String statusReport) {
         Sale sale = saleRepository.findByIdSaleAndIdUser(saleId, userId)
                 .orElseThrow(() -> new SaleNotFoundException("Sale not found for user"));
 
@@ -193,7 +193,7 @@ public class SaleService implements ISaleService {
     }
 
     @Override
-    public SaleResponseDTO refundOrder(Long saleId) {
+    public SaleResponse refundOrder(Long saleId) {
         Sale sale = saleRepository.findById(saleId)
                 .orElseThrow(() -> new SaleNotFoundException("Sale not found"));
 
@@ -213,9 +213,8 @@ public class SaleService implements ISaleService {
         sale.setStatus(SaleStatus.REFUNDED);
         sale = saleRepository.save(sale);
 
-        Optional<Payment> paymentOpt = paymentRepository.findBySale_IdSale(saleId);
-        if (paymentOpt.isPresent()) {
-            Payment payment = paymentOpt.get();
+        List<Payment> payments = paymentRepository.findAllBySale_IdSale(saleId);
+        for (Payment payment : payments) {
             PaymentStatus refundedStatus = paymentStatusRepository.findByStatusName("REFUNDED")
                     .orElseThrow(() -> new RuntimeException("Payment status REFUNDED not found in DB"));
             payment.setStatus(refundedStatus);
@@ -226,21 +225,21 @@ public class SaleService implements ISaleService {
     }
 
     @Override
-    public List<SaleResponseDTO> getSalesByUser(Long userId) {
+    public List<SaleResponse> getSalesByUser(Long userId) {
         return saleRepository.findByIdUser(userId).stream()
                 .map(sale -> buildSaleResponseDTO(sale, sale.getDetails()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<SaleResponseDTO> getAllSales() {
+    public List<SaleResponse> getAllSales() {
         return saleRepository.findAllWithDetails().stream()
                 .map(sale -> buildSaleResponseDTO(sale, sale.getDetails()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public SaleResponseDTO updateSaleAdmin(Long saleId, AdminSaleUpdateRequest request) {
+    public SaleResponse updateSaleAdmin(Long saleId, AdminSaleUpdateRequest request) {
         Sale sale = saleRepository.findById(saleId)
                 .orElseThrow(() -> new SaleNotFoundException("Sale not found"));
 
@@ -307,12 +306,13 @@ public class SaleService implements ISaleService {
                 sale.setStatus(SaleStatus.REFUNDED);
                 sale = saleRepository.save(sale);
 
-                paymentRepository.findBySale_IdSale(saleId).ifPresent(payment -> {
+                List<Payment> paymentsList = paymentRepository.findAllBySale_IdSale(saleId);
+                for (Payment payment : paymentsList) {
                     PaymentStatus refundedStatus = paymentStatusRepository.findByStatusName("REFUNDED")
                             .orElseThrow(() -> new RuntimeException("Payment status REFUNDED not found"));
                     payment.setStatus(refundedStatus);
                     paymentRepository.save(payment);
-                });
+                }
 
                 return buildSaleResponseDTO(sale, details);
 
@@ -327,16 +327,16 @@ public class SaleService implements ISaleService {
     }
 
     @Override
-    public SaleResponseDTO getSaleDetail(Long saleId, Long userId) {
+    public SaleResponse getSaleDetail(Long saleId, Long userId) {
         Sale sale = saleRepository.findByIdSaleAndIdUser(saleId, userId)
                 .orElseThrow(() -> new SaleNotFoundException("Sale not found for user"));
         List<SaleDetail> details = saleDetailRepository.findBySale_IdSale(saleId);
         return buildSaleResponseDTO(sale, details);
     }
 
-    private SaleResponseDTO buildSaleResponseDTO(Sale sale, List<SaleDetail> details) {
-        List<SaleDetailDTO> detailDTOs = details.stream()
-                .map(detail -> SaleDetailDTO.builder()
+    private SaleResponse buildSaleResponseDTO(Sale sale, List<SaleDetail> details) {
+        List<SaleDetailResponse> detailDTOs = details.stream()
+                .map(detail -> SaleDetailResponse.builder()
                         .idVariant(detail.getProductVariant().getVariantId())
                         .quantity(detail.getQuantity())
                         .unitPrice(detail.getUnitPrice())
@@ -349,20 +349,21 @@ public class SaleService implements ISaleService {
                         .build())
                 .collect(Collectors.toList());
 
-        PaymentDTO paymentDTO = null;
-        Optional<Payment> paymentOpt = paymentRepository.findBySale_IdSale(sale.getIdSale());
-        if (paymentOpt.isPresent()) {
-            Payment payment = paymentOpt.get();
-            paymentDTO = PaymentDTO.builder()
-                    .idPayment(payment.getIdPayment())
-                    .paymentMethod(payment.getPaymentMethod())
-                    .amount(payment.getAmount())
-                    .paymentDate(payment.getPaymentDate())
-                    .status(payment.getStatus().getStatusName())
-                    .build();
+        List<Payment> paymentsEntity = paymentRepository.findAllBySale_IdSale(sale.getIdSale());
+        List<PaymentResponse> paymentDTOList = paymentsEntity.stream().map(payment -> PaymentResponse.builder()
+                .idPayment(payment.getIdPayment())
+                .paymentMethod(payment.getPaymentMethod())
+                .amount(payment.getAmount())
+                .paymentDate(payment.getPaymentDate())
+                .status(payment.getStatus().getStatusName())
+                .build()).collect(Collectors.toList());
+
+        PaymentResponse paymentDTO = null;
+        if (!paymentDTOList.isEmpty()) {
+            paymentDTO = paymentDTOList.get(paymentDTOList.size() - 1);
         }
 
-        return SaleResponseDTO.builder()
+        return SaleResponse.builder()
                 .idSale(sale.getIdSale())
                 .idUser(sale.getIdUser())
                 .status(sale.getStatus())
@@ -372,6 +373,7 @@ public class SaleService implements ISaleService {
                 .statusReport(sale.getStatusReport())
                 .shippingAddress(sale.getShippingAddress())
                 .payment(paymentDTO)
+                .payments(paymentDTOList)
                 .details(detailDTOs)
                 .build();
     }

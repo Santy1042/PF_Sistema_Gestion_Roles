@@ -1,17 +1,17 @@
 package com.thegroup.pf_sgr.interfaces;
 
-import com.thegroup.pf_sgr.dto.CheckoutResponseDTO;
-import com.thegroup.pf_sgr.dto.SaleResponseDTO;
+import com.thegroup.pf_sgr.dto.CheckoutResponse;
+import com.thegroup.pf_sgr.dto.SaleResponse;
 import com.thegroup.pf_sgr.dto.AdminSaleUpdateRequest;
 import java.util.List;
 
 public interface ISaleService {
-    CheckoutResponseDTO createOrder(Long userId);
-    SaleResponseDTO confirmPayment(Long saleId, Long userId, String statusReport);
-    SaleResponseDTO cancelOrder(Long saleId, Long userId, String statusReport);
-    SaleResponseDTO refundOrder(Long saleId);
-    List<SaleResponseDTO> getSalesByUser(Long userId);
-    SaleResponseDTO getSaleDetail(Long saleId, Long userId);
-    List<SaleResponseDTO> getAllSales();
-    SaleResponseDTO updateSaleAdmin(Long saleId, AdminSaleUpdateRequest request);
+    CheckoutResponse createOrder(Long userId);
+    SaleResponse confirmPayment(Long saleId, Long userId, String statusReport);
+    SaleResponse cancelOrder(Long saleId, Long userId, String statusReport);
+    SaleResponse refundOrder(Long saleId);
+    List<SaleResponse> getSalesByUser(Long userId);
+    SaleResponse getSaleDetail(Long saleId, Long userId);
+    List<SaleResponse> getAllSales();
+    SaleResponse updateSaleAdmin(Long saleId, AdminSaleUpdateRequest request);
 }

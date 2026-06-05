@@ -217,6 +217,12 @@ async function guardarVariante() {
   const id = document.getElementById('varianteId').value;
   let imageUrl = document.getElementById('varianteImageUrl').value.trim();
   const fileInput = document.getElementById('varianteImageFile');
+  
+  if (!imageUrl && fileInput.files.length === 0) {
+    showToastMsg('La imagen de la variante es obligatoria', 'error');
+    return;
+  }
+
   if (fileInput.files.length > 0) {
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);

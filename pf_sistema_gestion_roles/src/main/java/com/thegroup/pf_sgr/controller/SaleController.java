@@ -1,7 +1,7 @@
 package com.thegroup.pf_sgr.controller;
 
-import com.thegroup.pf_sgr.dto.CheckoutResponseDTO;
-import com.thegroup.pf_sgr.dto.SaleResponseDTO;
+import com.thegroup.pf_sgr.dto.CheckoutResponse;
+import com.thegroup.pf_sgr.dto.SaleResponse;
 import com.thegroup.pf_sgr.dto.StatusReportRequest;
 import com.thegroup.pf_sgr.interfaces.ISaleService;
 import com.thegroup.pf_sgr.repository.UserRepository;
@@ -24,48 +24,48 @@ public class SaleController {
     private final UserRepository userRepository;
 
     @PostMapping("/checkout")
-    public ResponseEntity<CheckoutResponseDTO> createOrder(Authentication authentication) {
+    public ResponseEntity<CheckoutResponse> createOrder(Authentication authentication) {
         Long userId = AuthUtils.getUserId(authentication, userRepository);
-        CheckoutResponseDTO response = saleService.createOrder(userId);
+        CheckoutResponse response = saleService.createOrder(userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/{id}/pay")
-    public ResponseEntity<SaleResponseDTO> confirmPayment(
+    public ResponseEntity<SaleResponse> confirmPayment(
             @PathVariable Long id,
             @RequestBody(required = false) StatusReportRequest report,
             Authentication authentication) {
         Long userId = AuthUtils.getUserId(authentication, userRepository);
         String status = report != null ? report.getStatusReport() : null;
-        SaleResponseDTO response = saleService.confirmPayment(id, userId, status);
+        SaleResponse response = saleService.confirmPayment(id, userId, status);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<SaleResponseDTO> cancelOrder(
+    public ResponseEntity<SaleResponse> cancelOrder(
             @PathVariable Long id,
             @RequestBody(required = false) StatusReportRequest report,
             Authentication authentication) {
         Long userId = AuthUtils.getUserId(authentication, userRepository);
         String status = report != null ? report.getStatusReport() : null;
-        SaleResponseDTO response = saleService.cancelOrder(id, userId, status);
+        SaleResponse response = saleService.cancelOrder(id, userId, status);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{id}/refund")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<SaleResponseDTO> refundOrder(@PathVariable Long id) {
+    public ResponseEntity<SaleResponse> refundOrder(@PathVariable Long id) {
         return ResponseEntity.ok(saleService.refundOrder(id));
     }
 
     @GetMapping("/my-orders")
-    public ResponseEntity<List<SaleResponseDTO>> getSalesByUser(Authentication authentication) {
+    public ResponseEntity<List<SaleResponse>> getSalesByUser(Authentication authentication) {
         Long userId = AuthUtils.getUserId(authentication, userRepository);
         return ResponseEntity.ok(saleService.getSalesByUser(userId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SaleResponseDTO> getSaleDetail(
+    public ResponseEntity<SaleResponse> getSaleDetail(
             @PathVariable Long id,
             Authentication authentication) {
         Long userId = AuthUtils.getUserId(authentication, userRepository);
