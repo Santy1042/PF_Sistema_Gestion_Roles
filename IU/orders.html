@@ -108,15 +108,20 @@
             height: 100%;
             background-color: rgba(0,0,0,0.5);
             backdrop-filter: blur(4px);
+            overflow-y: auto;
+            display: none; /* Default hide */
+            align-items: center; /* Vertical center if flex */
         }
 
         .modal-content {
             background-color: var(--surface);
-            margin: 10% auto;
+            margin: 5vh auto;
             padding: 2rem;
             border: 1px solid var(--border-color);
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
             border-radius: 12px;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
@@ -220,9 +225,10 @@
             <h3>Productos de la Venta #<span id="modalDetallesVentaSaleId"></span></h3>
             <table style="width: 100%; margin-top: 1rem; border-collapse: collapse;">
                 <thead>
-                    <tr style="border-bottom: 1px solid var(--border-color); text-align: left;">
+                    <tr style="border-bottom: 1px solid var(--border-color);">
                         <th style="padding: 0.5rem;">Producto</th>
                         <th style="padding: 0.5rem;">Cantidad</th>
+                        <th style="padding: 0.5rem;">Precio Unit.</th>
                         <th style="padding: 0.5rem;">Subtotal</th>
                     </tr>
                 </thead>

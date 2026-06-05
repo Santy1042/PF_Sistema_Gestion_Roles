@@ -257,6 +257,16 @@ function openInvoiceModal(saleId) {
             if (detail.size && detail.size !== 'N/A') variantDetails.push(`Talla: ${detail.size}`);
             const variantStr = variantDetails.length > 0 ? ` <br><small style="color: var(--text-secondary);">(${variantDetails.join(', ')})</small>` : '';
 
+            let priceHtml = '';
+            if (detail.discountPercentage && detail.discountPercentage > 0) {
+                priceHtml = `
+                    <span style="text-decoration: line-through; color: var(--text-secondary); font-size: 0.85em; display: block;">$${(detail.originalPrice || 0).toLocaleString()}</span>
+                    <span style="color: var(--primary); font-weight: bold;">$${(detail.unitPrice || 0).toLocaleString()} (-${detail.discountPercentage}%)</span>
+                `;
+            } else {
+                priceHtml = `$${(detail.unitPrice || 0).toLocaleString()}`;
+            }
+
             invoiceHtml += `
                 <tr style="border-bottom: 1px solid var(--border-color); border-bottom-style: dashed;">
                     <td style="padding: 0.5rem;">
@@ -264,7 +274,7 @@ function openInvoiceModal(saleId) {
                         ${variantStr}
                     </td>
                     <td style="padding: 0.5rem;">${detail.quantity}</td>
-                    <td style="padding: 0.5rem;">$${(detail.unitPrice || 0).toLocaleString()}</td>
+                    <td style="padding: 0.5rem;">${priceHtml}</td>
                     <td style="padding: 0.5rem;">$${((detail.unitPrice || 0) * detail.quantity).toLocaleString()}</td>
                 </tr>
             `;
@@ -273,6 +283,8 @@ function openInvoiceModal(saleId) {
                     </tbody>
                 </table>
                 <div style="text-align: right; margin-top: 1rem; font-size: 1.1rem;">
+                    <strong>Subtotal: $${order.subtotal.toLocaleString()}</strong><br>
+                    ${order.subtotal > order.total ? `<strong style="color: var(--primary);">Descuento Aplicado: -$${(order.subtotal - order.total).toLocaleString()}</strong><br>` : ''}
                     <strong>Total a Pagar: $${order.total.toLocaleString()}</strong>
                 </div>
             </div>
@@ -302,7 +314,18 @@ window.verDetallesVenta = function(saleId) {
     if (details.length === 0) {
         tbody.innerHTML = '<tr><td colspan="3" style="text-align:center">Sin productos</td></tr>';
     } else {
-        tbody.innerHTML = details.map(d => `
+        tbody.innerHTML = details.map(d => {
+            let priceHtml = '';
+            if (d.discountPercentage && d.discountPercentage > 0) {
+                priceHtml = `
+                    <span style="text-decoration: line-through; color: var(--text-secondary); font-size: 0.85em; display: block;">$${parseFloat(d.originalPrice || 0).toFixed(2)}</span>
+                    <span style="color: var(--primary); font-weight: bold;">$${parseFloat(d.unitPrice || 0).toFixed(2)}</span>
+                `;
+            } else {
+                priceHtml = `$${parseFloat(d.unitPrice || 0).toFixed(2)}`;
+            }
+
+            return `
             <tr style="border-bottom: 1px solid var(--border-color);">
                 <td style="padding: 0.5rem;">
                     <div style="font-weight: 500;">${d.productName || 'Producto'}</div>
@@ -312,9 +335,28 @@ window.verDetallesVenta = function(saleId) {
                     </div>
                 </td>
                 <td style="padding: 0.5rem;">${d.quantity}</td>
+                <td style="padding: 0.5rem;">${priceHtml}</td>
                 <td style="padding: 0.5rem;">$${parseFloat(d.totalPrice).toFixed(2)}</td>
             </tr>
-        `).join('');
+            `;
+        }).join('');
+
+        // Add summary row
+        tbody.innerHTML += `
+            <tr style="background: var(--surface-muted);">
+                <td colspan="3" style="padding: 0.5rem; text-align: right; font-weight: bold;">Subtotal:</td>
+                <td style="padding: 0.5rem; font-weight: bold;">$${parseFloat(order.subtotal).toFixed(2)}</td>
+            </tr>
+            ${order.subtotal > order.total ? `
+            <tr style="background: var(--surface-muted); color: var(--primary);">
+                <td colspan="3" style="padding: 0.5rem; text-align: right; font-weight: bold;">Descuento:</td>
+                <td style="padding: 0.5rem; font-weight: bold;">-$${parseFloat(order.subtotal - order.total).toFixed(2)}</td>
+            </tr>` : ''}
+            <tr style="background: var(--surface); border-top: 2px solid var(--border-color);">
+                <td colspan="3" style="padding: 0.5rem; text-align: right; font-weight: bold; font-size: 1.1em;">Total Final:</td>
+                <td style="padding: 0.5rem; font-weight: bold; font-size: 1.1em;">$${parseFloat(order.total).toFixed(2)}</td>
+            </tr>
+        `;
     }
     document.getElementById('modalDetallesVentaSaleId').textContent = saleId;
     document.getElementById('modalDetallesVenta').style.display = 'block';

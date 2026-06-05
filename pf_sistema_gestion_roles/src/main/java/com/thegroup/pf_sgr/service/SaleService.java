@@ -78,10 +78,16 @@ public class SaleService implements ISaleService {
         for (CartItem item : cartItems) {
             ProductVariant variant = item.getProductVariant();
             Product product = variant.getProduct();
-            BigDecimal unitPrice = product.getPrice();
-            BigDecimal itemSubtotal = unitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
+            BigDecimal originalPrice = product.getPrice();
+            BigDecimal unitPrice = originalPrice;
+            if (product.getDiscountPercentage() != null && product.getDiscountPercentage() > 0) {
+                BigDecimal discountMultiplier = BigDecimal.valueOf(100 - product.getDiscountPercentage()).divide(BigDecimal.valueOf(100));
+                unitPrice = unitPrice.multiply(discountMultiplier);
+            }
+            BigDecimal itemSubtotal = originalPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
+            BigDecimal itemTotal = unitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
             subtotal = subtotal.add(itemSubtotal);
-            total = total.add(itemSubtotal);
+            total = total.add(itemTotal);
         }
 
         Sale sale = Sale.builder()
@@ -96,7 +102,12 @@ public class SaleService implements ISaleService {
         for (CartItem item : cartItems) {
             ProductVariant variant = item.getProductVariant();
             Product product = variant.getProduct();
-            BigDecimal unitPrice = product.getPrice();
+            BigDecimal originalPrice = product.getPrice();
+            BigDecimal unitPrice = originalPrice;
+            if (product.getDiscountPercentage() != null && product.getDiscountPercentage() > 0) {
+                BigDecimal discountMultiplier = BigDecimal.valueOf(100 - product.getDiscountPercentage()).divide(BigDecimal.valueOf(100));
+                unitPrice = unitPrice.multiply(discountMultiplier);
+            }
             BigDecimal itemTotal = unitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
 
             int updatedRows = productVariantRepository.reduceStock(variant.getVariantId(), item.getQuantity());
@@ -322,17 +333,22 @@ public class SaleService implements ISaleService {
 
     private SaleResponse buildSaleResponseDTO(Sale sale, List<SaleDetail> details) {
         List<SaleDetailResponse> detailDTOs = details.stream()
-                .map(detail -> SaleDetailResponse.builder()
+                .map(detail -> {
+                    Product product = detail.getProductVariant().getProduct();
+                    return SaleDetailResponse.builder()
                         .idVariant(detail.getProductVariant().getVariantId())
                         .quantity(detail.getQuantity())
                         .unitPrice(detail.getUnitPrice())
                         .totalPrice(detail.getTotalPrice())
-                        .productName(detail.getProductVariant().getProduct().getName())
+                        .productName(product.getName())
                         .color(detail.getProductVariant().getColor() != null
                             ? detail.getProductVariant().getColor().getName() : "N/A")
                         .size(detail.getProductVariant().getSize() != null
                             ? detail.getProductVariant().getSize().getName() : "N/A")
-                        .build())
+                        .originalPrice(product.getPrice())
+                        .discountPercentage(product.getDiscountPercentage())
+                        .build();
+                })
                 .collect(Collectors.toList());
 
         List<Payment> paymentsEntity = paymentRepository.findAllBySale_IdSale(sale.getIdSale());

@@ -2,9 +2,9 @@
 -- PostgreSQL database dump
 --
 
-\restrict x5mcSyUs11Kij64dFGAcd6NOWhowXmPi8cKDOtOkPnrnUugHpZTEprZ78i78qfJ
+\restrict sZ8w2sZvHK4eTf3bfKMkoiRuJG7llUQECNX6R2Z4PIilHmEaeOZWAyLnXtwqabT
 
--- Dumped from database version 18.4 (365f1e4)
+-- Dumped from database version 18.4 (72c6e7c)
 -- Dumped by pg_dump version 18.4
 
 SET statement_timeout = 0;
@@ -559,8 +559,8 @@ CREATE TABLE public.users (
     id_role integer NOT NULL,
     is_active boolean DEFAULT true,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    last_access timestamp without time zone,
-    address text
+    address text,
+    last_access timestamp without time zone
 );
 
 
@@ -698,9 +698,6 @@ ALTER TABLE ONLY public.users ALTER COLUMN id_user SET DEFAULT nextval('public.u
 --
 
 COPY public.cart_items (item_cart_id, cart_id, product_variant_id, quantity) FROM stdin;
-6	7	9	2
-26	10	8	2
-27	10	13	1
 \.
 
 
@@ -709,10 +706,6 @@ COPY public.cart_items (item_cart_id, cart_id, product_variant_id, quantity) FRO
 --
 
 COPY public.carts (cart_id, user_id, created_at) FROM stdin;
-2	5	2026-05-25 17:23:54.627402
-7	4	2026-05-25 18:24:01.996833
-10	1	2026-05-25 18:24:45.792048
-11	6	2026-06-03 15:11:49.422222
 \.
 
 
@@ -723,7 +716,7 @@ COPY public.carts (cart_id, user_id, created_at) FROM stdin;
 COPY public.categories (id_category, name_category, is_active) FROM stdin;
 2	Pantalones	t
 3	Accesorios	t
-1	Ropa Superiorr	t
+1	Ropa Superior	t
 \.
 
 
@@ -736,6 +729,7 @@ COPY public.colors (id_color, name_color) FROM stdin;
 2	Rojo
 3	Azul
 4	Blanco
+6	Beige
 \.
 
 
@@ -756,9 +750,7 @@ COPY public.payment_statuses (id_status, status_name) FROM stdin;
 --
 
 COPY public.payments (id_payment, id_sale, payment_method, amount, payment_date, id_status) FROM stdin;
-2	5	CARD	75000.00	2026-06-02 22:06:01.864087	1
-1	3	CARD	225000.00	2026-06-02 21:41:13.046777	1
-3	6	PAYPAL	435000.00	2026-06-03 10:16:01.249563	1
+5	16	BANK	235000.00	2026-06-05 04:06:27.821132	1
 \.
 
 
@@ -767,10 +759,6 @@ COPY public.payments (id_payment, id_sale, payment_method, amount, payment_date,
 --
 
 COPY public.product_tags (id_product, id_tag) FROM stdin;
-13	1
-13	2
-14	1
-14	3
 \.
 
 
@@ -779,10 +767,49 @@ COPY public.product_tags (id_product, id_tag) FROM stdin;
 --
 
 COPY public.product_variants (id_variant, id_product, id_size, id_color, stock, is_active, image_url) FROM stdin;
-7	13	1	1	100	f	
-9	14	2	2	95	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1779689098/yylnd2wlarvkkzv4ubbh.png
-8	13	2	1	1	t	\N
-13	14	1	2	35	t	\N
+42	20	4	6	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631672/prahmoalmaaez5ouperf.png
+43	21	7	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631811/qxnwai4mstgbepuz9jqm.png
+44	21	7	2	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631824/jhqtqhkeogj70e0h21gm.png
+45	21	7	3	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631835/rayzng5aiuev5cgq1ogg.png
+47	22	2	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631920/tdxpx38ylc6dvzp3plen.png
+48	22	3	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631920/tdxpx38ylc6dvzp3plen.png
+49	22	4	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631920/tdxpx38ylc6dvzp3plen.png
+50	22	1	4	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631954/i6rlw0zxvzijir9kdmds.png
+51	22	2	4	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631954/i6rlw0zxvzijir9kdmds.png
+52	22	3	4	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631954/i6rlw0zxvzijir9kdmds.png
+53	22	4	4	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631954/i6rlw0zxvzijir9kdmds.png
+54	22	1	2	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631986/eidtgyycldzqsd2h1ogi.png
+55	22	2	2	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631986/eidtgyycldzqsd2h1ogi.png
+56	22	3	2	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631986/eidtgyycldzqsd2h1ogi.png
+57	22	4	2	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631986/eidtgyycldzqsd2h1ogi.png
+46	22	1	1	19	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631920/tdxpx38ylc6dvzp3plen.png
+33	19	3	6	19	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630608/sbfgkmhbhhr9ghyilsz9.png
+15	18	1	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630001/g8qds6wseavbfgmabzfb.png
+16	18	2	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630001/g8qds6wseavbfgmabzfb.png
+17	18	4	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630001/g8qds6wseavbfgmabzfb.png
+18	18	3	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630001/g8qds6wseavbfgmabzfb.png
+19	18	1	4	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630227/ejxazyw8ek8mr5ta9m9o.jpg
+20	18	2	4	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630227/ejxazyw8ek8mr5ta9m9o.jpg
+21	18	3	4	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630227/ejxazyw8ek8mr5ta9m9o.jpg
+22	18	4	4	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630227/ejxazyw8ek8mr5ta9m9o.jpg
+23	18	1	3	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630278/j8eky7prey86avgxir8o.png
+24	18	2	3	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630278/j8eky7prey86avgxir8o.png
+25	18	3	3	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630278/j8eky7prey86avgxir8o.png
+26	18	4	3	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630278/j8eky7prey86avgxir8o.png
+27	19	1	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630539/ax5prqx8sa6th5kdzvk2.png
+28	19	2	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630539/ax5prqx8sa6th5kdzvk2.png
+29	19	3	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630539/ax5prqx8sa6th5kdzvk2.png
+30	19	4	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630539/ax5prqx8sa6th5kdzvk2.png
+31	19	1	6	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630608/sbfgkmhbhhr9ghyilsz9.png
+32	19	2	6	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630608/sbfgkmhbhhr9ghyilsz9.png
+34	19	4	6	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780630608/sbfgkmhbhhr9ghyilsz9.png
+35	20	1	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631629/vfgfaobt2ayujcdg1kr3.png
+36	20	2	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631629/vfgfaobt2ayujcdg1kr3.png
+37	20	3	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631629/vfgfaobt2ayujcdg1kr3.png
+38	20	4	1	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631629/vfgfaobt2ayujcdg1kr3.png
+39	20	1	6	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631672/prahmoalmaaez5ouperf.png
+40	20	2	6	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631672/prahmoalmaaez5ouperf.png
+41	20	3	6	20	t	https://res.cloudinary.com/dzebcxlzg/image/upload/v1780631672/prahmoalmaaez5ouperf.png
 \.
 
 
@@ -791,9 +818,11 @@ COPY public.product_variants (id_variant, id_product, id_size, id_color, stock, 
 --
 
 COPY public.products (id_product, name_product, price, is_active, created_at, id_category, is_featured, discount_percentage) FROM stdin;
-13	Chaqueta Y2K	180000.00	t	\N	1	t	20
-16	Chaqueta Y2KK	10000.00	t	2026-06-03	1	f	0
-14	Camiseta Básica Minimalista	750000.00	t	\N	1	t	10
+18	Camiseta Clásica de Algodón Premium	75000.00	t	2026-06-05	1	t	10
+19	Pantalón Ancho Minimalista	110000.00	t	2026-06-05	2	t	10
+20	Pantalón Deportivo Casual	85000.00	t	2026-06-05	2	t	10
+21	Gorro de Invierno Básico	35000.00	t	2026-06-05	3	t	10
+22	Hoodie Básico con Capucha	125000.00	t	2026-06-05	1	t	10
 \.
 
 
@@ -812,21 +841,8 @@ COPY public.roles (id_role, name_role) FROM stdin;
 --
 
 COPY public.sale_details (id_sale_detail, id_sale, id_variant, quantity, unit_price, total_price) FROM stdin;
-1	1	9	1	75000.00	75000.00
-2	2	9	1	75000.00	75000.00
-3	3	9	3	75000.00	225000.00
-4	4	13	1	75000.00	75000.00
-5	5	13	1	75000.00	75000.00
-6	6	9	1	75000.00	75000.00
-7	6	8	2	180000.00	360000.00
-8	7	8	1	180000.00	180000.00
-9	8	8	2	180000.00	360000.00
-10	9	8	1	180000.00	180000.00
-11	10	8	2	180000.00	360000.00
-12	10	13	1	750000.00	750000.00
-13	11	8	2	180000.00	360000.00
-14	11	13	1	750000.00	750000.00
-15	12	13	3	750000.00	2250000.00
+20	16	46	1	125000.00	125000.00
+21	16	33	1	110000.00	110000.00
 \.
 
 
@@ -847,18 +863,7 @@ COPY public.sale_statuses (id_status, name_status) FROM stdin;
 --
 
 COPY public.sales (id_sale, id_user, sale_date, subtotal, total, id_status, status_report, shipping_address) FROM stdin;
-1	5	2026-06-03 01:45:32.012006	75000.00	75000.00	2	\N	\N
-3	5	2026-06-03 02:39:25.443677	225000.00	225000.00	2	Pagado a través de checkout usando método: CARD	\N
-2	5	2026-06-03 02:22:08.234359	75000.00	75000.00	3	\N	\N
-4	5	2026-06-03 02:46:39.269056	75000.00	75000.00	3	\N	\N
-5	5	2026-06-03 03:05:43.869068	75000.00	75000.00	2	Pagado a través de checkout usando método: CARD	Calle falsa
-6	6	2026-06-03 15:12:55.713339	435000.00	435000.00	2	Pagado a través de checkout usando método: PAYPAL	fasfasfasf
-7	6	2026-06-03 15:16:54.138742	180000.00	180000.00	3	\N	\N
-8	1	2026-06-03 15:35:56.554772	360000.00	360000.00	1	\N	\N
-9	1	2026-06-03 15:37:04.088737	180000.00	180000.00	1	\N	\N
-10	1	2026-06-03 15:44:45.017325	1110000.00	1110000.00	1	\N	\N
-11	6	2026-06-03 15:56:24.177783	1110000.00	1110000.00	1	\N	\N
-12	6	2026-06-03 16:06:15.182441	2250000.00	2250000.00	1	\N	\N
+16	1	2026-06-05 04:04:03.920947	235000.00	235000.00	2	Pagado a través de checkout usando método: BANK	Calle mas falsaaaaa
 \.
 
 
@@ -867,10 +872,11 @@ COPY public.sales (id_sale, id_user, sale_date, subtotal, total, id_status, stat
 --
 
 COPY public.sizes (id_size, name_size) FROM stdin;
-1	M
 2	S
-3	L
-4	XL
+1	XS
+4	L
+3	M
+7	Unica
 \.
 
 
@@ -890,10 +896,11 @@ COPY public.tags (id_tag, name_tag) FROM stdin;
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
-COPY public.users (id_user, first_name, last_name, email, phone_number, password_hash, id_role, is_active, created_at, address) FROM stdin;
-1	Pedro	Perez	pepepe@example.com	\N	$2a$10$ufs1nQ.hHasxmw7CqlhHweTUIYEUst0e7SXngzd0WR89XNfstbWMK	1	t	2026-05-27 19:57:47.097329	\N
-5	Pedro	Perez Picapiedra	pedroperez@example.com	3100000000	$2a$10$TI1MIyaiJ9mcIfhcaubkvu0IsTUSSOFeU0hlGKDiUUIlPJNUrKi6G	2	f	2026-06-01 23:59:56.838804	Calle falsa
-6	Santy	Sanchez	Santy@example.com	3111234567	$2a$10$ly8Sz.oBYGDtuYkfssv1eeWsYvc26iaK.VwtBTlhGXZ3hG3XbZkBW	2	t	2026-06-03 10:11:46.256567	Pepe
+COPY public.users (id_user, first_name, last_name, email, phone_number, password_hash, id_role, is_active, created_at, address, last_access) FROM stdin;
+7	Dylann	Vergara	dylann2428@gmail.com	3146009234	$2a$10$5R1TfFd//.8Au5i7AiFZ0.mDGgAnKwu0NR3ppePFzl.ubP9HWmyVG	1	t	2026-06-03 19:21:04.263569	calle 65	\N
+12	Marco	Sánchez	markusiano@gmail.com	3156429565	$2a$10$TGwyJAdT4LTzY0Scxe3O8uXf/0l4uA8c0Xws/Orpj.YrJXAafNpva	2	t	2026-06-03 22:19:40.93365	Calle 74	\N
+6	Santy	Sanchez	Santy@example.com	3111234567	$2a$10$ly8Sz.oBYGDtuYkfssv1eeWsYvc26iaK.VwtBTlhGXZ3hG3XbZkBW	2	t	2026-06-03 10:11:46.256567	Pepe	2026-06-05 01:27:28.999575
+1	Pedro	Perez	pepepe@example.com	3111234568	$2a$10$ufs1nQ.hHasxmw7CqlhHweTUIYEUst0e7SXngzd0WR89XNfstbWMK	1	t	2026-05-27 19:57:47.097329	Calle mas falsaaaaa	2026-06-05 01:31:24.204594
 \.
 
 
@@ -901,14 +908,14 @@ COPY public.users (id_user, first_name, last_name, email, phone_number, password
 -- Name: cart_items_item_cart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.cart_items_item_cart_id_seq', 27, true);
+SELECT pg_catalog.setval('public.cart_items_item_cart_id_seq', 39, true);
 
 
 --
 -- Name: carts_cart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.carts_cart_id_seq', 11, true);
+SELECT pg_catalog.setval('public.carts_cart_id_seq', 17, true);
 
 
 --
@@ -922,7 +929,7 @@ SELECT pg_catalog.setval('public.categories_id_category_seq', 5, true);
 -- Name: colors_id_color_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.colors_id_color_seq', 5, true);
+SELECT pg_catalog.setval('public.colors_id_color_seq', 6, true);
 
 
 --
@@ -936,21 +943,21 @@ SELECT pg_catalog.setval('public.payment_statuses_id_status_seq', 4, true);
 -- Name: payments_id_payment_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.payments_id_payment_seq', 3, true);
+SELECT pg_catalog.setval('public.payments_id_payment_seq', 5, true);
 
 
 --
 -- Name: product_variants_id_variant_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.product_variants_id_variant_seq', 14, true);
+SELECT pg_catalog.setval('public.product_variants_id_variant_seq', 57, true);
 
 
 --
 -- Name: products_id_product_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.products_id_product_seq', 17, true);
+SELECT pg_catalog.setval('public.products_id_product_seq', 22, true);
 
 
 --
@@ -964,7 +971,7 @@ SELECT pg_catalog.setval('public.roles_id_role_seq', 2, true);
 -- Name: sale_details_id_sale_detail_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.sale_details_id_sale_detail_seq', 15, true);
+SELECT pg_catalog.setval('public.sale_details_id_sale_detail_seq', 21, true);
 
 
 --
@@ -978,14 +985,14 @@ SELECT pg_catalog.setval('public.sale_statuses_id_status_seq', 4, true);
 -- Name: sales_id_sale_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.sales_id_sale_seq', 12, true);
+SELECT pg_catalog.setval('public.sales_id_sale_seq', 16, true);
 
 
 --
 -- Name: sizes_id_size_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.sizes_id_size_seq', 6, true);
+SELECT pg_catalog.setval('public.sizes_id_size_seq', 7, true);
 
 
 --
@@ -999,7 +1006,7 @@ SELECT pg_catalog.setval('public.tags_id_tag_seq', 6, true);
 -- Name: users_id_user_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.users_id_user_seq', 6, true);
+SELECT pg_catalog.setval('public.users_id_user_seq', 15, true);
 
 
 --
@@ -1372,5 +1379,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE cloud_admin IN SCHEMA public GRANT ALL ON TABL
 -- PostgreSQL database dump complete
 --
 
-\unrestrict x5mcSyUs11Kij64dFGAcd6NOWhowXmPi8cKDOtOkPnrnUugHpZTEprZ78i78qfJ
+\unrestrict sZ8w2sZvHK4eTf3bfKMkoiRuJG7llUQECNX6R2Z4PIilHmEaeOZWAyLnXtwqabT
 

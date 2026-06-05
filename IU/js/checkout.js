@@ -23,14 +23,29 @@ function initializeCheckout() {
     setupFormHandlers();
 }
 
-function loadUserData() {
+async function loadUserData() {
+    const addressDisplay = document.getElementById('checkoutAddressDisplay');
+    if (!addressDisplay) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/profile`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (response.ok) {
+            const user = await response.json();
+            addressDisplay.textContent = user.address || 'No tienes una dirección registrada.';
+            return;
+        }
+    } catch(e) {
+        console.error('Error fetching profile', e);
+    }
+
     const userInfo = localStorage.getItem('userInfo');
     if (userInfo) {
         const user = JSON.parse(userInfo);
-        const addressDisplay = document.getElementById('checkoutAddressDisplay');
-        if (addressDisplay) {
-            addressDisplay.textContent = user.address || 'No tienes una dirección registrada.';
-        }
+        addressDisplay.textContent = user.address || 'No tienes una dirección registrada.';
+    } else {
+        addressDisplay.textContent = 'No tienes una dirección registrada.';
     }
 }
 

@@ -18,4 +18,6 @@ public class SaleDetailResponse {
     private String productName;
     private String color;
     private String size;
+    private BigDecimal originalPrice;
+    private Integer discountPercentage;
 }
