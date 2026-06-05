@@ -1,6 +1,23 @@
 let allProducts = [];
 
+function renderSkeletons() {
+    const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+    grid.innerHTML = Array(6).fill('').map(() => `
+        <div class="product-card skeleton-card">
+            <div class="skeleton skeleton-img"></div>
+            <div class="product-info" style="padding: 1.5rem;">
+                <div class="skeleton skeleton-text title"></div>
+                <div class="skeleton skeleton-text short"></div>
+                <div class="skeleton skeleton-text" style="margin-top: 1rem;"></div>
+                <div class="skeleton skeleton-btn" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+    `).join('');
+}
+
 async function fetchProducts() {
+    renderSkeletons();
     try {
         const response = await fetch(`${API_BASE_URL}/products?page=0&size=100`);
         if (!response.ok) throw new Error('No se pudo conectar al backend');
@@ -10,7 +27,7 @@ async function fetchProducts() {
         renderProducts(allProducts);
         updateCount(allProducts.length);
     } catch (error) {
-        console.error('Error conectando al backend:', error);
+        console.error(error);
         const grid = document.getElementById('productsGrid');
         if (grid) grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;padding:2rem;">No se pudieron cargar los productos.</p>';
     }
