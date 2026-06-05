@@ -98,4 +98,12 @@ public class GlobalExceptionHandler {
                 "message", message
         ));
     }
+
+    @ExceptionHandler(org.springframework.orm.ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<Map<String, String>> handleOptimisticLocking(org.springframework.orm.ObjectOptimisticLockingFailureException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                "error", "Conflicto de concurrencia",
+                "message", "El stock de uno de los productos ha sido actualizado. Por favor, refresque la página e intente nuevamente."
+        ));
+    }
 }

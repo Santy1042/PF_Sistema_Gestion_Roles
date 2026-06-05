@@ -99,8 +99,10 @@ public class SaleService implements ISaleService {
             BigDecimal unitPrice = product.getPrice();
             BigDecimal itemTotal = unitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
 
-            variant.setStock(variant.getStock() - item.getQuantity());
-            productVariantRepository.save(variant);
+            int updatedRows = productVariantRepository.reduceStock(variant.getVariantId(), item.getQuantity());
+            if (updatedRows == 0) {
+                throw new InsufficientStockException("No hay suficiente stock o alguien acaba de comprar la última unidad.");
+            }
 
             SaleDetail detail = SaleDetail.builder()
                     .sale(sale)
@@ -181,13 +183,9 @@ public class SaleService implements ISaleService {
         sale = saleRepository.save(sale);
 
         List<SaleDetail> details = saleDetailRepository.findBySale_IdSale(saleId);
-        List<ProductVariant> variantsToUpdate = new ArrayList<>();
         for (SaleDetail detail : details) {
-            ProductVariant variant = detail.getProductVariant();
-            variant.setStock(variant.getStock() + detail.getQuantity());
-            variantsToUpdate.add(variant);
+            productVariantRepository.increaseStock(detail.getProductVariant().getVariantId(), detail.getQuantity());
         }
-        productVariantRepository.saveAll(variantsToUpdate);
 
         return buildSaleResponseDTO(sale, details);
     }
@@ -202,13 +200,9 @@ public class SaleService implements ISaleService {
         }
 
         List<SaleDetail> details = saleDetailRepository.findBySale_IdSale(saleId);
-        List<ProductVariant> variantsToUpdate = new ArrayList<>();
         for (SaleDetail detail : details) {
-            ProductVariant variant = detail.getProductVariant();
-            variant.setStock(variant.getStock() + detail.getQuantity());
-            variantsToUpdate.add(variant);
+            productVariantRepository.increaseStock(detail.getProductVariant().getVariantId(), detail.getQuantity());
         }
-        productVariantRepository.saveAll(variantsToUpdate);
 
         sale.setStatus(SaleStatus.REFUNDED);
         sale = saleRepository.save(sale);
@@ -283,25 +277,17 @@ public class SaleService implements ISaleService {
             } else if (newStatus == SaleStatus.CANCELLED && currentStatus == SaleStatus.PENDING) {
 
                 for (SaleDetail detail : details) {
-                    ProductVariant variant = detail.getProductVariant();
-                    variant.setStock(variant.getStock() + detail.getQuantity());
+                    productVariantRepository.increaseStock(detail.getProductVariant().getVariantId(), detail.getQuantity());
                 }
-                productVariantRepository.saveAll(
-                    details.stream().map(SaleDetail::getProductVariant).collect(Collectors.toList())
-                );
                 sale.setStatus(SaleStatus.CANCELLED);
                 sale = saleRepository.save(sale);
                 return buildSaleResponseDTO(sale, details);
 
             } else if (newStatus == SaleStatus.REFUNDED && currentStatus == SaleStatus.PAID) {
 
-                List<ProductVariant> toUpdate = new ArrayList<>();
                 for (SaleDetail detail : details) {
-                    ProductVariant variant = detail.getProductVariant();
-                    variant.setStock(variant.getStock() + detail.getQuantity());
-                    toUpdate.add(variant);
+                    productVariantRepository.increaseStock(detail.getProductVariant().getVariantId(), detail.getQuantity());
                 }
-                productVariantRepository.saveAll(toUpdate);
 
                 sale.setStatus(SaleStatus.REFUNDED);
                 sale = saleRepository.save(sale);
