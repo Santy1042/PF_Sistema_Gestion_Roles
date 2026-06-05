@@ -125,13 +125,6 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void deleteProduct(Integer productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
-        productRepository.delete(product);
-    }
-
-    @Override
     public Page<ProductResponse> searchProductByName(String name, int page, int size) {
         return productRepository.findByNameContainingIgnoreCase(name, PageRequest.of(page, size))
                 .map(this::mapToResponse);

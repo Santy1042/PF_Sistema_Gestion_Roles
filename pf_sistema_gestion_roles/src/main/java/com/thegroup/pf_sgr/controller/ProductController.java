@@ -67,11 +67,4 @@ public class ProductController {
         productService.activateProduct(productId);
         return ResponseEntity.noContent().build();
     } 
-
-    @DeleteMapping("/{productId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Integer productId) {
-        productService.deleteProduct(productId);
-        return ResponseEntity.noContent().build();
-    }
 }

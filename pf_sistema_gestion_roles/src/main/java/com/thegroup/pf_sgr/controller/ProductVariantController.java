@@ -51,11 +51,4 @@ public class ProductVariantController {
         variantService.activateVariant(variantId);
         return ResponseEntity.noContent().build();
     } 
-
-    @DeleteMapping("/deleteVariant")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteVariant(@RequestParam Integer variantId) {
-        variantService.deleteVariant(variantId);
-        return ResponseEntity.noContent().build();
-    }
 }

@@ -1,14 +1,46 @@
+let allAdminProducts = [];
+let filteredAdminProducts = [];
 let productoPage = 0;
+const PAGE_SIZE = 10;
 
-async function cargarProductos(page = 0, nombre = '') {
-  productoPage = page;
-  let url = nombre
-    ? `${API}/products/search?name=${encodeURIComponent(nombre)}&page=${page}&size=10`
-    : `${API}/products?page=${page}&size=10`;
-
-  const res = await fetch(url);
+async function inicializarProductos() {
+  const res = await fetch(`${API}/products?page=0&size=1000`, { headers: authHeaders() });
   const data = await res.json();
-  const items = data.content || [];
+  allAdminProducts = data.content || data || [];
+  
+  // Extraemos las categorías para el filtro
+  const catSel = document.getElementById('filterCategoriaAdmin');
+  if (catSel) {
+    const cats = [...new Set(allAdminProducts.map(p => p.categoryName).filter(Boolean))];
+    const html = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+    catSel.innerHTML = '<option value="">Todas las categorías</option>' + html;
+  }
+  
+  aplicarFiltrosAdmin(0);
+}
+
+function aplicarFiltrosAdmin(page = 0) {
+  const nombre = document.getElementById('searchProducto')?.value.trim().toLowerCase() || '';
+  const catName = document.getElementById('filterCategoriaAdmin')?.value || '';
+  const estado = document.getElementById('filterEstadoAdmin')?.value || 'true';
+
+  filteredAdminProducts = allAdminProducts.filter(p => {
+    if (nombre && !p.name.toLowerCase().includes(nombre)) return false;
+    if (catName && p.categoryName !== catName) return false;
+    if (estado === 'true' && p.isActive === false) return false;
+    if (estado === 'false' && p.isActive !== false) return false;
+    return true;
+  });
+
+  cargarProductosLocales(page);
+}
+
+function cargarProductosLocales(page) {
+  productoPage = page;
+  const startIndex = page * PAGE_SIZE;
+  const items = filteredAdminProducts.slice(startIndex, startIndex + PAGE_SIZE);
+  const totalPages = Math.ceil(filteredAdminProducts.length / PAGE_SIZE);
+
   const body = document.getElementById('bodyProductos');
 
   body.innerHTML = items.length === 0
@@ -28,15 +60,12 @@ async function cargarProductos(page = 0, nombre = '') {
           <button class="btn btn-sm ${p.isActive ? 'btn-danger' : 'btn-outline'}" onclick="toggleProducto(${p.productId}, ${p.isActive})">
             ${p.isActive ? 'Desactivar' : 'Activar'}
           </button>
-          <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${p.productId})">Eliminar</button>
         </td>
       </tr>`).join('');
 
-  renderPagination('paginacionProductos', page, data.totalPages, (p) => cargarProductos(p, nombre));
+  renderPagination('paginacionProductos', page, totalPages, aplicarFiltrosAdmin);
 
-  if (!nombre) {
-    document.getElementById('statProducts').textContent = data.totalElements ?? items.length;
-  }
+  document.getElementById('statProducts').textContent = filteredAdminProducts.length;
 }
 
 async function editarProducto(id) {
@@ -72,25 +101,12 @@ async function toggleProducto(id, isActive) {
   });
   if (res.ok) {
     showToastMsg(`Producto ${isActive ? 'desactivado' : 'activado'}`);
-    cargarProductos(productoPage);
+    await inicializarProductos();
   } else {
     showToastMsg('Error al cambiar estado', 'error');
   }
 }
 
-async function eliminarProducto(id) {
-  if (!confirm('¿Eliminar este producto?')) return;
-  const res = await fetch(`${API}/products/${id}`, {
-    method: 'DELETE',
-    headers: authHeaders()
-  });
-  if (res.ok) {
-    showToastMsg('Producto eliminado');
-    cargarProductos(productoPage);
-  } else {
-    showToastMsg('Error al eliminar', 'error');
-  }
-}
 
 async function guardarProducto() {
   const id = document.getElementById('productoId').value;
@@ -121,7 +137,7 @@ async function guardarProducto() {
     const savedProduct = await res.json();
     showToastMsg(id ? 'Producto actualizado' : 'Producto creado. Agrega al menos una variante.');
     cancelarFormProducto();
-    cargarProductos(productoPage);
+    await inicializarProductos();
 
     if (!id && savedProduct.productId) {
 
@@ -184,7 +200,6 @@ async function cargarVariantesPorProducto(productId) {
           <button class="btn btn-sm ${v.isActive !== false ? 'btn-danger' : 'btn-outline'}" onclick="toggleVariante(${v.id ?? v.variantId}, ${v.isActive !== false})">
             ${v.isActive !== false ? 'Desactivar' : 'Activar'}
           </button>
-          <button class="btn btn-danger btn-sm" onclick="eliminarVariante(${v.id ?? v.variantId})">Eliminar</button>
         </td>
       </tr>`).join('');
 }
@@ -282,19 +297,6 @@ function cancelarFormVariante() {
   document.querySelectorAll('.gallery-img-selector').forEach(img => img.style.borderColor = 'transparent');
 }
 
-async function eliminarVariante(id) {
-  if (!confirm('¿Eliminar esta variante?')) return;
-  const res = await fetch(`${API}/variants/deleteVariant?variantId=${id}`, {
-    method: 'DELETE',
-    headers: authHeaders()
-  });
-  if (res.ok) {
-    showToastMsg('Variante eliminada');
-    cargarVariantesPorProducto(currentProductoIdParaVariantes);
-  } else {
-    showToastMsg('Error al eliminar', 'error');
-  }
-}
 
 function renderImageGallery() {
   const gallery = document.getElementById('varianteImageGallery');

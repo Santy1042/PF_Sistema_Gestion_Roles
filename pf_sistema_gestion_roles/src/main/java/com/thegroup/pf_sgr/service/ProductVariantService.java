@@ -67,11 +67,4 @@ public class ProductVariantService implements IProductVariantService {
         variant.setIsActive(true);
         productVariantRepository.save(variant);
     }
-
-    @Override
-    public void deleteVariant(Integer variantId) {
-        ProductVariant variant = productVariantRepository.findById(variantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Variante no encontrada con el ID: " + variantId));
-        productVariantRepository.delete(variant);
-    }
 }

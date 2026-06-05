@@ -112,8 +112,14 @@
       <div class="table-panel">
         <div class="table-search">
           <input type="text" id="searchProducto" placeholder="Buscar producto por nombre...">
-          <button class="btn btn-outline" id="btnBuscarProducto">Buscar</button>
-          <button class="btn btn-outline" id="btnTodosProductos">Ver todos</button>
+          <select id="filterCategoriaAdmin" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-primary);"><option value="">Todas las categorías</option></select>
+          <select id="filterEstadoAdmin" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-primary);">
+            <option value="true">Activos</option>
+            <option value="false">Inactivos</option>
+            <option value="">Todos</option>
+          </select>
+          <button class="btn btn-outline" id="btnBuscarProducto">Buscar / Filtrar</button>
+          <button class="btn btn-outline" id="btnTodosProductos">Limpiar</button>
         </div>
         <table id="tablaProductos">
           <thead>

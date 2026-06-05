@@ -391,6 +391,14 @@ async function cargarSelectCategorias() {
     sel.innerHTML = '<option value="">Sin categoría</option>' +
       items.map(c => `<option value="${c.idCategory}">${c.name}</option>`).join('');
     sel.value = current;
+
+    const filterSel = document.getElementById('filterCategoriaAdmin');
+    if (filterSel) {
+      const filterCurrent = filterSel.value;
+      filterSel.innerHTML = '<option value="">Todas las categorías</option>' +
+        items.map(c => `<option value="${c.idCategory}">${c.name}</option>`).join('');
+      filterSel.value = filterCurrent;
+    }
   } catch (e) { console.error('Error cargando categorías select', e); }
 }
 
@@ -398,7 +406,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await checkAdmin();
 
   cargarStats();
-  cargarProductos();
+  inicializarProductos();
   cargarSelectCategorias();
   cargarUsuarios();
   cargarVentas();
@@ -414,7 +422,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       tab.classList.add('active');
       document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
 
-      if (tab.dataset.tab === 'productos') cargarProductos(0);
+      if (tab.dataset.tab === 'productos') inicializarProductos();
       if (tab.dataset.tab === 'ventas') cargarVentas();
     });
   });
@@ -426,14 +434,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('btnGuardarProducto').addEventListener('click', guardarProducto);
   document.getElementById('btnCancelarProducto').addEventListener('click', cancelarFormProducto);
   document.getElementById('btnBuscarProducto').addEventListener('click', () => {
-    cargarProductos(0, document.getElementById('searchProducto').value);
+    aplicarFiltrosAdmin(0);
   });
   document.getElementById('btnTodosProductos').addEventListener('click', () => {
     document.getElementById('searchProducto').value = '';
-    cargarProductos(0);
+    document.getElementById('filterCategoriaAdmin').value = '';
+    document.getElementById('filterEstadoAdmin').value = 'true';
+    aplicarFiltrosAdmin(0);
   });
   document.getElementById('searchProducto').addEventListener('keydown', e => {
-    if (e.key === 'Enter') cargarProductos(0, e.target.value);
+    if (e.key === 'Enter') aplicarFiltrosAdmin(0);
   });
 
   document.getElementById('btnNuevaVariante').addEventListener('click', () => {

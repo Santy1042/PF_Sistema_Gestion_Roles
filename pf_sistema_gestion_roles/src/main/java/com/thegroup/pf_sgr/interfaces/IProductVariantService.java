@@ -10,5 +10,4 @@ public interface IProductVariantService {
     ProductVariant updateVariant(Integer variantId, ProductVariant updatedVariant);
     void deactivateVariant(Integer variantId);
     void activateVariant(Integer variantId);
-    void deleteVariant(Integer variantId);
 }

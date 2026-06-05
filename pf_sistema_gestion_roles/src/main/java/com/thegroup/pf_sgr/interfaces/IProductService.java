@@ -11,6 +11,5 @@ public interface IProductService {
     ProductResponse updateProduct(Integer productId, ProductRequest request);
     void deactivateProduct(Integer productId);
     void activateProduct(Integer productId);
-    void deleteProduct(Integer productId);
     Page<ProductResponse> searchProductByName(String name, int page, int size);
 }
