@@ -63,7 +63,7 @@
         ${adminButton}
         <div class="profile-dropdown" style="position: relative; display: inline-flex; align-items: center;">
           ${userNameHTML}
-          <img src="img/default_user.jpeg" alt="Perfil" class="nav-profile-pic" style="cursor: pointer; border-radius: 50%; border: 2px solid transparent; transition: all 0.3s ease;" onerror="this.src='img/default_user.jpeg'" onclick="this.nextElementSibling.classList.toggle('show')">
+          <img src="img/default_user.jpeg" alt="Perfil" class="nav-profile-pic" style="cursor: pointer; border-radius: 50%; border: 2px solid transparent; transition: all 0.3s ease;" onerror="this.src='img/default_user.jpeg'">
           <div class="dropdown-content" style="display: none; position: absolute; right: 0; top: 100%; background-color: var(--surface); min-width: 160px; box-shadow: 0px 8px 16px var(--shadow); z-index: 10; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); opacity: 0; transition: opacity 0.3s ease;">
             <a href="profile.html" style="color: var(--text-primary); padding: 12px 16px; text-decoration: none; display: block; border-bottom: 1px solid var(--border-color);">👤 Editar Perfil</a>
             <a href="orders.html" style="color: var(--text-primary); padding: 12px 16px; text-decoration: none; display: block;">📦 Mis Pedidos</a>
