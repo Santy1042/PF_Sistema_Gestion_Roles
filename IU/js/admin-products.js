@@ -164,6 +164,9 @@ async function cargarVariantesPorProducto(productId) {
   const res = await fetch(`${API}/products/${productId}`, { headers: authHeaders() });
   const data = await res.json();
   const items = data.variants || [];
+  window.currentProductVariantsData = items;
+  renderImageGallery();
+  
   const body = document.getElementById('bodyVariantes');
 
   body.innerHTML = items.length === 0
@@ -276,6 +279,7 @@ function cancelarFormVariante() {
   document.getElementById('varianteImageUrl').value = '';
   document.getElementById('varianteImageFile').value = '';
   document.getElementById('formVarianteTitle').textContent = 'Crear Variante';
+  document.querySelectorAll('.gallery-img-selector').forEach(img => img.style.borderColor = 'transparent');
 }
 
 async function eliminarVariante(id) {
@@ -291,3 +295,30 @@ async function eliminarVariante(id) {
     showToastMsg('Error al eliminar', 'error');
   }
 }
+
+function renderImageGallery() {
+  const gallery = document.getElementById('varianteImageGallery');
+  if (!gallery) return;
+  const items = window.currentProductVariantsData || [];
+  const uniqueUrls = [...new Set(items.map(v => v.imageUrl).filter(url => url && !url.includes('default_product.png')))];
+  
+  if (uniqueUrls.length === 0) {
+    gallery.innerHTML = '<span style="font-size: 0.8em; color: var(--text-secondary);">No hay fotos previas para este producto.</span>';
+    return;
+  }
+
+  gallery.innerHTML = uniqueUrls.map(url => `
+    <img src="${url}" 
+         class="gallery-img-selector"
+         style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease;"
+         onclick="selectGalleryImage('${url}', this)"
+         title="Usar esta imagen">
+  `).join('');
+}
+
+window.selectGalleryImage = function(url, imgElement) {
+  document.querySelectorAll('.gallery-img-selector').forEach(img => img.style.borderColor = 'transparent');
+  imgElement.style.borderColor = 'var(--primary)';
+  document.getElementById('varianteImageUrl').value = url;
+  document.getElementById('varianteImageFile').value = '';
+};
