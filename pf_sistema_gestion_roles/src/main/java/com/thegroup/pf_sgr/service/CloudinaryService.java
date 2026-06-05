@@ -15,7 +15,7 @@ import java.util.Map;
 public class CloudinaryService implements ICloudinaryService {
 
     private final Cloudinary cloudinary;
-    private static final long MAX_FILE_SIZE = 2 * 1024 * 1024;
+    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024;
     private static final List<String> ALLOWED_MIME_TYPES = Arrays.asList("image/jpeg", "image/png", "image/webp");
 
     public CloudinaryService(
@@ -38,7 +38,7 @@ public class CloudinaryService implements ICloudinaryService {
         }
 
         if (file.getSize() > MAX_FILE_SIZE) {
-            throw new IllegalArgumentException("La imagen excede el límite máximo permitido de 2MB");
+            throw new IllegalArgumentException("La imagen excede el límite máximo permitido de 10MB");
         }
 
         if (!ALLOWED_MIME_TYPES.contains(file.getContentType())) {

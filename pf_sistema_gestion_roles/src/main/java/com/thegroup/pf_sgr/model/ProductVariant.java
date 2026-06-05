@@ -48,7 +48,7 @@ public class ProductVariant {
 
     @Column(name = "is_active")
     @JsonProperty("isActive")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @Column(name = "image_url")
     private String imageUrl;

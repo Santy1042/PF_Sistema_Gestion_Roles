@@ -242,8 +242,13 @@ async function guardarVariante() {
   }
 
   if (fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    if (file.size > 10 * 1024 * 1024) {
+      showToastMsg('La imagen no puede pesar más de 10MB', 'error');
+      return;
+    }
     const formData = new FormData();
-    formData.append('file', fileInput.files[0]);
+    formData.append('file', file);
     const uploadRes = await fetch(`${API}/images/upload`, {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${getToken()}` },
@@ -264,8 +269,14 @@ async function guardarVariante() {
     size: document.getElementById('varianteTallaId').value
       ? { sizeId: parseInt(document.getElementById('varianteTallaId').value) } : null,
     stock: parseInt(document.getElementById('varianteStock').value) || 0,
-    imageUrl
+    imageUrl,
+    isActive: document.getElementById('varianteActiva') ? document.getElementById('varianteActiva').checked : true
   };
+
+  if (!body.color || !body.size) {
+    showToastMsg('El color y la talla son obligatorios', 'error');
+    return;
+  }
 
   const url = id
     ? `${API}/variants/updateVariant?variantId=${id}`
